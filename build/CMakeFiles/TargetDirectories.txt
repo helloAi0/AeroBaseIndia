@@ -1,0 +1,3 @@
+/home/user_taha5253/AeroBaseIndia/build/CMakeFiles/AeroBaseIndia.dir
+/home/user_taha5253/AeroBaseIndia/build/CMakeFiles/edit_cache.dir
+/home/user_taha5253/AeroBaseIndia/build/CMakeFiles/rebuild_cache.dir
