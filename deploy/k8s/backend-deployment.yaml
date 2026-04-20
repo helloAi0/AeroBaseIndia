@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aerobase-backend
+  namespace: aerobase
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: aerobase
+  template:
+    metadata:
+      labels:
+        app: aerobase
+    spec:
+      containers:
+      - name: backend
+        image: yourdockerhub/aerobase-india:latest
+        ports:
+        - containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: aerobase-config
+        - secretRef:
+            name: aerobase-secret

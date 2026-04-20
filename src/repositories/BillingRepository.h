@@ -4,13 +4,17 @@
 
 class BillingRepository {
 public:
+    /**
+     * Persists a new invoice record to the PostgreSQL database.
+     * Ensure the tenant_subscriptions table has the corresponding subscription_id first!
+     */
     static void createInvoice(const Invoice& invoice) {
         auto conn = DatabaseManager::getConnection();
         pqxx::work txn(*conn);
 
         txn.exec_params(
             "INSERT INTO invoices(id, tenant_id, subscription_id, amount, currency, status, due_at) "
-            "VALUES($1,$2,$3,$4,$5,$6,$7)",
+            "VALUES($1, $2, $3, $4, $5, $6, $7)",
             invoice.id,
             invoice.tenantId,
             invoice.subscriptionId,

@@ -1,0 +1,5 @@
+minikube-linux-amd64
+password.txt
+cloud-ready-config.yaml
+.kube/
+build/

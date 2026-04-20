@@ -1,15 +1,16 @@
 #pragma once
 #include "../repositories/FlightRepository.h"
-#include "../controllers/FlightSocketController.h" // For WebSocket broadcasting
-#include "FlightCacheService.h"                    // For Redis caching
+#include "../controllers/FlightSocketController.h" 
+#include "FlightCacheService.h"                    
 #include "AuthService.h"
+#include "AuditService.h"
+#include "EventPublisher.h" // Added for terminal notifications
 #include <jsoncpp/json/json.h>
 #include <stdexcept>
 #include <string>
 
 class FlightService {
 public:
-    // Existing: Builds the initial flight object with conflict validation
     static Flight buildFlight(const std::string& tenantId,
                               const std::string& number,
                               const std::string& origin,
@@ -37,23 +38,56 @@ public:
     }
 
     /**
-     * New: Orchestrates real-time updates across the Cache and WebSockets.
-     * This should be called after a successful database update.
+     * Orchestrates the update, the audit log, the cache, and real-time alerts.
      */
-    static void updateStatusAndNotify(const std::string& flightId,
-                                      const std::string& status,
-                                      const std::string& gate) {
-        // 1. Update the Fast Cache (Redis) for instant status lookups
-        FlightCacheService::updateFlightStatus(flightId, status, gate);
+    static void updateStatusAndNotify(const std::string& tenantId,
+                                      const std::string& userId,
+                                      const std::string& flightId,
+                                      const std::string& newStatus,
+                                      const std::string& newGate,
+                                      const std::string& ipAddress) {
+        
+        // 1. Fetch current state for the "Before" snapshot
+        auto oldFlight = FlightRepository::getById(tenantId, flightId);
+        if (!oldFlight) throw std::runtime_error("Flight not found");
 
-        // 2. Prepare the Real-Time Payload
+        // 2. Perform Persistent Database Update
+        FlightRepository::updateStatus(tenantId, flightId, newStatus, newGate);
+
+        // 3. Construct and Submit Audit Log
+        AuditLog log;
+        log.id = AuthService::generateUUID();
+        log.tenantId = tenantId;
+        log.userId = userId;
+        log.action = "STATUS_UPDATE";
+        log.entityType = "FLIGHT";
+        log.entityId = flightId;
+        
+        log.oldData = "{\"status\":\"" + oldFlight->status + "\",\"gate\":\"" + oldFlight->gate + "\"}";
+        log.newData = "{\"status\":\"" + newStatus + "\",\"gate\":\"" + newGate + "\"}";
+        log.ipAddress = ipAddress;
+
+        AuditService::log(log);
+
+        // 4. Update the Fast Cache (Redis)
+        FlightCacheService::updateFlightStatus(flightId, newStatus, newGate);
+
+        // 5. Gate Change Specific Notification
+        // Only publish if the gate actually moved
+        if (oldFlight->gate != newGate) {
+            std::string gateEvent =
+                "{\"type\":\"GATE_CHANGED\","
+                "\"flight_id\":\"" + flightId + "\","
+                "\"gate\":\"" + newGate + "\"}";
+
+            EventPublisher::publish(gateEvent);
+        }
+
+        // 6. General Broadcast to WebSockets (FIDS screens)
         Json::Value payload;
         payload["flight_id"] = flightId;
-        payload["status"] = status;
-        payload["gate"] = gate;
-
-        // 3. Broadcast to all active WebSocket clients (FIDS screens, Staff apps)
-        // Using toStyledString() for debugging or toFastString() for performance
-        FlightSocketController::broadcast(payload.toStyledString());
+        payload["status"] = newStatus;
+        payload["gate"] = newGate;
+        FlightSocketController::broadcast(payload.toFastString());
     }
 };

@@ -1,0 +1,6 @@
+CREATE TABLE permissions (
+    id UUID PRIMARY KEY,
+    name VARCHAR(150) UNIQUE NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
