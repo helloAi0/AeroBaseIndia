@@ -1,4 +1,6 @@
 #include "FlightController.h"
+#include "../tracing/TraceContext.h"
+#include "../metrics/MetricsRegistry.h"
 #include "../services/JwtService.h"
 #include "../services/AuthService.h" 
 #include "../services/RBACService.h"
@@ -7,29 +9,52 @@
 #include "../services/FlightCacheService.h"
 #include "../services/EventPublisher.h"
 #include "../services/RequestTimer.h"
+#include "../services/DelayPredictionService.h" 
+#include "../services/ComplianceLogger.h" // Added for B2B Compliance Logging
 #include "../middleware/PermissionMiddleware.h"
 #include "../config/DatabaseManager.h"
 #include "../models/AuditLog.h"
 #include <chrono>
+#include <openssl/sha.h> // Added for payload hashing
+#include <iomanip>
+#include <sstream>
 
 using namespace drogon;
 
+// --- Helper: Generate SHA-256 Payload Hash ---
+std::string generatePayloadHash(const std::string& data) {
+    unsigned char hash[SHA256_DIGEST_LENGTH];
+    SHA256(reinterpret_cast<const unsigned char*>(data.c_str()), data.size(), hash);
+    std::stringstream ss;
+    for(int i = 0; i < SHA256_DIGEST_LENGTH; i++) {
+        ss << std::hex << std::setw(2) << std::setfill('0') << (int)hash[i];
+    }
+    return ss.str();
+}
+
 // --- 1. GET: List Flights (Tenant Isolated) ---
-void FlightController::getFlights(const HttpRequestPtr& req, 
+void FlightController::getFlights(const HttpRequestPtr& req,
                                   std::function<void(const HttpResponsePtr&)>&& callback) {
     auto start = std::chrono::steady_clock::now();
+    auto span = Tracer::getInstance().startSpan(
+        "GET /flights",
+        req->getHeader("X-Trace-ID"));
+    span.tenantId = req->getHeader("X-Tenant-ID");
+    Tracer::addTag(span, "http.method", "GET");
+    Tracer::addTag(span, "http.path", "/flights");
+    MetricsRegistry::getInstance().incrementCounter(
+        "aerobase_http_requests_total",
+        "{path=\"/flights\",method=\"GET\",status=\"200\"}");
 
     try {
-        // Auth Check
-        std::string authHeader = req->getHeader("Authorization");
-        auto decoded = JwtService::verifyToken(authHeader.substr(7));
-        std::string tenantId = decoded.get_payload_claim("tenant_id").as_string();
+        std::string tenantId = req->getHeader("X-Tenant-ID");
+        if (tenantId.empty()) tenantId = "DEL";
 
         auto conn = DatabaseManager::getConnection();
         pqxx::read_transaction txn(*conn);
         
         auto result = txn.exec_params(
-            "SELECT flight_number, destination, status FROM flights WHERE tenant_id = $1", 
+            "SELECT f.flight_number, f.destination, f.status, f.gate, f.id, f.origin FROM flights f JOIN tenants t ON f.tenant_id=t.id WHERE t.airport_code=$1 ORDER BY f.created_at DESC LIMIT 100", 
             tenantId
         );
 
@@ -37,12 +62,16 @@ void FlightController::getFlights(const HttpRequestPtr& req,
         for (auto const &row : result) {
             Json::Value f;
             f["flight_number"] = row[0].c_str();
-            f["destination"] = row[1].c_str();
-            f["status"] = row[2].c_str();
+            f["destination"]   = row[1].c_str();
+            f["status"]        = row[2].c_str();
+            f["gate"]          = row[3].c_str();
+            f["id"]            = row[4].c_str();
+            f["origin"]        = row[5].is_null() ? "" : row[5].c_str();
             flights.append(f);
         }
 
         RequestTimer::logRequest(req->path(), start);
+        Tracer::getInstance().finishSpan(span, 200);
         callback(HttpResponse::newHttpJsonResponse(flights));
     } catch (...) {
         RequestTimer::logRequest(req->path(), start);
@@ -60,7 +89,8 @@ void FlightController::addFlight(const HttpRequestPtr& req,
         std::string authHeader = req->getHeader("Authorization");
         auto decoded = JwtService::verifyToken(authHeader.substr(7));
         
-        std::string tenantId = decoded.get_payload_claim("tenant_id").as_string();
+        std::string tenantId = req->getHeader("X-Tenant-ID");
+        if (tenantId.empty()) tenantId = "DEL";
         std::string staffRole = decoded.get_payload_claim("role").as_string();
         std::string userIdFromToken = decoded.get_payload_claim("user_id").as_string();
         std::string userIdFromHeader = req->getHeader("X-User-Id");
@@ -155,10 +185,29 @@ void FlightController::addFlight(const HttpRequestPtr& req,
             "\"status\":\"Scheduled\"}";
         EventPublisher::publish(tenantId, event);
 
+        // --- STEP G: AI Delay Prediction (Non-Blocking) ---
+        double weather = (*json).get("weather_score", 5.0).asDouble();
+        double congestion = (*json).get("congestion_score", 5.0).asDouble();
+
+        DelayPredictionService::predictDelay(weather, congestion, [flightId](int delayMins) {
+            try {
+                auto conn = DatabaseManager::getConnection();
+                pqxx::work updateTxn(*conn);
+                updateTxn.exec_params(
+                    "UPDATE flights SET predicted_delay = $1 WHERE id = $2",
+                    delayMins, flightId
+                );
+                updateTxn.commit();
+            } catch (...) {
+                // Silently fail or log to ensure the main app stays stable
+            }
+        });
+
         // Response
         Json::Value res;
         res["result"] = "ok";
         res["flight_id"] = flightId;
+        res["message"] = "Flight created. AI prediction is processing.";
         RequestTimer::logRequest(req->path(), start);
         callback(HttpResponse::newHttpJsonResponse(res));
 
@@ -191,4 +240,66 @@ void FlightController::getLiveStatus(const HttpRequestPtr& req,
 
     RequestTimer::logRequest(req->path(), start);
     callback(HttpResponse::newHttpJsonResponse(response));
+}
+
+// --- 4. POST: Partner Sync (B2B API Key Auth) ---
+void FlightController::syncFlight(const HttpRequestPtr& req, 
+                                  std::function<void(const HttpResponsePtr&)>&& callback) {
+    auto start = std::chrono::steady_clock::now();
+    
+    try {
+        // Retrieve identity injected by PartnerAuthFilter
+        std::string partnerId = req->attributes()->get<std::string>("verified_partner_id");
+        
+        auto json = req->getJsonObject();
+        if (!json) throw std::runtime_error("Invalid JSON body");
+        
+        std::string flightNum = (*json)["flight_number"].asString();
+
+        auto conn = DatabaseManager::getConnection();
+        pqxx::work txn(*conn);
+
+        // MAANG Logic: Idempotent Upsert
+        txn.exec_params(
+            "INSERT INTO flights (id, flight_number, origin, destination, status, airline_partner_id) "
+            "VALUES (gen_random_uuid(), $1, $2, $3, 'Scheduled', $4) "
+            "ON CONFLICT (flight_number) DO UPDATE SET "
+            "origin = EXCLUDED.origin, destination = EXCLUDED.destination, updated_at = CURRENT_TIMESTAMP",
+            flightNum, (*json)["origin"].asString(), (*json)["destination"].asString(), partnerId
+        );
+
+        txn.commit();
+
+        // --- STEP: COMPLIANCE LOGGING ---
+        Json::Value logDetails;
+        logDetails["endpoint"] = "/api/partner/flights/sync";
+        logDetails["payload_hash"] = generatePayloadHash(req->body().data()); // Real SHA-256 hash of payload
+        logDetails["response_code"] = 200;
+        logDetails["flight_number"] = flightNum;
+
+        ComplianceLogger::log(
+            "TENANT_AEROBASE", // Use your global tenant ID here
+            partnerId, 
+            "API_USAGE", 
+            "B2B_SYNC", 
+            flightNum, 
+            logDetails, 
+            req->peerAddr().toIp()
+        );
+
+        Json::Value res;
+        res["result"] = "synced";
+        res["flight_number"] = flightNum;
+        
+        RequestTimer::logRequest(req->path(), start);
+        callback(HttpResponse::newHttpJsonResponse(res));
+
+    } catch (const std::exception& e) {
+        Json::Value err;
+        err["error"] = "Partner sync failed";
+        auto resp = HttpResponse::newHttpJsonResponse(err);
+        resp->setStatusCode(k500InternalServerError);
+        RequestTimer::logRequest(req->path(), start);
+        callback(resp);
+    }
 }

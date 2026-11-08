@@ -1,4 +1,5 @@
 #pragma once
+
 #include <openssl/sha.h>
 #include <sstream>
 #include <iomanip>
@@ -16,5 +17,11 @@ public:
             ss << std::hex << std::setw(2) << std::setfill('0') << (int)hash[i];
 
         return ss.str();
+    }
+
+    // Added: verifyPassword used by AuthService
+    static bool verifyPassword(const std::string& plain,
+                               const std::string& hashed) {
+        return hashPassword(plain) == hashed;
     }
 };

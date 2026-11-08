@@ -3,3 +3,4 @@ password.txt
 cloud-ready-config.yaml
 .kube/
 build/
+node_modules

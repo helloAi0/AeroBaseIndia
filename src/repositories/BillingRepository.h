@@ -1,13 +1,12 @@
 #pragma once
+
 #include "../config/DatabaseManager.h"
 #include "../models/Invoice.h"
+#include <json/json.h>
+#include <string>
 
 class BillingRepository {
 public:
-    /**
-     * Persists a new invoice record to the PostgreSQL database.
-     * Ensure the tenant_subscriptions table has the corresponding subscription_id first!
-     */
     static void createInvoice(const Invoice& invoice) {
         auto conn = DatabaseManager::getConnection();
         pqxx::work txn(*conn);
@@ -22,6 +21,27 @@ public:
             invoice.currency,
             invoice.status,
             invoice.dueAt
+        );
+
+        txn.commit();
+    }
+
+    static Json::Value getSubscriptionInfo(const std::string& tenantId) {
+        Json::Value result;
+        result["tenant_id"] = tenantId;
+        result["plan"] = "STANDARD";
+        result["status"] = "ACTIVE";
+        return result;
+    }
+
+    static void updatePlan(const std::string& tenantId, const std::string& newPlan) {
+        auto conn = DatabaseManager::getConnection();
+        pqxx::work txn(*conn);
+
+        txn.exec_params(
+            "UPDATE tenant_subscriptions SET plan_id = $2 WHERE tenant_id = $1",
+            tenantId,
+            newPlan
         );
 
         txn.commit();

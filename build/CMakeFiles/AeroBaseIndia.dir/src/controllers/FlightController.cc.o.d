@@ -2,7 +2,8 @@ CMakeFiles/AeroBaseIndia.dir/src/controllers/FlightController.cc.o: \
  /home/user_taha5253/AeroBaseIndia/src/controllers/FlightController.cc \
  /usr/include/stdc-predef.h \
  /home/user_taha5253/AeroBaseIndia/src/controllers/FlightController.h \
- /usr/local/include/drogon/HttpController.h \
+ /home/user_taha5253/AeroBaseIndia/src/controllers/../gateway/ApiGateway.h \
+ /usr/local/include/drogon/HttpFilter.h \
  /usr/local/include/drogon/DrObject.h /usr/local/include/drogon/exports.h \
  /usr/local/include/drogon/DrClassMap.h \
  /usr/local/include/trantor/utils/Logger.h \
@@ -202,7 +203,7 @@ CMakeFiles/AeroBaseIndia.dir/src/controllers/FlightController.cc.o: \
  /usr/include/c++/13/bits/this_thread_sleep.h \
  /usr/include/c++/13/cxxabi.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/cxxabi_tweaks.h \
- /usr/local/include/drogon/utils/HttpConstraint.h \
+ /usr/local/include/drogon/drogon_callbacks.h \
  /usr/local/include/drogon/HttpTypes.h /usr/include/c++/13/atomic \
  /usr/local/include/drogon/utils/Utilities.h \
  /usr/local/include/trantor/utils/Funcs.h /usr/include/c++/13/algorithm \
@@ -221,32 +222,20 @@ CMakeFiles/AeroBaseIndia.dir/src/controllers/FlightController.cc.o: \
  /usr/include/c++/13/bits/locale_conv.h /usr/include/c++/13/iomanip \
  /usr/include/c++/13/bits/quoted_string.h /usr/include/c++/13/codecvt \
  /usr/include/c++/13/bits/fs_dir.h /usr/include/c++/13/bits/fs_ops.h \
- /usr/local/include/drogon/HttpAppFramework.h \
- /usr/local/include/drogon/CacheMap.h \
- /usr/local/include/trantor/net/EventLoop.h \
- /usr/local/include/trantor/utils/LockFreeQueue.h \
- /usr/include/c++/13/queue /usr/include/c++/13/deque \
- /usr/include/c++/13/bits/stl_deque.h /usr/include/c++/13/bits/deque.tcc \
- /usr/include/c++/13/bits/stl_queue.h /usr/include/c++/13/chrono \
- /usr/include/c++/13/map /usr/include/c++/13/bits/stl_map.h \
- /usr/include/c++/13/bits/stl_multimap.h \
- /usr/include/c++/13/unordered_set \
- /usr/include/c++/13/bits/unordered_set.h /usr/include/c++/13/future \
- /usr/include/c++/13/condition_variable \
- /usr/include/c++/13/bits/atomic_futex.h \
- /usr/local/include/drogon/HttpBinder.h \
- /usr/local/include/drogon/utils/FunctionTraits.h \
- /usr/local/include/drogon/RequestStream.h \
  /usr/local/include/drogon/HttpRequest.h \
- /usr/local/include/drogon/Session.h /usr/include/c++/13/optional \
+ /usr/local/include/drogon/Session.h /usr/include/c++/13/map \
+ /usr/include/c++/13/bits/stl_map.h \
+ /usr/include/c++/13/bits/stl_multimap.h /usr/include/c++/13/optional \
  /usr/include/c++/13/any /usr/local/include/drogon/Attribute.h \
  /usr/local/include/drogon/UploadFile.h /usr/include/jsoncpp/json/json.h \
  /usr/include/jsoncpp/json/config.h /usr/include/jsoncpp/json/allocator.h \
  /usr/include/jsoncpp/json/version.h \
  /usr/include/jsoncpp/json/json_features.h \
  /usr/include/jsoncpp/json/forwards.h /usr/include/jsoncpp/json/reader.h \
- /usr/include/jsoncpp/json/value.h /usr/include/c++/13/stack \
- /usr/include/c++/13/bits/stl_stack.h /usr/include/jsoncpp/json/writer.h \
+ /usr/include/jsoncpp/json/value.h /usr/include/c++/13/deque \
+ /usr/include/c++/13/bits/stl_deque.h /usr/include/c++/13/bits/deque.tcc \
+ /usr/include/c++/13/stack /usr/include/c++/13/bits/stl_stack.h \
+ /usr/include/jsoncpp/json/writer.h \
  /usr/local/include/trantor/net/InetAddress.h /usr/include/netinet/in.h \
  /usr/include/x86_64-linux-gnu/sys/socket.h \
  /usr/include/x86_64-linux-gnu/bits/types/struct_iovec.h \
@@ -267,17 +256,28 @@ CMakeFiles/AeroBaseIndia.dir/src/controllers/FlightController.cc.o: \
  /usr/include/x86_64-linux-gnu/bits/in.h /usr/include/arpa/inet.h \
  /usr/local/include/trantor/net/Certificate.h \
  /usr/local/include/trantor/net/TcpConnection.h \
- /usr/local/include/trantor/utils/MsgBuffer.h \
+ /usr/local/include/trantor/net/EventLoop.h \
+ /usr/local/include/trantor/utils/LockFreeQueue.h \
+ /usr/include/c++/13/queue /usr/include/c++/13/bits/stl_queue.h \
+ /usr/include/c++/13/chrono /usr/local/include/trantor/utils/MsgBuffer.h \
  /usr/local/include/trantor/net/callbacks.h \
  /usr/local/include/trantor/net/TLSPolicy.h /usr/include/c++/13/utility \
  /usr/include/c++/13/bits/stl_relops.h \
  /usr/local/include/trantor/net/AsyncStream.h \
- /usr/local/include/drogon/HttpFilter.h \
- /usr/local/include/drogon/drogon_callbacks.h \
  /usr/local/include/drogon/HttpResponse.h \
  /usr/local/include/drogon/Cookie.h \
  /usr/local/include/drogon/HttpViewData.h \
  /usr/local/include/drogon/HttpMiddleware.h \
+ /usr/local/include/drogon/HttpController.h \
+ /usr/local/include/drogon/utils/HttpConstraint.h \
+ /usr/local/include/drogon/HttpAppFramework.h \
+ /usr/local/include/drogon/CacheMap.h /usr/include/c++/13/unordered_set \
+ /usr/include/c++/13/bits/unordered_set.h /usr/include/c++/13/future \
+ /usr/include/c++/13/condition_variable \
+ /usr/include/c++/13/bits/atomic_futex.h \
+ /usr/local/include/drogon/HttpBinder.h \
+ /usr/local/include/drogon/utils/FunctionTraits.h \
+ /usr/local/include/drogon/RequestStream.h \
  /usr/local/include/drogon/MultiPart.h \
  /usr/local/include/drogon/NotFound.h \
  /usr/local/include/drogon/DrTemplate.h \
@@ -301,11 +301,8 @@ CMakeFiles/AeroBaseIndia.dir/src/controllers/FlightController.cc.o: \
  /usr/local/include/drogon/nosql/RedisException.h \
  /usr/local/include/drogon/nosql/RedisSubscriber.h \
  /usr/local/include/trantor/net/Resolver.h \
- /home/user_taha5253/AeroBaseIndia/src/controllers/../services/JwtService.h \
- /home/user_taha5253/AeroBaseIndia/external/jwt-cpp/include/jwt-cpp/jwt.h \
- /home/user_taha5253/AeroBaseIndia/external/jwt-cpp/include/picojson/picojson.h \
- /usr/include/c++/13/iterator /usr/include/c++/13/bits/stream_iterator.h \
- /usr/include/c++/13/cmath /usr/include/math.h \
+ /home/user_taha5253/AeroBaseIndia/src/controllers/../tracing/TraceContext.h \
+ /usr/include/c++/13/random /usr/include/c++/13/cmath /usr/include/math.h \
  /usr/include/x86_64-linux-gnu/bits/math-vector.h \
  /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h \
  /usr/include/x86_64-linux-gnu/bits/flt-eval-method.h \
@@ -326,8 +323,18 @@ CMakeFiles/AeroBaseIndia.dir/src/controllers/FlightController.cc.o: \
  /usr/include/c++/13/tr1/modified_bessel_func.tcc \
  /usr/include/c++/13/tr1/poly_hermite.tcc \
  /usr/include/c++/13/tr1/poly_laguerre.tcc \
- /usr/include/c++/13/tr1/riemann_zeta.tcc /usr/include/c++/13/cinttypes \
- /usr/include/inttypes.h \
+ /usr/include/c++/13/tr1/riemann_zeta.tcc \
+ /usr/include/c++/13/bits/random.h \
+ /usr/include/x86_64-linux-gnu/c++/13/bits/opt_random.h \
+ /usr/include/c++/13/bits/random.tcc /usr/include/c++/13/numeric \
+ /usr/include/c++/13/bits/stl_numeric.h \
+ /usr/include/c++/13/pstl/glue_numeric_defs.h \
+ /home/user_taha5253/AeroBaseIndia/src/controllers/../metrics/MetricsRegistry.h \
+ /home/user_taha5253/AeroBaseIndia/src/controllers/../services/JwtService.h \
+ /home/user_taha5253/AeroBaseIndia/external/jwt-cpp/include/jwt-cpp/jwt.h \
+ /home/user_taha5253/AeroBaseIndia/external/jwt-cpp/include/picojson/picojson.h \
+ /usr/include/c++/13/iterator /usr/include/c++/13/bits/stream_iterator.h \
+ /usr/include/c++/13/cinttypes /usr/include/inttypes.h \
  /home/user_taha5253/AeroBaseIndia/external/jwt-cpp/include/jwt-cpp/base.h \
  /usr/include/openssl/ec.h /usr/include/openssl/macros.h \
  /usr/include/x86_64-linux-gnu/openssl/opensslconf.h \
@@ -378,6 +385,10 @@ CMakeFiles/AeroBaseIndia.dir/src/controllers/FlightController.cc.o: \
  /home/user_taha5253/AeroBaseIndia/external/jwt-cpp/include/jwt-cpp/traits/kazuho-picojson/defaults.h \
  /home/user_taha5253/AeroBaseIndia/external/jwt-cpp/include/jwt-cpp/traits/kazuho-picojson/traits.h \
  /home/user_taha5253/AeroBaseIndia/src/controllers/../services/AuthService.h \
+ /home/user_taha5253/AeroBaseIndia/src/controllers/../services/RBACService.h \
+ /home/user_taha5253/AeroBaseIndia/src/controllers/../services/AuditService.h \
+ /home/user_taha5253/AeroBaseIndia/src/controllers/../services/../models/AuditLog.h \
+ /home/user_taha5253/AeroBaseIndia/src/controllers/../services/SubscriptionValidator.h \
  /home/user_taha5253/AeroBaseIndia/src/controllers/../services/../config/DatabaseManager.h \
  /usr/include/pqxx/pqxx /usr/include/pqxx/internal/header-pre.hxx \
  /usr/include/c++/13/version /usr/include/pqxx/internal/cxx-features.hxx \
@@ -390,10 +401,7 @@ CMakeFiles/AeroBaseIndia.dir/src/controllers/FlightController.cc.o: \
  /usr/include/pqxx/strconv.hxx /usr/include/c++/13/charconv \
  /usr/include/pqxx/util.hxx /usr/include/pqxx/version.hxx \
  /usr/include/pqxx/internal/libpq-forward.hxx /usr/include/pqxx/zview.hxx \
- /usr/include/pqxx/internal/conversions.hxx /usr/include/c++/13/numeric \
- /usr/include/c++/13/bits/stl_numeric.h \
- /usr/include/c++/13/pstl/glue_numeric_defs.h \
- /usr/include/pqxx/params.hxx \
+ /usr/include/pqxx/internal/conversions.hxx /usr/include/pqxx/params.hxx \
  /usr/include/pqxx/internal/statement_parameters.hxx \
  /usr/include/pqxx/binarystring.hxx /usr/include/pqxx/result.hxx \
  /usr/include/pqxx/internal/encodings.hxx \
@@ -424,12 +432,47 @@ CMakeFiles/AeroBaseIndia.dir/src/controllers/FlightController.cc.o: \
  /usr/include/pqxx/subtransaction.hxx /usr/include/pqxx/time.hxx \
  /usr/include/pqxx/transactor.hxx \
  /usr/include/pqxx/internal/header-post.hxx \
- /home/user_taha5253/AeroBaseIndia/src/controllers/../services/PasswordService.h \
- /usr/include/uuid/uuid.h /usr/include/x86_64-linux-gnu/sys/time.h \
- /home/user_taha5253/AeroBaseIndia/src/controllers/../services/RBACService.h \
  /home/user_taha5253/AeroBaseIndia/src/controllers/../services/FlightCacheService.h \
  /home/user_taha5253/AeroBaseIndia/src/controllers/../services/../config/RedisManager.h \
  /usr/include/hiredis/hiredis.h /usr/include/hiredis/read.h \
- /usr/include/hiredis/sds.h /usr/include/hiredis/alloc.h \
- /home/user_taha5253/AeroBaseIndia/src/controllers/../repositories/AuditRepository.h \
- /home/user_taha5253/AeroBaseIndia/src/controllers/../repositories/../models/AuditLog.h
+ /usr/include/x86_64-linux-gnu/sys/time.h /usr/include/hiredis/sds.h \
+ /usr/include/hiredis/alloc.h \
+ /home/user_taha5253/AeroBaseIndia/src/controllers/../services/EventPublisher.h \
+ /home/user_taha5253/AeroBaseIndia/src/controllers/../services/RequestTimer.h \
+ /home/user_taha5253/AeroBaseIndia/src/controllers/../services/../core/RequestTimer.h \
+ /home/user_taha5253/AeroBaseIndia/src/controllers/../services/DelayPredictionService.h \
+ /home/user_taha5253/AeroBaseIndia/src/controllers/../services/ComplianceLogger.h \
+ /home/user_taha5253/AeroBaseIndia/src/controllers/../middleware/PermissionMiddleware.h \
+ /usr/local/include/drogon/drogon.h \
+ /usr/local/include/drogon/HttpClient.h \
+ /usr/local/include/drogon/HttpSimpleController.h \
+ /usr/local/include/drogon/plugins/SecureSSLRedirector.h \
+ /usr/include/c++/13/regex /usr/include/c++/13/bitset \
+ /usr/include/c++/13/bits/regex_constants.h \
+ /usr/include/c++/13/bits/regex_error.h \
+ /usr/include/c++/13/bits/regex_automaton.h \
+ /usr/include/c++/13/bits/regex_automaton.tcc \
+ /usr/include/c++/13/bits/regex_scanner.h \
+ /usr/include/c++/13/bits/regex_scanner.tcc \
+ /usr/include/c++/13/bits/regex_compiler.h \
+ /usr/include/c++/13/bits/regex_compiler.tcc \
+ /usr/include/c++/13/bits/regex.h /usr/include/c++/13/bits/regex.tcc \
+ /usr/include/c++/13/bits/regex_executor.h \
+ /usr/include/c++/13/bits/regex_executor.tcc \
+ /usr/local/include/drogon/plugins/AccessLogger.h \
+ /usr/local/include/trantor/utils/AsyncFileLogger.h \
+ /usr/local/include/drogon/plugins/RealIpResolver.h \
+ /usr/local/include/drogon/plugins/Hodor.h \
+ /usr/local/include/drogon/RateLimiter.h \
+ /usr/local/include/drogon/plugins/SlashRemover.h \
+ /usr/include/jsoncpp/json/value.h \
+ /usr/local/include/drogon/plugins/GlobalFilters.h \
+ /usr/local/include/drogon/plugins/PromExporter.h \
+ /usr/local/include/drogon/utils/monitoring/Registry.h \
+ /usr/local/include/drogon/utils/monitoring/Collector.h \
+ /usr/local/include/drogon/utils/monitoring/Sample.h \
+ /usr/local/include/drogon/utils/monitoring/Metric.h \
+ /usr/local/include/drogon/IntranetIpFilter.h \
+ /usr/local/include/drogon/LocalHostFilter.h \
+ /usr/local/include/drogon/IOThreadStorage.h \
+ /home/user_taha5253/AeroBaseIndia/src/controllers/../middleware/../services/AuthorizationService.h

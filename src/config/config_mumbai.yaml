@@ -1,0 +1,5 @@
+deployment:
+  region: mumbai
+  role: primary
+  failover_enabled: true
+  node_id: aerobase-mum-01

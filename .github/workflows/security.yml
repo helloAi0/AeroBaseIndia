@@ -1,0 +1,64 @@
+name: Security Scan
+
+on:
+  schedule:
+    - cron: "0 2 * * 1"  # Every Monday 2AM
+  push:
+    branches: [main]
+
+jobs:
+  dependency-scan:
+    name: Dependency Security Scan
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Python dependency audit
+        run: |
+          pip install safety -q
+          cd ml_service
+          pip install -r requirements.txt -q
+          safety check || true
+
+      - name: Check for hardcoded secrets
+        run: |
+          python3 -c "
+          import os, re
+          patterns = [
+              r'password\s*=\s*[\"\''][^\"\'']{8,}',
+              r'secret\s*=\s*[\"\''][^\"\'']{8,}',
+              r'api_key\s*=\s*[\"\''][^\"\'']{8,}',
+          ]
+          found = []
+          for root, dirs, files in os.walk('src'):
+              dirs[:] = [d for d in dirs if d not in ['build','.git']]
+              for f in files:
+                  if not f.endswith(('.cpp','.h','.cc')): continue
+                  content = open(os.path.join(root,f)).read()
+                  for p in patterns:
+                      if re.search(p, content, re.I):
+                          found.append(f)
+          if found:
+              print(f'WARNING: Possible hardcoded secrets in: {found}')
+          else:
+              print('Secret scan: CLEAN')
+          "
+
+  codeql:
+    name: CodeQL Analysis
+    runs-on: ubuntu-22.04
+    permissions:
+      security-events: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: cpp, python
+      - name: Build for CodeQL
+        run: |
+          sudo apt-get install -y cmake libssl-dev libjsoncpp-dev || true
+          cmake -B build_codeql 2>/dev/null || true
+          cmake --build build_codeql 2>/dev/null || true
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3

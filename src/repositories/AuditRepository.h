@@ -16,7 +16,7 @@ public:
             ") VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)",
             log.id,
             log.tenantId,
-            log.staffId, // Using staffId from your previous model
+            log.userId,
             log.action,
             log.entityType,
             log.entityId,

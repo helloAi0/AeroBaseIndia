@@ -1,7 +1,8 @@
 #include <drogon/WebSocketController.h>
 #include <set>
 #include <memory>
-#include <any>
+#include <string>
+#include <iostream>
 
 using namespace drogon;
 
@@ -32,7 +33,7 @@ public:
             return;
         }
 
-        // Store tenant ID in the connection's "context"
+        // Store tenant ID in the connection's "context" as a shared_ptr<string>
         conn->setContext(std::make_shared<std::string>(tenantId));
         clients.insert(conn);
     }
@@ -47,16 +48,14 @@ public:
      */
     static void broadcast(const std::string& eventTenantId, const std::string& message) {
         for (auto& client : clients) {
-            try {
-                // Retrieve the stored tenant ID
-                auto tenantPtr = std::any_cast<std::shared_ptr<std::string>>(client->getContext());
-                
-                if (tenantPtr && *tenantPtr == eventTenantId) {
-                    client->send(message);
-                }
-            } catch (const std::bad_any_cast&) {
-                // Ignore connections without a valid tenant context
-                continue;
+            // Use Drogon's typed context accessor which returns a shared_ptr<std::string>
+            auto ctx = client->getContext<std::string>();
+            if (!ctx) continue;
+            std::string tenantId = *ctx;
+            if (tenantId.empty()) continue;
+
+            if (tenantId == eventTenantId) {
+                client->send(message);
             }
         }
     }

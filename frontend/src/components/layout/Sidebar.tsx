@@ -1,0 +1,172 @@
+import {
+  LayoutDashboard, Plane, DoorOpen, Briefcase,
+  BarChart3, CreditCard, Bell, FileText, Activity,
+  GitBranch, Code2, ChevronLeft, ChevronRight,
+  Users, Cpu, Map, UserCheck, TrendingUp, AlertOctagon,
+  FileDown, Package, CalendarDays, ClipboardCheck,
+  Gauge, Wrench, CloudSun, ParkingSquare, Store,
+  MessageSquare, TestTube, Radio, Building2, Palette,
+  Shield, Settings, Flame, Target, Volume2, Link,
+  Globe, Crown
+} from "lucide-react";
+import { useAppStore } from "../../store/appStore";
+import { useAuthStore } from "../../store/authStore";
+
+const ALL_NAV = [
+  { group:"Operations", roles:["superadmin","airport_admin","staff"], items:[
+    {id:"dashboard",   label:"Dashboard",      icon:LayoutDashboard},
+    {id:"flights",     label:"Flights",        icon:Plane},
+    {id:"gates",       label:"Gates",          icon:DoorOpen},
+    {id:"baggage",     label:"Baggage",        icon:Briefcase},
+    {id:"scheduler",   label:"Scheduler",      icon:CalendarDays},
+    {id:"checkin",     label:"Check-in",       icon:ClipboardCheck},
+  ]},
+  { group:"Business", roles:["superadmin","airport_admin"], items:[
+    {id:"analytics",     label:"Analytics",    icon:BarChart3},
+    {id:"revenue",       label:"Revenue",      icon:TrendingUp},
+    {id:"payments",      label:"Payments",     icon:CreditCard},
+    {id:"billing",       label:"Billing",      icon:FileText},
+    {id:"retail",        label:"Retail",       icon:Store},
+    {id:"feedback",      label:"Feedback",     icon:MessageSquare},
+  ]},
+  { group:"Operations Ext", roles:["superadmin","airport_admin","staff"], items:[
+    {id:"cargo",         label:"Cargo",        icon:Package},
+    {id:"fuel",          label:"Fuel",         icon:Gauge},
+    {id:"maintenance",   label:"Maintenance",  icon:Wrench},
+    {id:"weather",       label:"Weather",      icon:CloudSun},
+    {id:"parking",       label:"Parking",      icon:ParkingSquare},
+    {id:"map",           label:"Airport Map",  icon:Map},
+  ]},
+  { group:"Passenger", roles:["superadmin","airport_admin","staff","passenger"], items:[
+    {id:"passenger",     label:"Passengers",   icon:Users},
+    {id:"map",           label:"Airport Map",  icon:Map},
+  ]},
+  { group:"My Shop", roles:["retailer"], items:[
+      {id:"retailer",     label:"My Shop Dashboard",icon:Store},
+      {id:"map",          label:"Airport Map",       icon:Map},
+      {id:"flights",      label:"Flight Info",       icon:Plane},
+  ]},
+  { group:"My Account", roles:["passenger"], items:[
+      {id:"subscription",  label:"My Subscription", icon:Crown},
+  ]},
+  { group:"People", roles:["superadmin","airport_admin"], items:[
+    {id:"staff",         label:"Staff",        icon:UserCheck},
+    {id:"partner",       label:"Partner Hub",  icon:Building2},
+  ]},
+  { group:"Management", roles:["superadmin","airport_admin"], items:[
+    {id:"incidents",     label:"Incidents",    icon:AlertOctagon},
+    {id:"reports",       label:"Reports",      icon:FileDown},
+    {id:"contracts",     label:"Contracts",    icon:FileText},
+    {id:"kpi",           label:"KPIs",         icon:Target},
+    {id:"security",      label:"Security",     icon:Shield},
+    {id:"notifications", label:"Alerts",       icon:Bell},
+    {id:"announcements", label:"Announcements",icon:Volume2},
+  ]},
+  { group:"System", roles:["superadmin","airport_admin"], items:[
+    {id:"twin",          label:"Digital Twin", icon:Cpu},
+    {id:"ai",            label:"AI Predictions",icon:Flame},
+    {id:"integrations",  label:"Integrations", icon:Link},
+    {id:"metrics",       label:"Metrics",      icon:Activity},
+    {id:"traces",        label:"Traces",       icon:GitBranch},
+    {id:"graphql",       label:"GraphQL",      icon:Code2},
+    {id:"api_test",      label:"API Tester",   icon:TestTube},
+    {id:"websocket",     label:"Live Feed",    icon:Radio},
+    {id:"settings",      label:"Settings",     icon:Settings},
+  ]},
+  { group:"Super Admin", roles:["superadmin"], items:[
+    {id:"tenants",       label:"Tenants",      icon:Building2},
+    {id:"branding",      label:"Branding",     icon:Palette},
+    {id:"deployment",    label:"Deploy",       icon:Globe},
+  ]},
+];
+
+export function Sidebar() {
+  const { activePage, setActivePage, sidebarOpen, setSidebar, tenant } = useAppStore();
+  const { user } = useAuthStore();
+  const role = user?.role || "passenger";
+
+  // Filter nav by role, deduplicate by group+id
+  const seenIds = new Set<string>();
+  const visibleNav = ALL_NAV
+    .filter(g => g.roles.includes(role))
+    .map(g => ({
+      ...g,
+      items: g.items.filter(item => {
+        if (seenIds.has(item.id)) return false;
+        seenIds.add(item.id);
+        return true;
+      })
+    }))
+    .filter(g => g.items.length > 0);
+
+  return (
+    <aside
+      className="fixed left-0 top-0 h-screen z-40 flex flex-col bg-navy-800 border-r border-navy-600/60 transition-all duration-300 overflow-hidden"
+      style={{ width: sidebarOpen ? "224px" : "56px" }}
+    >
+      {/* Logo */}
+      <div className="flex items-center justify-between p-3 border-b border-navy-600/60 h-16 flex-shrink-0">
+        <div className="flex items-center gap-2.5 min-w-0 overflow-hidden">
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-sky-400 to-teal-500 flex items-center justify-center flex-shrink-0">
+            <Plane className="w-4 h-4 text-white"/>
+          </div>
+          {sidebarOpen && (
+            <div className="min-w-0">
+              <div className="text-sm font-bold text-white truncate">AeroBase</div>
+              <div className="text-xs text-sky-400 font-medium truncate">
+                {user?.airport||tenant.code}
+              </div>
+            </div>
+          )}
+        </div>
+        <button onClick={()=>setSidebar(!sidebarOpen)}
+          className="p-1.5 rounded-lg hover:bg-navy-700 text-slate-400 hover:text-white transition-colors flex-shrink-0">
+          {sidebarOpen
+            ? <ChevronLeft className="w-4 h-4"/>
+            : <ChevronRight className="w-4 h-4"/>
+          }
+        </button>
+      </div>
+
+      {/* Nav */}
+      <nav className="flex-1 overflow-y-auto overflow-x-hidden py-2 px-2 space-y-3">
+        {visibleNav.map(({ group, items }) => (
+          <div key={group}>
+            {sidebarOpen && (
+              <div className="text-xs font-semibold text-slate-600 uppercase tracking-widest px-2 mb-1 pt-1">
+                {group}
+              </div>
+            )}
+            <div className="space-y-0.5">
+              {items.map(({ id, label, icon: Icon }) => (
+                <button key={id}
+                  onClick={() => { setActivePage(id); if (window.innerWidth < 1024) setSidebar(false); }}
+                  title={!sidebarOpen ? label : undefined}
+                  className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl transition-all text-sm
+                    ${activePage === id
+                      ? "bg-sky-500/15 text-sky-300 font-medium border border-sky-500/20"
+                      : "text-slate-500 hover:bg-navy-700/80 hover:text-slate-200"
+                    }
+                    ${!sidebarOpen ? "justify-center" : ""}`}>
+                  <Icon className="w-4 h-4 flex-shrink-0"/>
+                  {sidebarOpen && <span className="truncate text-left">{label}</span>}
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+      </nav>
+
+      {sidebarOpen && (
+        <div className="p-3 border-t border-navy-600/60 flex-shrink-0">
+          <div className="text-xs text-slate-600">
+            {user?.role==="superadmin"?"Super Admin — All Airports":
+             user?.role==="airport_admin"?`Admin — ${user.airport}`:
+             user?.role==="staff"?`Staff — ${user?.airport}`:
+             "Passenger Portal"}
+          </div>
+        </div>
+      )}
+    </aside>
+  );
+}

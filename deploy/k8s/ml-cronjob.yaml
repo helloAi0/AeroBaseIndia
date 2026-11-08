@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: nightly-model-retraining
+  namespace: aerobase
+spec:
+  schedule: "0 2 * * *" # Runs at 2:00 AM every day
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: ml-retrainer
+            image: helloai0/aerobase-ml:latest
+            command: ["python3", "retrain.py"]
+            volumeMounts:
+            - name: model-storage
+              mountPath: /data
+          restartPolicy: OnFailure
+          volumes:
+          - name: model-storage
+            persistentVolumeClaim:
+              claimName: aerobase-pvc

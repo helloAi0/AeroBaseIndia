@@ -1,33 +1,20 @@
 #pragma once
+
 #include <jwt-cpp/jwt.h>
 #include <string>
+#include <map>
 
 class JwtService {
-private:
-    static constexpr const char* SECRET = "AERObase_SUPER_SECRET_KEY";
-
 public:
+    // Convenience overload used by AuthService
     static std::string generateToken(const std::string& userId,
                                      const std::string& tenantId,
-                                     const std::string& role) {
-        return jwt::create()
-            .set_type("JWT")
-            .set_issuer("AeroBaseIndia")
-            .set_payload_claim("user_id", jwt::claim(userId))
-            .set_payload_claim("tenant_id", jwt::claim(tenantId))
-            .set_payload_claim("role", jwt::claim(role))
-            .sign(jwt::algorithm::hs256{SECRET});
-    }
+                                     const std::string& role);
 
-    // Use 'auto' here so C++ handles the complex internal template type for us
-    static auto verifyToken(const std::string& token) {
-        auto decoded = jwt::decode(token);
+    // Generic map-based generator
+    static std::string generateToken(const std::map<std::string, std::string>& claims);
 
-        jwt::verify()
-            .allow_algorithm(jwt::algorithm::hs256{SECRET})
-            .with_issuer("AeroBaseIndia")
-            .verify(decoded);
-
-        return decoded;
-    }
+    // Verify and return decoded token
+    static jwt::decoded_jwt<jwt::traits::kazuho_picojson>
+    verifyToken(const std::string& token);
 };

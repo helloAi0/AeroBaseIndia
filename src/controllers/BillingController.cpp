@@ -1,7 +1,9 @@
 #include <drogon/drogon.h>
+#include <pqxx/pqxx>
 #include "../services/BillingService.h"
 #include "../services/JwtService.h"
 #include "../repositories/BillingRepository.h"
+#include "../config/DatabaseManager.h" // Required for direct DB access
 
 using namespace drogon;
 
@@ -11,7 +13,7 @@ public:
         // API: POST /api/billing/invoice (Internal/Admin use)
         ADD_METHOD_TO(BillingController::createInvoiceApi, "/api/billing/invoice", Post);
         
-        // API: GET /api/billing/invoices (History)
+        // API: GET /api/billing/invoices (History with RBAC)
         ADD_METHOD_TO(BillingController::getInvoices, "/api/billing/invoices", Get);
         
         // API: GET /api/billing/subscription (Current Plan & Usage)
@@ -47,29 +49,50 @@ public:
         }
     }
 
-    // --- 2. GET: List All Invoices for Tenant ---
+    // --- 2. GET: List All Invoices (SECURE RBAC VERSION) ---
     void getInvoices(const HttpRequestPtr& req,
                      std::function<void(const HttpResponsePtr&)>&& callback) {
         try {
-            // Extract Tenant identity from JWT
+            // 1. Identity & Role Extraction
             std::string authHeader = req->getHeader("Authorization");
+            if (authHeader.length() < 7) throw std::runtime_error("Invalid Token");
+            
             auto decoded = JwtService::verifyToken(authHeader.substr(7));
             std::string tenantId = decoded.get_payload_claim("tenant_id").as_string();
+            std::string role = decoded.get_payload_claim("role").as_string();
 
-            auto invoices = BillingRepository::getInvoicesByTenant(tenantId);
-            
-            Json::Value res(Json::arrayValue);
-            for (const auto& inv : invoices) {
-                Json::Value item;
-                item["id"] = inv.id;
-                item["amount"] = inv.amount;
-                item["status"] = inv.status;
-                item["date"] = inv.dueAt;
-                res.append(item);
+            // 2. Security: Only Billing Admins can see financial data
+            if (role != "BILLING_ADMIN" && role != "SUPER_ADMIN") {
+                auto resp = HttpResponse::newHttpResponse();
+                resp->setStatusCode(k403Forbidden);
+                callback(resp);
+                return;
             }
-            callback(HttpResponse::newHttpJsonResponse(res));
+
+            // 3. Direct DB Access for Complex Financial Queries
+            auto conn = DatabaseManager::getConnection();
+            pqxx::read_transaction txn(*conn);
+            auto result = txn.exec_params(
+                "SELECT id, billing_period_start, billing_period_end, total, status "
+                "FROM invoices WHERE tenant_id = $1 ORDER BY created_at DESC", 
+                tenantId
+            );
+
+            Json::Value invoices(Json::arrayValue);
+            for (auto const &row : result) {
+                Json::Value inv;
+                inv["id"] = row[0].c_str();
+                inv["period"] = std::string(row[1].c_str()) + " to " + std::string(row[2].c_str());
+                inv["total"] = row[3].as<double>();
+                inv["status"] = row[4].c_str();
+                invoices.append(inv);
+            }
+
+            callback(HttpResponse::newHttpJsonResponse(invoices));
         } catch (...) {
-            callback(HttpResponse::newHttpJsonResponse(Json::Value(Json::arrayValue)));
+            auto resp = HttpResponse::newHttpResponse();
+            resp->setStatusCode(k500InternalServerError);
+            callback(resp);
         }
     }
 
@@ -95,7 +118,7 @@ public:
                     std::function<void(const HttpResponsePtr&)>&& callback) {
         try {
             auto json = req->getJsonObject();
-            std::string newPlan = (*json)["plan_id"].asString(); // e.g., "premium"
+            std::string newPlan = (*json)["plan_id"].asString();
 
             std::string authHeader = req->getHeader("Authorization");
             auto decoded = JwtService::verifyToken(authHeader.substr(7));

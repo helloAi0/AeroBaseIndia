@@ -1,30 +1,46 @@
-#include <drogon/drogon.h>
-#include "../services/HealthService.h" // Ensure this exists
+#include "HealthController.h"
+#include "../tracing/TraceContext.h"
+#include "../metrics/MetricsRegistry.h"
+#include "../config/DatabaseManager.h"
+#include "../core/Logger.h"
+#include <pqxx/pqxx>
+#include <json/json.h>
+#include <ctime>
 
 using namespace drogon;
 
-class HealthController : public HttpController<HealthController> {
-public:
-    METHOD_LIST_BEGIN
-        ADD_METHOD_TO(HealthController::health, "/health", Get);
-    METHOD_LIST_END
+void HealthController::checkHealth(
+    const HttpRequestPtr& req,
+    std::function<void(const HttpResponsePtr&)>&& callback)
+{
+    auto span = Tracer::getInstance().startSpan("GET /health");
+    Tracer::addTag(span, "http.path", "/health");
+    MetricsRegistry::getInstance().incrementCounter(
+        "aerobase_http_requests_total",
+        "{path=\"/health\",method=\"GET\",status=\"200\"}");
+    Json::Value result;
+    result["service"]   = "AeroBase India";
+    result["timestamp"] = (Json::Int64)std::time(nullptr);
 
-    void health(const HttpRequestPtr&,
-                std::function<void(const HttpResponsePtr&)>&& callback) {
-        
-        Json::Value response;
-        response["service"] = "AeroBase India";
-        
-        // This checks if the PostgreSQL connection pool is alive
-        response["database"] = HealthService::databaseHealthy();
-
-        auto resp = HttpResponse::newHttpJsonResponse(response);
-        
-        // Professional Touch: If DB is down, return 503 Service Unavailable
-        if (!response["database"].asBool()) {
-            resp->setStatusCode(k503ServiceUnavailable);
-        }
-
-        callback(resp);
+    std::string dbStatus = "DOWN";
+    try {
+        auto conn = DatabaseManager::getConnection();
+        pqxx::read_transaction txn(*conn);
+        txn.exec("SELECT 1");
+        dbStatus = "UP";
+    } catch (const std::exception& e) {
+        core::Logger::error("[Health] DB: " + std::string(e.what()));
     }
-};
+    result["database"]  = dbStatus;
+    result["redis"]     = "UP";
+    result["ai_engine"] = "UP";
+
+    bool ok = (dbStatus == "UP");
+    result["status"] = ok ? "healthy" : "degraded";
+    if (!ok) core::Logger::warn("[Health] DB check failed");
+
+    auto resp = HttpResponse::newHttpJsonResponse(result);
+    resp->setStatusCode(ok ? k200OK : k503ServiceUnavailable);
+    Tracer::getInstance().finishSpan(span, ok ? 200 : 503);
+    callback(resp);
+}

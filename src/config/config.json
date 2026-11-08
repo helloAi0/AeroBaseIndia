@@ -1,6 +1,7 @@
 {
   "app": {
-    "threads_num": 8
+    "threads_num": 8,
+    "ml_service_url": "http://localhost:5000"
   },
   "listeners": [
     {

@@ -69,10 +69,136 @@ include CMakeFiles/AeroBaseIndia.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/AeroBaseIndia.dir/flags.make
 
+CMakeFiles/AeroBaseIndia.dir/src/analytics/RevenueForecastEngine.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/analytics/RevenueForecastEngine.cpp.o: /home/user_taha5253/AeroBaseIndia/src/analytics/RevenueForecastEngine.cpp
+CMakeFiles/AeroBaseIndia.dir/src/analytics/RevenueForecastEngine.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/analytics/RevenueForecastEngine.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/analytics/RevenueForecastEngine.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/analytics/RevenueForecastEngine.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/analytics/RevenueForecastEngine.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/analytics/RevenueForecastEngine.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/analytics/RevenueForecastEngine.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/analytics/RevenueForecastEngine.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/analytics/RevenueForecastEngine.cpp > CMakeFiles/AeroBaseIndia.dir/src/analytics/RevenueForecastEngine.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/analytics/RevenueForecastEngine.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/analytics/RevenueForecastEngine.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/analytics/RevenueForecastEngine.cpp -o CMakeFiles/AeroBaseIndia.dir/src/analytics/RevenueForecastEngine.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/analytics/RevenueRecommendationEngine.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/analytics/RevenueRecommendationEngine.cpp.o: /home/user_taha5253/AeroBaseIndia/src/analytics/RevenueRecommendationEngine.cpp
+CMakeFiles/AeroBaseIndia.dir/src/analytics/RevenueRecommendationEngine.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/analytics/RevenueRecommendationEngine.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/analytics/RevenueRecommendationEngine.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/analytics/RevenueRecommendationEngine.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/analytics/RevenueRecommendationEngine.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/analytics/RevenueRecommendationEngine.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/analytics/RevenueRecommendationEngine.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/analytics/RevenueRecommendationEngine.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/analytics/RevenueRecommendationEngine.cpp > CMakeFiles/AeroBaseIndia.dir/src/analytics/RevenueRecommendationEngine.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/analytics/RevenueRecommendationEngine.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/analytics/RevenueRecommendationEngine.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/analytics/RevenueRecommendationEngine.cpp -o CMakeFiles/AeroBaseIndia.dir/src/analytics/RevenueRecommendationEngine.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/billing/BillingCalculator.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/billing/BillingCalculator.cpp.o: /home/user_taha5253/AeroBaseIndia/src/billing/BillingCalculator.cpp
+CMakeFiles/AeroBaseIndia.dir/src/billing/BillingCalculator.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/billing/BillingCalculator.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/billing/BillingCalculator.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/billing/BillingCalculator.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/billing/BillingCalculator.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/billing/BillingCalculator.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/billing/BillingCalculator.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/billing/BillingCalculator.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/billing/BillingCalculator.cpp > CMakeFiles/AeroBaseIndia.dir/src/billing/BillingCalculator.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/billing/BillingCalculator.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/billing/BillingCalculator.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/billing/BillingCalculator.cpp -o CMakeFiles/AeroBaseIndia.dir/src/billing/BillingCalculator.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/billing/OverageService.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/billing/OverageService.cpp.o: /home/user_taha5253/AeroBaseIndia/src/billing/OverageService.cpp
+CMakeFiles/AeroBaseIndia.dir/src/billing/OverageService.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/billing/OverageService.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/billing/OverageService.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/billing/OverageService.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/billing/OverageService.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/billing/OverageService.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/billing/OverageService.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/billing/OverageService.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/billing/OverageService.cpp > CMakeFiles/AeroBaseIndia.dir/src/billing/OverageService.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/billing/OverageService.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/billing/OverageService.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/billing/OverageService.cpp -o CMakeFiles/AeroBaseIndia.dir/src/billing/OverageService.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/billing/UsageMeteringService.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/billing/UsageMeteringService.cpp.o: /home/user_taha5253/AeroBaseIndia/src/billing/UsageMeteringService.cpp
+CMakeFiles/AeroBaseIndia.dir/src/billing/UsageMeteringService.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/billing/UsageMeteringService.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/billing/UsageMeteringService.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/billing/UsageMeteringService.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/billing/UsageMeteringService.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/billing/UsageMeteringService.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/billing/UsageMeteringService.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/billing/UsageMeteringService.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/billing/UsageMeteringService.cpp > CMakeFiles/AeroBaseIndia.dir/src/billing/UsageMeteringService.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/billing/UsageMeteringService.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/billing/UsageMeteringService.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/billing/UsageMeteringService.cpp -o CMakeFiles/AeroBaseIndia.dir/src/billing/UsageMeteringService.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/AdminRevenueController.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/controllers/AdminRevenueController.cpp.o: /home/user_taha5253/AeroBaseIndia/src/controllers/AdminRevenueController.cpp
+CMakeFiles/AeroBaseIndia.dir/src/controllers/AdminRevenueController.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/controllers/AdminRevenueController.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/controllers/AdminRevenueController.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/controllers/AdminRevenueController.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/controllers/AdminRevenueController.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/controllers/AdminRevenueController.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/AdminRevenueController.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/controllers/AdminRevenueController.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/controllers/AdminRevenueController.cpp > CMakeFiles/AeroBaseIndia.dir/src/controllers/AdminRevenueController.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/AdminRevenueController.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/controllers/AdminRevenueController.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/controllers/AdminRevenueController.cpp -o CMakeFiles/AeroBaseIndia.dir/src/controllers/AdminRevenueController.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/AirlineBaggageController.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/controllers/AirlineBaggageController.cpp.o: /home/user_taha5253/AeroBaseIndia/src/controllers/AirlineBaggageController.cpp
+CMakeFiles/AeroBaseIndia.dir/src/controllers/AirlineBaggageController.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/controllers/AirlineBaggageController.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/controllers/AirlineBaggageController.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/controllers/AirlineBaggageController.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/controllers/AirlineBaggageController.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/controllers/AirlineBaggageController.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/AirlineBaggageController.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/controllers/AirlineBaggageController.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/controllers/AirlineBaggageController.cpp > CMakeFiles/AeroBaseIndia.dir/src/controllers/AirlineBaggageController.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/AirlineBaggageController.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/controllers/AirlineBaggageController.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/controllers/AirlineBaggageController.cpp -o CMakeFiles/AeroBaseIndia.dir/src/controllers/AirlineBaggageController.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/AirlineFlightController.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/controllers/AirlineFlightController.cpp.o: /home/user_taha5253/AeroBaseIndia/src/controllers/AirlineFlightController.cpp
+CMakeFiles/AeroBaseIndia.dir/src/controllers/AirlineFlightController.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/controllers/AirlineFlightController.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/controllers/AirlineFlightController.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/controllers/AirlineFlightController.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/controllers/AirlineFlightController.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/controllers/AirlineFlightController.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/AirlineFlightController.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/controllers/AirlineFlightController.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/controllers/AirlineFlightController.cpp > CMakeFiles/AeroBaseIndia.dir/src/controllers/AirlineFlightController.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/AirlineFlightController.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/controllers/AirlineFlightController.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/controllers/AirlineFlightController.cpp -o CMakeFiles/AeroBaseIndia.dir/src/controllers/AirlineFlightController.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/AuditController.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/controllers/AuditController.cpp.o: /home/user_taha5253/AeroBaseIndia/src/controllers/AuditController.cpp
+CMakeFiles/AeroBaseIndia.dir/src/controllers/AuditController.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/controllers/AuditController.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/controllers/AuditController.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/controllers/AuditController.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/controllers/AuditController.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/controllers/AuditController.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/AuditController.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/controllers/AuditController.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/controllers/AuditController.cpp > CMakeFiles/AeroBaseIndia.dir/src/controllers/AuditController.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/AuditController.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/controllers/AuditController.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/controllers/AuditController.cpp -o CMakeFiles/AeroBaseIndia.dir/src/controllers/AuditController.cpp.s
+
 CMakeFiles/AeroBaseIndia.dir/src/controllers/AuthController.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
 CMakeFiles/AeroBaseIndia.dir/src/controllers/AuthController.cpp.o: /home/user_taha5253/AeroBaseIndia/src/controllers/AuthController.cpp
 CMakeFiles/AeroBaseIndia.dir/src/controllers/AuthController.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/controllers/AuthController.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/controllers/AuthController.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/controllers/AuthController.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/controllers/AuthController.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/controllers/AuthController.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/controllers/AuthController.cpp
 
 CMakeFiles/AeroBaseIndia.dir/src/controllers/AuthController.cpp.i: cmake_force
@@ -86,7 +212,7 @@ CMakeFiles/AeroBaseIndia.dir/src/controllers/AuthController.cpp.s: cmake_force
 CMakeFiles/AeroBaseIndia.dir/src/controllers/BaggageController.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
 CMakeFiles/AeroBaseIndia.dir/src/controllers/BaggageController.cpp.o: /home/user_taha5253/AeroBaseIndia/src/controllers/BaggageController.cpp
 CMakeFiles/AeroBaseIndia.dir/src/controllers/BaggageController.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/controllers/BaggageController.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/controllers/BaggageController.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/controllers/BaggageController.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/controllers/BaggageController.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/controllers/BaggageController.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/controllers/BaggageController.cpp
 
 CMakeFiles/AeroBaseIndia.dir/src/controllers/BaggageController.cpp.i: cmake_force
@@ -97,10 +223,52 @@ CMakeFiles/AeroBaseIndia.dir/src/controllers/BaggageController.cpp.s: cmake_forc
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/controllers/BaggageController.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/controllers/BaggageController.cpp -o CMakeFiles/AeroBaseIndia.dir/src/controllers/BaggageController.cpp.s
 
+CMakeFiles/AeroBaseIndia.dir/src/controllers/BaggageTrackingController.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/controllers/BaggageTrackingController.cpp.o: /home/user_taha5253/AeroBaseIndia/src/controllers/BaggageTrackingController.cpp
+CMakeFiles/AeroBaseIndia.dir/src/controllers/BaggageTrackingController.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/controllers/BaggageTrackingController.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/controllers/BaggageTrackingController.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/controllers/BaggageTrackingController.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/controllers/BaggageTrackingController.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/controllers/BaggageTrackingController.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/BaggageTrackingController.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/controllers/BaggageTrackingController.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/controllers/BaggageTrackingController.cpp > CMakeFiles/AeroBaseIndia.dir/src/controllers/BaggageTrackingController.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/BaggageTrackingController.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/controllers/BaggageTrackingController.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/controllers/BaggageTrackingController.cpp -o CMakeFiles/AeroBaseIndia.dir/src/controllers/BaggageTrackingController.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/BillingController.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/controllers/BillingController.cpp.o: /home/user_taha5253/AeroBaseIndia/src/controllers/BillingController.cpp
+CMakeFiles/AeroBaseIndia.dir/src/controllers/BillingController.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/controllers/BillingController.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/controllers/BillingController.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/controllers/BillingController.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/controllers/BillingController.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/controllers/BillingController.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/BillingController.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/controllers/BillingController.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/controllers/BillingController.cpp > CMakeFiles/AeroBaseIndia.dir/src/controllers/BillingController.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/BillingController.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/controllers/BillingController.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/controllers/BillingController.cpp -o CMakeFiles/AeroBaseIndia.dir/src/controllers/BillingController.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/BoardingPassController.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/controllers/BoardingPassController.cpp.o: /home/user_taha5253/AeroBaseIndia/src/controllers/BoardingPassController.cpp
+CMakeFiles/AeroBaseIndia.dir/src/controllers/BoardingPassController.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/controllers/BoardingPassController.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/controllers/BoardingPassController.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/controllers/BoardingPassController.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/controllers/BoardingPassController.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/controllers/BoardingPassController.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/BoardingPassController.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/controllers/BoardingPassController.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/controllers/BoardingPassController.cpp > CMakeFiles/AeroBaseIndia.dir/src/controllers/BoardingPassController.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/BoardingPassController.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/controllers/BoardingPassController.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/controllers/BoardingPassController.cpp -o CMakeFiles/AeroBaseIndia.dir/src/controllers/BoardingPassController.cpp.s
+
 CMakeFiles/AeroBaseIndia.dir/src/controllers/BookingController.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
 CMakeFiles/AeroBaseIndia.dir/src/controllers/BookingController.cpp.o: /home/user_taha5253/AeroBaseIndia/src/controllers/BookingController.cpp
 CMakeFiles/AeroBaseIndia.dir/src/controllers/BookingController.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/controllers/BookingController.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/controllers/BookingController.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/controllers/BookingController.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/controllers/BookingController.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/controllers/BookingController.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/controllers/BookingController.cpp
 
 CMakeFiles/AeroBaseIndia.dir/src/controllers/BookingController.cpp.i: cmake_force
@@ -111,10 +279,52 @@ CMakeFiles/AeroBaseIndia.dir/src/controllers/BookingController.cpp.s: cmake_forc
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/controllers/BookingController.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/controllers/BookingController.cpp -o CMakeFiles/AeroBaseIndia.dir/src/controllers/BookingController.cpp.s
 
+CMakeFiles/AeroBaseIndia.dir/src/controllers/BrandingController.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/controllers/BrandingController.cpp.o: /home/user_taha5253/AeroBaseIndia/src/controllers/BrandingController.cpp
+CMakeFiles/AeroBaseIndia.dir/src/controllers/BrandingController.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/controllers/BrandingController.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/controllers/BrandingController.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/controllers/BrandingController.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/controllers/BrandingController.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/controllers/BrandingController.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/BrandingController.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/controllers/BrandingController.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/controllers/BrandingController.cpp > CMakeFiles/AeroBaseIndia.dir/src/controllers/BrandingController.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/BrandingController.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/controllers/BrandingController.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/controllers/BrandingController.cpp -o CMakeFiles/AeroBaseIndia.dir/src/controllers/BrandingController.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/ComplianceController.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/controllers/ComplianceController.cpp.o: /home/user_taha5253/AeroBaseIndia/src/controllers/ComplianceController.cpp
+CMakeFiles/AeroBaseIndia.dir/src/controllers/ComplianceController.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/controllers/ComplianceController.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/controllers/ComplianceController.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/controllers/ComplianceController.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/controllers/ComplianceController.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/controllers/ComplianceController.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/ComplianceController.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/controllers/ComplianceController.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/controllers/ComplianceController.cpp > CMakeFiles/AeroBaseIndia.dir/src/controllers/ComplianceController.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/ComplianceController.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/controllers/ComplianceController.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/controllers/ComplianceController.cpp -o CMakeFiles/AeroBaseIndia.dir/src/controllers/ComplianceController.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/DigitalTwinController.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/controllers/DigitalTwinController.cpp.o: /home/user_taha5253/AeroBaseIndia/src/controllers/DigitalTwinController.cpp
+CMakeFiles/AeroBaseIndia.dir/src/controllers/DigitalTwinController.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/controllers/DigitalTwinController.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/controllers/DigitalTwinController.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/controllers/DigitalTwinController.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/controllers/DigitalTwinController.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/controllers/DigitalTwinController.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/DigitalTwinController.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/controllers/DigitalTwinController.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/controllers/DigitalTwinController.cpp > CMakeFiles/AeroBaseIndia.dir/src/controllers/DigitalTwinController.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/DigitalTwinController.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/controllers/DigitalTwinController.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/controllers/DigitalTwinController.cpp -o CMakeFiles/AeroBaseIndia.dir/src/controllers/DigitalTwinController.cpp.s
+
 CMakeFiles/AeroBaseIndia.dir/src/controllers/FlightController.cc.o: CMakeFiles/AeroBaseIndia.dir/flags.make
 CMakeFiles/AeroBaseIndia.dir/src/controllers/FlightController.cc.o: /home/user_taha5253/AeroBaseIndia/src/controllers/FlightController.cc
 CMakeFiles/AeroBaseIndia.dir/src/controllers/FlightController.cc.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/controllers/FlightController.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/controllers/FlightController.cc.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/controllers/FlightController.cc.o -MF CMakeFiles/AeroBaseIndia.dir/src/controllers/FlightController.cc.o.d -o CMakeFiles/AeroBaseIndia.dir/src/controllers/FlightController.cc.o -c /home/user_taha5253/AeroBaseIndia/src/controllers/FlightController.cc
 
 CMakeFiles/AeroBaseIndia.dir/src/controllers/FlightController.cc.i: cmake_force
@@ -128,7 +338,7 @@ CMakeFiles/AeroBaseIndia.dir/src/controllers/FlightController.cc.s: cmake_force
 CMakeFiles/AeroBaseIndia.dir/src/controllers/FlightSocketController.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
 CMakeFiles/AeroBaseIndia.dir/src/controllers/FlightSocketController.cpp.o: /home/user_taha5253/AeroBaseIndia/src/controllers/FlightSocketController.cpp
 CMakeFiles/AeroBaseIndia.dir/src/controllers/FlightSocketController.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/controllers/FlightSocketController.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/controllers/FlightSocketController.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/controllers/FlightSocketController.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/controllers/FlightSocketController.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/controllers/FlightSocketController.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/controllers/FlightSocketController.cpp
 
 CMakeFiles/AeroBaseIndia.dir/src/controllers/FlightSocketController.cpp.i: cmake_force
@@ -139,10 +349,24 @@ CMakeFiles/AeroBaseIndia.dir/src/controllers/FlightSocketController.cpp.s: cmake
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/controllers/FlightSocketController.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/controllers/FlightSocketController.cpp -o CMakeFiles/AeroBaseIndia.dir/src/controllers/FlightSocketController.cpp.s
 
+CMakeFiles/AeroBaseIndia.dir/src/controllers/GateAssignmentController.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/controllers/GateAssignmentController.cpp.o: /home/user_taha5253/AeroBaseIndia/src/controllers/GateAssignmentController.cpp
+CMakeFiles/AeroBaseIndia.dir/src/controllers/GateAssignmentController.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_21) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/controllers/GateAssignmentController.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/controllers/GateAssignmentController.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/controllers/GateAssignmentController.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/controllers/GateAssignmentController.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/controllers/GateAssignmentController.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/GateAssignmentController.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/controllers/GateAssignmentController.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/controllers/GateAssignmentController.cpp > CMakeFiles/AeroBaseIndia.dir/src/controllers/GateAssignmentController.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/GateAssignmentController.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/controllers/GateAssignmentController.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/controllers/GateAssignmentController.cpp -o CMakeFiles/AeroBaseIndia.dir/src/controllers/GateAssignmentController.cpp.s
+
 CMakeFiles/AeroBaseIndia.dir/src/controllers/GateController.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
 CMakeFiles/AeroBaseIndia.dir/src/controllers/GateController.cpp.o: /home/user_taha5253/AeroBaseIndia/src/controllers/GateController.cpp
 CMakeFiles/AeroBaseIndia.dir/src/controllers/GateController.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/controllers/GateController.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_22) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/controllers/GateController.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/controllers/GateController.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/controllers/GateController.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/controllers/GateController.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/controllers/GateController.cpp
 
 CMakeFiles/AeroBaseIndia.dir/src/controllers/GateController.cpp.i: cmake_force
@@ -153,10 +377,234 @@ CMakeFiles/AeroBaseIndia.dir/src/controllers/GateController.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/controllers/GateController.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/controllers/GateController.cpp -o CMakeFiles/AeroBaseIndia.dir/src/controllers/GateController.cpp.s
 
+CMakeFiles/AeroBaseIndia.dir/src/controllers/HealthController.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/controllers/HealthController.cpp.o: /home/user_taha5253/AeroBaseIndia/src/controllers/HealthController.cpp
+CMakeFiles/AeroBaseIndia.dir/src/controllers/HealthController.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_23) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/controllers/HealthController.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/controllers/HealthController.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/controllers/HealthController.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/controllers/HealthController.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/controllers/HealthController.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/HealthController.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/controllers/HealthController.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/controllers/HealthController.cpp > CMakeFiles/AeroBaseIndia.dir/src/controllers/HealthController.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/HealthController.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/controllers/HealthController.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/controllers/HealthController.cpp -o CMakeFiles/AeroBaseIndia.dir/src/controllers/HealthController.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/LiveEventsController.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/controllers/LiveEventsController.cpp.o: /home/user_taha5253/AeroBaseIndia/src/controllers/LiveEventsController.cpp
+CMakeFiles/AeroBaseIndia.dir/src/controllers/LiveEventsController.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_24) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/controllers/LiveEventsController.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/controllers/LiveEventsController.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/controllers/LiveEventsController.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/controllers/LiveEventsController.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/controllers/LiveEventsController.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/LiveEventsController.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/controllers/LiveEventsController.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/controllers/LiveEventsController.cpp > CMakeFiles/AeroBaseIndia.dir/src/controllers/LiveEventsController.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/LiveEventsController.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/controllers/LiveEventsController.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/controllers/LiveEventsController.cpp -o CMakeFiles/AeroBaseIndia.dir/src/controllers/LiveEventsController.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/ManifestController.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/controllers/ManifestController.cpp.o: /home/user_taha5253/AeroBaseIndia/src/controllers/ManifestController.cpp
+CMakeFiles/AeroBaseIndia.dir/src/controllers/ManifestController.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_25) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/controllers/ManifestController.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/controllers/ManifestController.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/controllers/ManifestController.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/controllers/ManifestController.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/controllers/ManifestController.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/ManifestController.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/controllers/ManifestController.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/controllers/ManifestController.cpp > CMakeFiles/AeroBaseIndia.dir/src/controllers/ManifestController.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/ManifestController.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/controllers/ManifestController.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/controllers/ManifestController.cpp -o CMakeFiles/AeroBaseIndia.dir/src/controllers/ManifestController.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/MetricsController.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/controllers/MetricsController.cpp.o: /home/user_taha5253/AeroBaseIndia/src/controllers/MetricsController.cpp
+CMakeFiles/AeroBaseIndia.dir/src/controllers/MetricsController.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_26) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/controllers/MetricsController.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/controllers/MetricsController.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/controllers/MetricsController.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/controllers/MetricsController.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/controllers/MetricsController.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/MetricsController.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/controllers/MetricsController.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/controllers/MetricsController.cpp > CMakeFiles/AeroBaseIndia.dir/src/controllers/MetricsController.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/MetricsController.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/controllers/MetricsController.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/controllers/MetricsController.cpp -o CMakeFiles/AeroBaseIndia.dir/src/controllers/MetricsController.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/NotificationController.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/controllers/NotificationController.cpp.o: /home/user_taha5253/AeroBaseIndia/src/controllers/NotificationController.cpp
+CMakeFiles/AeroBaseIndia.dir/src/controllers/NotificationController.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_27) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/controllers/NotificationController.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/controllers/NotificationController.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/controllers/NotificationController.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/controllers/NotificationController.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/controllers/NotificationController.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/NotificationController.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/controllers/NotificationController.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/controllers/NotificationController.cpp > CMakeFiles/AeroBaseIndia.dir/src/controllers/NotificationController.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/NotificationController.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/controllers/NotificationController.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/controllers/NotificationController.cpp -o CMakeFiles/AeroBaseIndia.dir/src/controllers/NotificationController.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/PassengerAuthController.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/controllers/PassengerAuthController.cpp.o: /home/user_taha5253/AeroBaseIndia/src/controllers/PassengerAuthController.cpp
+CMakeFiles/AeroBaseIndia.dir/src/controllers/PassengerAuthController.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_28) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/controllers/PassengerAuthController.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/controllers/PassengerAuthController.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/controllers/PassengerAuthController.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/controllers/PassengerAuthController.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/controllers/PassengerAuthController.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/PassengerAuthController.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/controllers/PassengerAuthController.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/controllers/PassengerAuthController.cpp > CMakeFiles/AeroBaseIndia.dir/src/controllers/PassengerAuthController.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/PassengerAuthController.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/controllers/PassengerAuthController.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/controllers/PassengerAuthController.cpp -o CMakeFiles/AeroBaseIndia.dir/src/controllers/PassengerAuthController.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/PassengerFlightController.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/controllers/PassengerFlightController.cpp.o: /home/user_taha5253/AeroBaseIndia/src/controllers/PassengerFlightController.cpp
+CMakeFiles/AeroBaseIndia.dir/src/controllers/PassengerFlightController.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_29) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/controllers/PassengerFlightController.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/controllers/PassengerFlightController.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/controllers/PassengerFlightController.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/controllers/PassengerFlightController.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/controllers/PassengerFlightController.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/PassengerFlightController.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/controllers/PassengerFlightController.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/controllers/PassengerFlightController.cpp > CMakeFiles/AeroBaseIndia.dir/src/controllers/PassengerFlightController.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/PassengerFlightController.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/controllers/PassengerFlightController.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/controllers/PassengerFlightController.cpp -o CMakeFiles/AeroBaseIndia.dir/src/controllers/PassengerFlightController.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/PaymentController.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/controllers/PaymentController.cpp.o: /home/user_taha5253/AeroBaseIndia/src/controllers/PaymentController.cpp
+CMakeFiles/AeroBaseIndia.dir/src/controllers/PaymentController.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_30) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/controllers/PaymentController.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/controllers/PaymentController.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/controllers/PaymentController.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/controllers/PaymentController.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/controllers/PaymentController.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/PaymentController.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/controllers/PaymentController.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/controllers/PaymentController.cpp > CMakeFiles/AeroBaseIndia.dir/src/controllers/PaymentController.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/PaymentController.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/controllers/PaymentController.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/controllers/PaymentController.cpp -o CMakeFiles/AeroBaseIndia.dir/src/controllers/PaymentController.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/PredictionController.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/controllers/PredictionController.cpp.o: /home/user_taha5253/AeroBaseIndia/src/controllers/PredictionController.cpp
+CMakeFiles/AeroBaseIndia.dir/src/controllers/PredictionController.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_31) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/controllers/PredictionController.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/controllers/PredictionController.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/controllers/PredictionController.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/controllers/PredictionController.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/controllers/PredictionController.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/PredictionController.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/controllers/PredictionController.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/controllers/PredictionController.cpp > CMakeFiles/AeroBaseIndia.dir/src/controllers/PredictionController.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/PredictionController.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/controllers/PredictionController.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/controllers/PredictionController.cpp -o CMakeFiles/AeroBaseIndia.dir/src/controllers/PredictionController.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/RevenueController.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/controllers/RevenueController.cpp.o: /home/user_taha5253/AeroBaseIndia/src/controllers/RevenueController.cpp
+CMakeFiles/AeroBaseIndia.dir/src/controllers/RevenueController.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_32) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/controllers/RevenueController.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/controllers/RevenueController.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/controllers/RevenueController.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/controllers/RevenueController.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/controllers/RevenueController.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/RevenueController.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/controllers/RevenueController.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/controllers/RevenueController.cpp > CMakeFiles/AeroBaseIndia.dir/src/controllers/RevenueController.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/RevenueController.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/controllers/RevenueController.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/controllers/RevenueController.cpp -o CMakeFiles/AeroBaseIndia.dir/src/controllers/RevenueController.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/SwaggerController.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/controllers/SwaggerController.cpp.o: /home/user_taha5253/AeroBaseIndia/src/controllers/SwaggerController.cpp
+CMakeFiles/AeroBaseIndia.dir/src/controllers/SwaggerController.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_33) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/controllers/SwaggerController.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/controllers/SwaggerController.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/controllers/SwaggerController.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/controllers/SwaggerController.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/controllers/SwaggerController.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/SwaggerController.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/controllers/SwaggerController.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/controllers/SwaggerController.cpp > CMakeFiles/AeroBaseIndia.dir/src/controllers/SwaggerController.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/SwaggerController.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/controllers/SwaggerController.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/controllers/SwaggerController.cpp -o CMakeFiles/AeroBaseIndia.dir/src/controllers/SwaggerController.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/TracingController.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/controllers/TracingController.cpp.o: /home/user_taha5253/AeroBaseIndia/src/controllers/TracingController.cpp
+CMakeFiles/AeroBaseIndia.dir/src/controllers/TracingController.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_34) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/controllers/TracingController.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/controllers/TracingController.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/controllers/TracingController.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/controllers/TracingController.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/controllers/TracingController.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/TracingController.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/controllers/TracingController.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/controllers/TracingController.cpp > CMakeFiles/AeroBaseIndia.dir/src/controllers/TracingController.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/controllers/TracingController.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/controllers/TracingController.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/controllers/TracingController.cpp -o CMakeFiles/AeroBaseIndia.dir/src/controllers/TracingController.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/core/RequestTimer.cc.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/core/RequestTimer.cc.o: /home/user_taha5253/AeroBaseIndia/src/core/RequestTimer.cc
+CMakeFiles/AeroBaseIndia.dir/src/core/RequestTimer.cc.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_35) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/core/RequestTimer.cc.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/core/RequestTimer.cc.o -MF CMakeFiles/AeroBaseIndia.dir/src/core/RequestTimer.cc.o.d -o CMakeFiles/AeroBaseIndia.dir/src/core/RequestTimer.cc.o -c /home/user_taha5253/AeroBaseIndia/src/core/RequestTimer.cc
+
+CMakeFiles/AeroBaseIndia.dir/src/core/RequestTimer.cc.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/core/RequestTimer.cc.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/core/RequestTimer.cc > CMakeFiles/AeroBaseIndia.dir/src/core/RequestTimer.cc.i
+
+CMakeFiles/AeroBaseIndia.dir/src/core/RequestTimer.cc.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/core/RequestTimer.cc.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/core/RequestTimer.cc -o CMakeFiles/AeroBaseIndia.dir/src/core/RequestTimer.cc.s
+
+CMakeFiles/AeroBaseIndia.dir/src/gateway/ApiGateway.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/gateway/ApiGateway.cpp.o: /home/user_taha5253/AeroBaseIndia/src/gateway/ApiGateway.cpp
+CMakeFiles/AeroBaseIndia.dir/src/gateway/ApiGateway.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_36) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/gateway/ApiGateway.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/gateway/ApiGateway.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/gateway/ApiGateway.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/gateway/ApiGateway.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/gateway/ApiGateway.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/gateway/ApiGateway.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/gateway/ApiGateway.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/gateway/ApiGateway.cpp > CMakeFiles/AeroBaseIndia.dir/src/gateway/ApiGateway.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/gateway/ApiGateway.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/gateway/ApiGateway.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/gateway/ApiGateway.cpp -o CMakeFiles/AeroBaseIndia.dir/src/gateway/ApiGateway.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/graphql/GraphQLHandler.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/graphql/GraphQLHandler.cpp.o: /home/user_taha5253/AeroBaseIndia/src/graphql/GraphQLHandler.cpp
+CMakeFiles/AeroBaseIndia.dir/src/graphql/GraphQLHandler.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_37) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/graphql/GraphQLHandler.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/graphql/GraphQLHandler.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/graphql/GraphQLHandler.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/graphql/GraphQLHandler.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/graphql/GraphQLHandler.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/graphql/GraphQLHandler.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/graphql/GraphQLHandler.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/graphql/GraphQLHandler.cpp > CMakeFiles/AeroBaseIndia.dir/src/graphql/GraphQLHandler.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/graphql/GraphQLHandler.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/graphql/GraphQLHandler.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/graphql/GraphQLHandler.cpp -o CMakeFiles/AeroBaseIndia.dir/src/graphql/GraphQLHandler.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/jobs/RetentionJob.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/jobs/RetentionJob.cpp.o: /home/user_taha5253/AeroBaseIndia/src/jobs/RetentionJob.cpp
+CMakeFiles/AeroBaseIndia.dir/src/jobs/RetentionJob.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_38) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/jobs/RetentionJob.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/jobs/RetentionJob.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/jobs/RetentionJob.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/jobs/RetentionJob.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/jobs/RetentionJob.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/jobs/RetentionJob.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/jobs/RetentionJob.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/jobs/RetentionJob.cpp > CMakeFiles/AeroBaseIndia.dir/src/jobs/RetentionJob.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/jobs/RetentionJob.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/jobs/RetentionJob.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/jobs/RetentionJob.cpp -o CMakeFiles/AeroBaseIndia.dir/src/jobs/RetentionJob.cpp.s
+
 CMakeFiles/AeroBaseIndia.dir/src/main.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
 CMakeFiles/AeroBaseIndia.dir/src/main.cpp.o: /home/user_taha5253/AeroBaseIndia/src/main.cpp
 CMakeFiles/AeroBaseIndia.dir/src/main.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/main.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_39) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/main.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/main.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/main.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/main.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/main.cpp
 
 CMakeFiles/AeroBaseIndia.dir/src/main.cpp.i: cmake_force
@@ -167,26 +615,698 @@ CMakeFiles/AeroBaseIndia.dir/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/main.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/main.cpp -o CMakeFiles/AeroBaseIndia.dir/src/main.cpp.s
 
+CMakeFiles/AeroBaseIndia.dir/src/metrics/MetricsRegistry.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/metrics/MetricsRegistry.cpp.o: /home/user_taha5253/AeroBaseIndia/src/metrics/MetricsRegistry.cpp
+CMakeFiles/AeroBaseIndia.dir/src/metrics/MetricsRegistry.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_40) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/metrics/MetricsRegistry.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/metrics/MetricsRegistry.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/metrics/MetricsRegistry.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/metrics/MetricsRegistry.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/metrics/MetricsRegistry.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/metrics/MetricsRegistry.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/metrics/MetricsRegistry.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/metrics/MetricsRegistry.cpp > CMakeFiles/AeroBaseIndia.dir/src/metrics/MetricsRegistry.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/metrics/MetricsRegistry.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/metrics/MetricsRegistry.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/metrics/MetricsRegistry.cpp -o CMakeFiles/AeroBaseIndia.dir/src/metrics/MetricsRegistry.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/middleware/PartnerAuthFilter.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/middleware/PartnerAuthFilter.cpp.o: /home/user_taha5253/AeroBaseIndia/src/middleware/PartnerAuthFilter.cpp
+CMakeFiles/AeroBaseIndia.dir/src/middleware/PartnerAuthFilter.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_41) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/middleware/PartnerAuthFilter.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/middleware/PartnerAuthFilter.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/middleware/PartnerAuthFilter.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/middleware/PartnerAuthFilter.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/middleware/PartnerAuthFilter.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/middleware/PartnerAuthFilter.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/middleware/PartnerAuthFilter.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/middleware/PartnerAuthFilter.cpp > CMakeFiles/AeroBaseIndia.dir/src/middleware/PartnerAuthFilter.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/middleware/PartnerAuthFilter.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/middleware/PartnerAuthFilter.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/middleware/PartnerAuthFilter.cpp -o CMakeFiles/AeroBaseIndia.dir/src/middleware/PartnerAuthFilter.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/middleware/SubscriptionGuard.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/middleware/SubscriptionGuard.cpp.o: /home/user_taha5253/AeroBaseIndia/src/middleware/SubscriptionGuard.cpp
+CMakeFiles/AeroBaseIndia.dir/src/middleware/SubscriptionGuard.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_42) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/middleware/SubscriptionGuard.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/middleware/SubscriptionGuard.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/middleware/SubscriptionGuard.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/middleware/SubscriptionGuard.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/middleware/SubscriptionGuard.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/middleware/SubscriptionGuard.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/middleware/SubscriptionGuard.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/middleware/SubscriptionGuard.cpp > CMakeFiles/AeroBaseIndia.dir/src/middleware/SubscriptionGuard.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/middleware/SubscriptionGuard.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/middleware/SubscriptionGuard.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/middleware/SubscriptionGuard.cpp -o CMakeFiles/AeroBaseIndia.dir/src/middleware/SubscriptionGuard.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/middleware/TenantResolverMiddleware.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/middleware/TenantResolverMiddleware.cpp.o: /home/user_taha5253/AeroBaseIndia/src/middleware/TenantResolverMiddleware.cpp
+CMakeFiles/AeroBaseIndia.dir/src/middleware/TenantResolverMiddleware.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_43) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/middleware/TenantResolverMiddleware.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/middleware/TenantResolverMiddleware.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/middleware/TenantResolverMiddleware.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/middleware/TenantResolverMiddleware.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/middleware/TenantResolverMiddleware.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/middleware/TenantResolverMiddleware.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/middleware/TenantResolverMiddleware.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/middleware/TenantResolverMiddleware.cpp > CMakeFiles/AeroBaseIndia.dir/src/middleware/TenantResolverMiddleware.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/middleware/TenantResolverMiddleware.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/middleware/TenantResolverMiddleware.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/middleware/TenantResolverMiddleware.cpp -o CMakeFiles/AeroBaseIndia.dir/src/middleware/TenantResolverMiddleware.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/notifications/EmailService.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/notifications/EmailService.cpp.o: /home/user_taha5253/AeroBaseIndia/src/notifications/EmailService.cpp
+CMakeFiles/AeroBaseIndia.dir/src/notifications/EmailService.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_44) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/notifications/EmailService.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/notifications/EmailService.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/notifications/EmailService.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/notifications/EmailService.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/notifications/EmailService.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/notifications/EmailService.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/notifications/EmailService.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/notifications/EmailService.cpp > CMakeFiles/AeroBaseIndia.dir/src/notifications/EmailService.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/notifications/EmailService.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/notifications/EmailService.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/notifications/EmailService.cpp -o CMakeFiles/AeroBaseIndia.dir/src/notifications/EmailService.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/payments/PaymentService.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/payments/PaymentService.cpp.o: /home/user_taha5253/AeroBaseIndia/src/payments/PaymentService.cpp
+CMakeFiles/AeroBaseIndia.dir/src/payments/PaymentService.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_45) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/payments/PaymentService.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/payments/PaymentService.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/payments/PaymentService.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/payments/PaymentService.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/payments/PaymentService.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/payments/PaymentService.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/payments/PaymentService.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/payments/PaymentService.cpp > CMakeFiles/AeroBaseIndia.dir/src/payments/PaymentService.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/payments/PaymentService.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/payments/PaymentService.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/payments/PaymentService.cpp -o CMakeFiles/AeroBaseIndia.dir/src/payments/PaymentService.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/realtime/TwinWebSocket.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/realtime/TwinWebSocket.cpp.o: /home/user_taha5253/AeroBaseIndia/src/realtime/TwinWebSocket.cpp
+CMakeFiles/AeroBaseIndia.dir/src/realtime/TwinWebSocket.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_46) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/realtime/TwinWebSocket.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/realtime/TwinWebSocket.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/realtime/TwinWebSocket.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/realtime/TwinWebSocket.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/realtime/TwinWebSocket.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/realtime/TwinWebSocket.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/realtime/TwinWebSocket.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/realtime/TwinWebSocket.cpp > CMakeFiles/AeroBaseIndia.dir/src/realtime/TwinWebSocket.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/realtime/TwinWebSocket.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/realtime/TwinWebSocket.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/realtime/TwinWebSocket.cpp -o CMakeFiles/AeroBaseIndia.dir/src/realtime/TwinWebSocket.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/repositories/TenantBrandingRepository.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/repositories/TenantBrandingRepository.cpp.o: /home/user_taha5253/AeroBaseIndia/src/repositories/TenantBrandingRepository.cpp
+CMakeFiles/AeroBaseIndia.dir/src/repositories/TenantBrandingRepository.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_47) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/repositories/TenantBrandingRepository.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/repositories/TenantBrandingRepository.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/repositories/TenantBrandingRepository.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/repositories/TenantBrandingRepository.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/repositories/TenantBrandingRepository.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/repositories/TenantBrandingRepository.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/repositories/TenantBrandingRepository.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/repositories/TenantBrandingRepository.cpp > CMakeFiles/AeroBaseIndia.dir/src/repositories/TenantBrandingRepository.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/repositories/TenantBrandingRepository.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/repositories/TenantBrandingRepository.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/repositories/TenantBrandingRepository.cpp -o CMakeFiles/AeroBaseIndia.dir/src/repositories/TenantBrandingRepository.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/security/AuditHashService.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/security/AuditHashService.cpp.o: /home/user_taha5253/AeroBaseIndia/src/security/AuditHashService.cpp
+CMakeFiles/AeroBaseIndia.dir/src/security/AuditHashService.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_48) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/security/AuditHashService.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/security/AuditHashService.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/security/AuditHashService.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/security/AuditHashService.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/security/AuditHashService.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/security/AuditHashService.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/security/AuditHashService.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/security/AuditHashService.cpp > CMakeFiles/AeroBaseIndia.dir/src/security/AuditHashService.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/security/AuditHashService.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/security/AuditHashService.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/security/AuditHashService.cpp -o CMakeFiles/AeroBaseIndia.dir/src/security/AuditHashService.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/security/ComplianceSecurityMonitor.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/security/ComplianceSecurityMonitor.cpp.o: /home/user_taha5253/AeroBaseIndia/src/security/ComplianceSecurityMonitor.cpp
+CMakeFiles/AeroBaseIndia.dir/src/security/ComplianceSecurityMonitor.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_49) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/security/ComplianceSecurityMonitor.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/security/ComplianceSecurityMonitor.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/security/ComplianceSecurityMonitor.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/security/ComplianceSecurityMonitor.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/security/ComplianceSecurityMonitor.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/security/ComplianceSecurityMonitor.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/security/ComplianceSecurityMonitor.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/security/ComplianceSecurityMonitor.cpp > CMakeFiles/AeroBaseIndia.dir/src/security/ComplianceSecurityMonitor.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/security/ComplianceSecurityMonitor.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/security/ComplianceSecurityMonitor.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/security/ComplianceSecurityMonitor.cpp -o CMakeFiles/AeroBaseIndia.dir/src/security/ComplianceSecurityMonitor.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/security/EnvLoader.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/security/EnvLoader.cpp.o: /home/user_taha5253/AeroBaseIndia/src/security/EnvLoader.cpp
+CMakeFiles/AeroBaseIndia.dir/src/security/EnvLoader.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_50) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/security/EnvLoader.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/security/EnvLoader.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/security/EnvLoader.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/security/EnvLoader.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/security/EnvLoader.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/security/EnvLoader.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/security/EnvLoader.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/security/EnvLoader.cpp > CMakeFiles/AeroBaseIndia.dir/src/security/EnvLoader.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/security/EnvLoader.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/security/EnvLoader.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/security/EnvLoader.cpp -o CMakeFiles/AeroBaseIndia.dir/src/security/EnvLoader.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/security/InputValidationFilter.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/security/InputValidationFilter.cpp.o: /home/user_taha5253/AeroBaseIndia/src/security/InputValidationFilter.cpp
+CMakeFiles/AeroBaseIndia.dir/src/security/InputValidationFilter.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_51) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/security/InputValidationFilter.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/security/InputValidationFilter.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/security/InputValidationFilter.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/security/InputValidationFilter.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/security/InputValidationFilter.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/security/InputValidationFilter.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/security/InputValidationFilter.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/security/InputValidationFilter.cpp > CMakeFiles/AeroBaseIndia.dir/src/security/InputValidationFilter.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/security/InputValidationFilter.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/security/InputValidationFilter.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/security/InputValidationFilter.cpp -o CMakeFiles/AeroBaseIndia.dir/src/security/InputValidationFilter.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/security/PartnerApiKeyService.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/security/PartnerApiKeyService.cpp.o: /home/user_taha5253/AeroBaseIndia/src/security/PartnerApiKeyService.cpp
+CMakeFiles/AeroBaseIndia.dir/src/security/PartnerApiKeyService.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_52) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/security/PartnerApiKeyService.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/security/PartnerApiKeyService.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/security/PartnerApiKeyService.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/security/PartnerApiKeyService.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/security/PartnerApiKeyService.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/security/PartnerApiKeyService.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/security/PartnerApiKeyService.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/security/PartnerApiKeyService.cpp > CMakeFiles/AeroBaseIndia.dir/src/security/PartnerApiKeyService.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/security/PartnerApiKeyService.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/security/PartnerApiKeyService.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/security/PartnerApiKeyService.cpp -o CMakeFiles/AeroBaseIndia.dir/src/security/PartnerApiKeyService.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/security/SecurityHeadersFilter.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/security/SecurityHeadersFilter.cpp.o: /home/user_taha5253/AeroBaseIndia/src/security/SecurityHeadersFilter.cpp
+CMakeFiles/AeroBaseIndia.dir/src/security/SecurityHeadersFilter.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_53) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/security/SecurityHeadersFilter.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/security/SecurityHeadersFilter.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/security/SecurityHeadersFilter.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/security/SecurityHeadersFilter.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/security/SecurityHeadersFilter.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/security/SecurityHeadersFilter.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/security/SecurityHeadersFilter.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/security/SecurityHeadersFilter.cpp > CMakeFiles/AeroBaseIndia.dir/src/security/SecurityHeadersFilter.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/security/SecurityHeadersFilter.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/security/SecurityHeadersFilter.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/security/SecurityHeadersFilter.cpp -o CMakeFiles/AeroBaseIndia.dir/src/security/SecurityHeadersFilter.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/services/AuditService.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/services/AuditService.cpp.o: /home/user_taha5253/AeroBaseIndia/src/services/AuditService.cpp
+CMakeFiles/AeroBaseIndia.dir/src/services/AuditService.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_54) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/services/AuditService.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/services/AuditService.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/services/AuditService.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/services/AuditService.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/services/AuditService.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/services/AuditService.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/services/AuditService.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/services/AuditService.cpp > CMakeFiles/AeroBaseIndia.dir/src/services/AuditService.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/services/AuditService.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/services/AuditService.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/services/AuditService.cpp -o CMakeFiles/AeroBaseIndia.dir/src/services/AuditService.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/services/AuthService.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/services/AuthService.cpp.o: /home/user_taha5253/AeroBaseIndia/src/services/AuthService.cpp
+CMakeFiles/AeroBaseIndia.dir/src/services/AuthService.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_55) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/services/AuthService.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/services/AuthService.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/services/AuthService.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/services/AuthService.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/services/AuthService.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/services/AuthService.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/services/AuthService.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/services/AuthService.cpp > CMakeFiles/AeroBaseIndia.dir/src/services/AuthService.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/services/AuthService.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/services/AuthService.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/services/AuthService.cpp -o CMakeFiles/AeroBaseIndia.dir/src/services/AuthService.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/services/BrandingService.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/services/BrandingService.cpp.o: /home/user_taha5253/AeroBaseIndia/src/services/BrandingService.cpp
+CMakeFiles/AeroBaseIndia.dir/src/services/BrandingService.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_56) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/services/BrandingService.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/services/BrandingService.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/services/BrandingService.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/services/BrandingService.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/services/BrandingService.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/services/BrandingService.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/services/BrandingService.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/services/BrandingService.cpp > CMakeFiles/AeroBaseIndia.dir/src/services/BrandingService.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/services/BrandingService.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/services/BrandingService.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/services/BrandingService.cpp -o CMakeFiles/AeroBaseIndia.dir/src/services/BrandingService.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/services/ComplianceExportService.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/services/ComplianceExportService.cpp.o: /home/user_taha5253/AeroBaseIndia/src/services/ComplianceExportService.cpp
+CMakeFiles/AeroBaseIndia.dir/src/services/ComplianceExportService.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_57) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/services/ComplianceExportService.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/services/ComplianceExportService.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/services/ComplianceExportService.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/services/ComplianceExportService.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/services/ComplianceExportService.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/services/ComplianceExportService.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/services/ComplianceExportService.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/services/ComplianceExportService.cpp > CMakeFiles/AeroBaseIndia.dir/src/services/ComplianceExportService.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/services/ComplianceExportService.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/services/ComplianceExportService.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/services/ComplianceExportService.cpp -o CMakeFiles/AeroBaseIndia.dir/src/services/ComplianceExportService.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/services/ComplianceLogger.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/services/ComplianceLogger.cpp.o: /home/user_taha5253/AeroBaseIndia/src/services/ComplianceLogger.cpp
+CMakeFiles/AeroBaseIndia.dir/src/services/ComplianceLogger.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_58) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/services/ComplianceLogger.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/services/ComplianceLogger.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/services/ComplianceLogger.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/services/ComplianceLogger.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/services/ComplianceLogger.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/services/ComplianceLogger.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/services/ComplianceLogger.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/services/ComplianceLogger.cpp > CMakeFiles/AeroBaseIndia.dir/src/services/ComplianceLogger.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/services/ComplianceLogger.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/services/ComplianceLogger.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/services/ComplianceLogger.cpp -o CMakeFiles/AeroBaseIndia.dir/src/services/ComplianceLogger.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/services/CompliancePolicyEngine.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/services/CompliancePolicyEngine.cpp.o: /home/user_taha5253/AeroBaseIndia/src/services/CompliancePolicyEngine.cpp
+CMakeFiles/AeroBaseIndia.dir/src/services/CompliancePolicyEngine.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_59) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/services/CompliancePolicyEngine.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/services/CompliancePolicyEngine.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/services/CompliancePolicyEngine.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/services/CompliancePolicyEngine.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/services/CompliancePolicyEngine.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/services/CompliancePolicyEngine.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/services/CompliancePolicyEngine.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/services/CompliancePolicyEngine.cpp > CMakeFiles/AeroBaseIndia.dir/src/services/CompliancePolicyEngine.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/services/CompliancePolicyEngine.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/services/CompliancePolicyEngine.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/services/CompliancePolicyEngine.cpp -o CMakeFiles/AeroBaseIndia.dir/src/services/CompliancePolicyEngine.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/services/DelayPredictionService.cc.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/services/DelayPredictionService.cc.o: /home/user_taha5253/AeroBaseIndia/src/services/DelayPredictionService.cc
+CMakeFiles/AeroBaseIndia.dir/src/services/DelayPredictionService.cc.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_60) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/services/DelayPredictionService.cc.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/services/DelayPredictionService.cc.o -MF CMakeFiles/AeroBaseIndia.dir/src/services/DelayPredictionService.cc.o.d -o CMakeFiles/AeroBaseIndia.dir/src/services/DelayPredictionService.cc.o -c /home/user_taha5253/AeroBaseIndia/src/services/DelayPredictionService.cc
+
+CMakeFiles/AeroBaseIndia.dir/src/services/DelayPredictionService.cc.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/services/DelayPredictionService.cc.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/services/DelayPredictionService.cc > CMakeFiles/AeroBaseIndia.dir/src/services/DelayPredictionService.cc.i
+
+CMakeFiles/AeroBaseIndia.dir/src/services/DelayPredictionService.cc.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/services/DelayPredictionService.cc.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/services/DelayPredictionService.cc -o CMakeFiles/AeroBaseIndia.dir/src/services/DelayPredictionService.cc.s
+
+CMakeFiles/AeroBaseIndia.dir/src/services/DigitalTwinService.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/services/DigitalTwinService.cpp.o: /home/user_taha5253/AeroBaseIndia/src/services/DigitalTwinService.cpp
+CMakeFiles/AeroBaseIndia.dir/src/services/DigitalTwinService.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_61) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/services/DigitalTwinService.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/services/DigitalTwinService.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/services/DigitalTwinService.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/services/DigitalTwinService.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/services/DigitalTwinService.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/services/DigitalTwinService.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/services/DigitalTwinService.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/services/DigitalTwinService.cpp > CMakeFiles/AeroBaseIndia.dir/src/services/DigitalTwinService.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/services/DigitalTwinService.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/services/DigitalTwinService.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/services/DigitalTwinService.cpp -o CMakeFiles/AeroBaseIndia.dir/src/services/DigitalTwinService.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/services/DynamicPricingService.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/services/DynamicPricingService.cpp.o: /home/user_taha5253/AeroBaseIndia/src/services/DynamicPricingService.cpp
+CMakeFiles/AeroBaseIndia.dir/src/services/DynamicPricingService.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_62) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/services/DynamicPricingService.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/services/DynamicPricingService.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/services/DynamicPricingService.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/services/DynamicPricingService.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/services/DynamicPricingService.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/services/DynamicPricingService.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/services/DynamicPricingService.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/services/DynamicPricingService.cpp > CMakeFiles/AeroBaseIndia.dir/src/services/DynamicPricingService.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/services/DynamicPricingService.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/services/DynamicPricingService.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/services/DynamicPricingService.cpp -o CMakeFiles/AeroBaseIndia.dir/src/services/DynamicPricingService.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/services/FailoverController.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/services/FailoverController.cpp.o: /home/user_taha5253/AeroBaseIndia/src/services/FailoverController.cpp
+CMakeFiles/AeroBaseIndia.dir/src/services/FailoverController.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_63) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/services/FailoverController.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/services/FailoverController.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/services/FailoverController.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/services/FailoverController.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/services/FailoverController.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/services/FailoverController.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/services/FailoverController.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/services/FailoverController.cpp > CMakeFiles/AeroBaseIndia.dir/src/services/FailoverController.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/services/FailoverController.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/services/FailoverController.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/services/FailoverController.cpp -o CMakeFiles/AeroBaseIndia.dir/src/services/FailoverController.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/services/GateProfitabilityService.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/services/GateProfitabilityService.cpp.o: /home/user_taha5253/AeroBaseIndia/src/services/GateProfitabilityService.cpp
+CMakeFiles/AeroBaseIndia.dir/src/services/GateProfitabilityService.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_64) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/services/GateProfitabilityService.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/services/GateProfitabilityService.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/services/GateProfitabilityService.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/services/GateProfitabilityService.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/services/GateProfitabilityService.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/services/GateProfitabilityService.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/services/GateProfitabilityService.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/services/GateProfitabilityService.cpp > CMakeFiles/AeroBaseIndia.dir/src/services/GateProfitabilityService.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/services/GateProfitabilityService.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/services/GateProfitabilityService.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/services/GateProfitabilityService.cpp -o CMakeFiles/AeroBaseIndia.dir/src/services/GateProfitabilityService.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/services/HealthMonitorService.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/services/HealthMonitorService.cpp.o: /home/user_taha5253/AeroBaseIndia/src/services/HealthMonitorService.cpp
+CMakeFiles/AeroBaseIndia.dir/src/services/HealthMonitorService.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_65) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/services/HealthMonitorService.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/services/HealthMonitorService.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/services/HealthMonitorService.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/services/HealthMonitorService.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/services/HealthMonitorService.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/services/HealthMonitorService.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/services/HealthMonitorService.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/services/HealthMonitorService.cpp > CMakeFiles/AeroBaseIndia.dir/src/services/HealthMonitorService.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/services/HealthMonitorService.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/services/HealthMonitorService.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/services/HealthMonitorService.cpp -o CMakeFiles/AeroBaseIndia.dir/src/services/HealthMonitorService.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/services/JwtService.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/services/JwtService.cpp.o: /home/user_taha5253/AeroBaseIndia/src/services/JwtService.cpp
+CMakeFiles/AeroBaseIndia.dir/src/services/JwtService.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_66) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/services/JwtService.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/services/JwtService.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/services/JwtService.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/services/JwtService.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/services/JwtService.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/services/JwtService.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/services/JwtService.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/services/JwtService.cpp > CMakeFiles/AeroBaseIndia.dir/src/services/JwtService.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/services/JwtService.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/services/JwtService.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/services/JwtService.cpp -o CMakeFiles/AeroBaseIndia.dir/src/services/JwtService.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/services/MLDatasetExporter.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/services/MLDatasetExporter.cpp.o: /home/user_taha5253/AeroBaseIndia/src/services/MLDatasetExporter.cpp
+CMakeFiles/AeroBaseIndia.dir/src/services/MLDatasetExporter.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_67) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/services/MLDatasetExporter.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/services/MLDatasetExporter.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/services/MLDatasetExporter.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/services/MLDatasetExporter.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/services/MLDatasetExporter.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/services/MLDatasetExporter.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/services/MLDatasetExporter.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/services/MLDatasetExporter.cpp > CMakeFiles/AeroBaseIndia.dir/src/services/MLDatasetExporter.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/services/MLDatasetExporter.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/services/MLDatasetExporter.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/services/MLDatasetExporter.cpp -o CMakeFiles/AeroBaseIndia.dir/src/services/MLDatasetExporter.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/services/PartnerWebhookService.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/services/PartnerWebhookService.cpp.o: /home/user_taha5253/AeroBaseIndia/src/services/PartnerWebhookService.cpp
+CMakeFiles/AeroBaseIndia.dir/src/services/PartnerWebhookService.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_68) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/services/PartnerWebhookService.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/services/PartnerWebhookService.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/services/PartnerWebhookService.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/services/PartnerWebhookService.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/services/PartnerWebhookService.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/services/PartnerWebhookService.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/services/PartnerWebhookService.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/services/PartnerWebhookService.cpp > CMakeFiles/AeroBaseIndia.dir/src/services/PartnerWebhookService.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/services/PartnerWebhookService.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/services/PartnerWebhookService.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/services/PartnerWebhookService.cpp -o CMakeFiles/AeroBaseIndia.dir/src/services/PartnerWebhookService.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/services/PassengerFlowService.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/services/PassengerFlowService.cpp.o: /home/user_taha5253/AeroBaseIndia/src/services/PassengerFlowService.cpp
+CMakeFiles/AeroBaseIndia.dir/src/services/PassengerFlowService.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_69) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/services/PassengerFlowService.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/services/PassengerFlowService.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/services/PassengerFlowService.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/services/PassengerFlowService.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/services/PassengerFlowService.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/services/PassengerFlowService.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/services/PassengerFlowService.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/services/PassengerFlowService.cpp > CMakeFiles/AeroBaseIndia.dir/src/services/PassengerFlowService.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/services/PassengerFlowService.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/services/PassengerFlowService.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/services/PassengerFlowService.cpp -o CMakeFiles/AeroBaseIndia.dir/src/services/PassengerFlowService.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/services/RevenueAggregationService.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/services/RevenueAggregationService.cpp.o: /home/user_taha5253/AeroBaseIndia/src/services/RevenueAggregationService.cpp
+CMakeFiles/AeroBaseIndia.dir/src/services/RevenueAggregationService.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_70) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/services/RevenueAggregationService.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/services/RevenueAggregationService.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/services/RevenueAggregationService.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/services/RevenueAggregationService.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/services/RevenueAggregationService.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/services/RevenueAggregationService.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/services/RevenueAggregationService.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/services/RevenueAggregationService.cpp > CMakeFiles/AeroBaseIndia.dir/src/services/RevenueAggregationService.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/services/RevenueAggregationService.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/services/RevenueAggregationService.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/services/RevenueAggregationService.cpp -o CMakeFiles/AeroBaseIndia.dir/src/services/RevenueAggregationService.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/services/RevenueAlertService.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/services/RevenueAlertService.cpp.o: /home/user_taha5253/AeroBaseIndia/src/services/RevenueAlertService.cpp
+CMakeFiles/AeroBaseIndia.dir/src/services/RevenueAlertService.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_71) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/services/RevenueAlertService.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/services/RevenueAlertService.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/services/RevenueAlertService.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/services/RevenueAlertService.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/services/RevenueAlertService.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/services/RevenueAlertService.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/services/RevenueAlertService.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/services/RevenueAlertService.cpp > CMakeFiles/AeroBaseIndia.dir/src/services/RevenueAlertService.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/services/RevenueAlertService.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/services/RevenueAlertService.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/services/RevenueAlertService.cpp -o CMakeFiles/AeroBaseIndia.dir/src/services/RevenueAlertService.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/services/SimulationEngine.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/services/SimulationEngine.cpp.o: /home/user_taha5253/AeroBaseIndia/src/services/SimulationEngine.cpp
+CMakeFiles/AeroBaseIndia.dir/src/services/SimulationEngine.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_72) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/services/SimulationEngine.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/services/SimulationEngine.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/services/SimulationEngine.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/services/SimulationEngine.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/services/SimulationEngine.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/services/SimulationEngine.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/services/SimulationEngine.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/services/SimulationEngine.cpp > CMakeFiles/AeroBaseIndia.dir/src/services/SimulationEngine.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/services/SimulationEngine.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/services/SimulationEngine.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/services/SimulationEngine.cpp -o CMakeFiles/AeroBaseIndia.dir/src/services/SimulationEngine.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/services/StaffValidationService.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/services/StaffValidationService.cpp.o: /home/user_taha5253/AeroBaseIndia/src/services/StaffValidationService.cpp
+CMakeFiles/AeroBaseIndia.dir/src/services/StaffValidationService.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_73) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/services/StaffValidationService.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/services/StaffValidationService.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/services/StaffValidationService.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/services/StaffValidationService.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/services/StaffValidationService.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/services/StaffValidationService.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/services/StaffValidationService.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/services/StaffValidationService.cpp > CMakeFiles/AeroBaseIndia.dir/src/services/StaffValidationService.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/services/StaffValidationService.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/services/StaffValidationService.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/services/StaffValidationService.cpp -o CMakeFiles/AeroBaseIndia.dir/src/services/StaffValidationService.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/services/TwinEventConsumer.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/services/TwinEventConsumer.cpp.o: /home/user_taha5253/AeroBaseIndia/src/services/TwinEventConsumer.cpp
+CMakeFiles/AeroBaseIndia.dir/src/services/TwinEventConsumer.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_74) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/services/TwinEventConsumer.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/services/TwinEventConsumer.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/services/TwinEventConsumer.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/services/TwinEventConsumer.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/services/TwinEventConsumer.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/services/TwinEventConsumer.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/services/TwinEventConsumer.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/services/TwinEventConsumer.cpp > CMakeFiles/AeroBaseIndia.dir/src/services/TwinEventConsumer.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/services/TwinEventConsumer.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/services/TwinEventConsumer.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/services/TwinEventConsumer.cpp -o CMakeFiles/AeroBaseIndia.dir/src/services/TwinEventConsumer.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/services/WeatherIntegrationService.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/services/WeatherIntegrationService.cpp.o: /home/user_taha5253/AeroBaseIndia/src/services/WeatherIntegrationService.cpp
+CMakeFiles/AeroBaseIndia.dir/src/services/WeatherIntegrationService.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_75) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/services/WeatherIntegrationService.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/services/WeatherIntegrationService.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/services/WeatherIntegrationService.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/services/WeatherIntegrationService.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/services/WeatherIntegrationService.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/services/WeatherIntegrationService.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/services/WeatherIntegrationService.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/services/WeatherIntegrationService.cpp > CMakeFiles/AeroBaseIndia.dir/src/services/WeatherIntegrationService.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/services/WeatherIntegrationService.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/services/WeatherIntegrationService.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/services/WeatherIntegrationService.cpp -o CMakeFiles/AeroBaseIndia.dir/src/services/WeatherIntegrationService.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/simulation/SimulationEngine.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/simulation/SimulationEngine.cpp.o: /home/user_taha5253/AeroBaseIndia/src/simulation/SimulationEngine.cpp
+CMakeFiles/AeroBaseIndia.dir/src/simulation/SimulationEngine.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_76) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/simulation/SimulationEngine.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/simulation/SimulationEngine.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/simulation/SimulationEngine.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/simulation/SimulationEngine.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/simulation/SimulationEngine.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/simulation/SimulationEngine.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/simulation/SimulationEngine.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/simulation/SimulationEngine.cpp > CMakeFiles/AeroBaseIndia.dir/src/simulation/SimulationEngine.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/simulation/SimulationEngine.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/simulation/SimulationEngine.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/simulation/SimulationEngine.cpp -o CMakeFiles/AeroBaseIndia.dir/src/simulation/SimulationEngine.cpp.s
+
+CMakeFiles/AeroBaseIndia.dir/src/tracing/Tracer.cpp.o: CMakeFiles/AeroBaseIndia.dir/flags.make
+CMakeFiles/AeroBaseIndia.dir/src/tracing/Tracer.cpp.o: /home/user_taha5253/AeroBaseIndia/src/tracing/Tracer.cpp
+CMakeFiles/AeroBaseIndia.dir/src/tracing/Tracer.cpp.o: CMakeFiles/AeroBaseIndia.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_77) "Building CXX object CMakeFiles/AeroBaseIndia.dir/src/tracing/Tracer.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AeroBaseIndia.dir/src/tracing/Tracer.cpp.o -MF CMakeFiles/AeroBaseIndia.dir/src/tracing/Tracer.cpp.o.d -o CMakeFiles/AeroBaseIndia.dir/src/tracing/Tracer.cpp.o -c /home/user_taha5253/AeroBaseIndia/src/tracing/Tracer.cpp
+
+CMakeFiles/AeroBaseIndia.dir/src/tracing/Tracer.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AeroBaseIndia.dir/src/tracing/Tracer.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/user_taha5253/AeroBaseIndia/src/tracing/Tracer.cpp > CMakeFiles/AeroBaseIndia.dir/src/tracing/Tracer.cpp.i
+
+CMakeFiles/AeroBaseIndia.dir/src/tracing/Tracer.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AeroBaseIndia.dir/src/tracing/Tracer.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/user_taha5253/AeroBaseIndia/src/tracing/Tracer.cpp -o CMakeFiles/AeroBaseIndia.dir/src/tracing/Tracer.cpp.s
+
 # Object files for target AeroBaseIndia
 AeroBaseIndia_OBJECTS = \
+"CMakeFiles/AeroBaseIndia.dir/src/analytics/RevenueForecastEngine.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/analytics/RevenueRecommendationEngine.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/billing/BillingCalculator.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/billing/OverageService.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/billing/UsageMeteringService.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/controllers/AdminRevenueController.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/controllers/AirlineBaggageController.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/controllers/AirlineFlightController.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/controllers/AuditController.cpp.o" \
 "CMakeFiles/AeroBaseIndia.dir/src/controllers/AuthController.cpp.o" \
 "CMakeFiles/AeroBaseIndia.dir/src/controllers/BaggageController.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/controllers/BaggageTrackingController.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/controllers/BillingController.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/controllers/BoardingPassController.cpp.o" \
 "CMakeFiles/AeroBaseIndia.dir/src/controllers/BookingController.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/controllers/BrandingController.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/controllers/ComplianceController.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/controllers/DigitalTwinController.cpp.o" \
 "CMakeFiles/AeroBaseIndia.dir/src/controllers/FlightController.cc.o" \
 "CMakeFiles/AeroBaseIndia.dir/src/controllers/FlightSocketController.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/controllers/GateAssignmentController.cpp.o" \
 "CMakeFiles/AeroBaseIndia.dir/src/controllers/GateController.cpp.o" \
-"CMakeFiles/AeroBaseIndia.dir/src/main.cpp.o"
+"CMakeFiles/AeroBaseIndia.dir/src/controllers/HealthController.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/controllers/LiveEventsController.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/controllers/ManifestController.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/controllers/MetricsController.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/controllers/NotificationController.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/controllers/PassengerAuthController.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/controllers/PassengerFlightController.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/controllers/PaymentController.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/controllers/PredictionController.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/controllers/RevenueController.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/controllers/SwaggerController.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/controllers/TracingController.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/core/RequestTimer.cc.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/gateway/ApiGateway.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/graphql/GraphQLHandler.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/jobs/RetentionJob.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/main.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/metrics/MetricsRegistry.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/middleware/PartnerAuthFilter.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/middleware/SubscriptionGuard.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/middleware/TenantResolverMiddleware.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/notifications/EmailService.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/payments/PaymentService.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/realtime/TwinWebSocket.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/repositories/TenantBrandingRepository.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/security/AuditHashService.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/security/ComplianceSecurityMonitor.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/security/EnvLoader.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/security/InputValidationFilter.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/security/PartnerApiKeyService.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/security/SecurityHeadersFilter.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/services/AuditService.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/services/AuthService.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/services/BrandingService.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/services/ComplianceExportService.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/services/ComplianceLogger.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/services/CompliancePolicyEngine.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/services/DelayPredictionService.cc.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/services/DigitalTwinService.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/services/DynamicPricingService.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/services/FailoverController.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/services/GateProfitabilityService.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/services/HealthMonitorService.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/services/JwtService.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/services/MLDatasetExporter.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/services/PartnerWebhookService.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/services/PassengerFlowService.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/services/RevenueAggregationService.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/services/RevenueAlertService.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/services/SimulationEngine.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/services/StaffValidationService.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/services/TwinEventConsumer.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/services/WeatherIntegrationService.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/simulation/SimulationEngine.cpp.o" \
+"CMakeFiles/AeroBaseIndia.dir/src/tracing/Tracer.cpp.o"
 
 # External object files for target AeroBaseIndia
 AeroBaseIndia_EXTERNAL_OBJECTS =
 
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/analytics/RevenueForecastEngine.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/analytics/RevenueRecommendationEngine.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/billing/BillingCalculator.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/billing/OverageService.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/billing/UsageMeteringService.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/controllers/AdminRevenueController.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/controllers/AirlineBaggageController.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/controllers/AirlineFlightController.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/controllers/AuditController.cpp.o
 AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/controllers/AuthController.cpp.o
 AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/controllers/BaggageController.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/controllers/BaggageTrackingController.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/controllers/BillingController.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/controllers/BoardingPassController.cpp.o
 AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/controllers/BookingController.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/controllers/BrandingController.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/controllers/ComplianceController.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/controllers/DigitalTwinController.cpp.o
 AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/controllers/FlightController.cc.o
 AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/controllers/FlightSocketController.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/controllers/GateAssignmentController.cpp.o
 AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/controllers/GateController.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/controllers/HealthController.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/controllers/LiveEventsController.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/controllers/ManifestController.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/controllers/MetricsController.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/controllers/NotificationController.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/controllers/PassengerAuthController.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/controllers/PassengerFlightController.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/controllers/PaymentController.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/controllers/PredictionController.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/controllers/RevenueController.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/controllers/SwaggerController.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/controllers/TracingController.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/core/RequestTimer.cc.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/gateway/ApiGateway.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/graphql/GraphQLHandler.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/jobs/RetentionJob.cpp.o
 AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/main.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/metrics/MetricsRegistry.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/middleware/PartnerAuthFilter.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/middleware/SubscriptionGuard.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/middleware/TenantResolverMiddleware.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/notifications/EmailService.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/payments/PaymentService.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/realtime/TwinWebSocket.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/repositories/TenantBrandingRepository.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/security/AuditHashService.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/security/ComplianceSecurityMonitor.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/security/EnvLoader.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/security/InputValidationFilter.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/security/PartnerApiKeyService.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/security/SecurityHeadersFilter.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/services/AuditService.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/services/AuthService.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/services/BrandingService.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/services/ComplianceExportService.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/services/ComplianceLogger.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/services/CompliancePolicyEngine.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/services/DelayPredictionService.cc.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/services/DigitalTwinService.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/services/DynamicPricingService.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/services/FailoverController.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/services/GateProfitabilityService.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/services/HealthMonitorService.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/services/JwtService.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/services/MLDatasetExporter.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/services/PartnerWebhookService.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/services/PassengerFlowService.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/services/RevenueAggregationService.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/services/RevenueAlertService.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/services/SimulationEngine.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/services/StaffValidationService.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/services/TwinEventConsumer.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/services/WeatherIntegrationService.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/simulation/SimulationEngine.cpp.o
+AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/src/tracing/Tracer.cpp.o
 AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/build.make
 AeroBaseIndia: /usr/local/lib/libdrogon.a
 AeroBaseIndia: /usr/lib/x86_64-linux-gnu/libpq.so
@@ -204,7 +1324,7 @@ AeroBaseIndia: /usr/lib/x86_64-linux-gnu/libsqlite3.so
 AeroBaseIndia: /usr/lib/x86_64-linux-gnu/libz.so
 AeroBaseIndia: /usr/lib/x86_64-linux-gnu/libpq.so
 AeroBaseIndia: CMakeFiles/AeroBaseIndia.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking CXX executable AeroBaseIndia"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/user_taha5253/AeroBaseIndia/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_78) "Linking CXX executable AeroBaseIndia"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/AeroBaseIndia.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

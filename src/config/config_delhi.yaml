@@ -1,0 +1,5 @@
+deployment:
+  region: delhi
+  role: standby
+  failover_enabled: true
+  node_id: aerobase-del-01
