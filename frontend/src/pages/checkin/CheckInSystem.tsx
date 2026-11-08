@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useAuthStore } from "../../store/authStore";
+import { DataTable } from "../../components/ui/DataTable";
 import {
   Users, CheckCircle, Clock, AlertTriangle, Search,
-  Phone, MessageSquare, Activity, Tag
+  Phone, MessageSquare, Activity
 } from "lucide-react";
 
 const AIRLINE_CODE_MAP: Record<string,string> = {
@@ -391,59 +392,30 @@ export function CheckInSystem() {
             <div className="p-4 border-b border-navy-600 font-bold text-white">
               Passengers — {filtPax.length} found
             </div>
-            <table className="w-full text-sm">
-              <thead>
-                <tr style={{borderBottom:"1px solid #1e2d4d"}}>
-                  {["Passenger","Flight","Seat","Class","Bags","Wristband","Special","Status","Actions"].map(h=>(
-                    <th key={h} className="px-4 py-3 text-left text-xs uppercase" style={{color:"#475569"}}>{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {filtPax.map(p=>(
-                  <tr key={p.id} style={{borderBottom:"1px solid rgba(30,45,77,0.5)"}}>
-                    <td className="px-4 py-3.5">
-                      <div className="font-semibold text-white">{p.name}</div>
-                      <div className="text-xs text-slate-500">{p.id}</div>
-                    </td>
-                    <td className="px-4 py-3.5 font-mono text-slate-300">
-                      {flights.find(f=>f.pax.some(px=>px.id===p.id))?.flight||"—"}
-                    </td>
-                    <td className="px-4 py-3.5 font-mono text-slate-300">{p.seat}</td>
-                    <td className="px-4 py-3.5 text-slate-400">{p.class}</td>
-                    <td className="px-4 py-3.5 text-slate-400">🧳 {p.bags}</td>
-                    <td className="px-4 py-3.5">
-                      <div className="flex items-center gap-1.5 text-xs">
-                        <Tag className="w-3 h-3 text-sky-400"/>
-                        <span className="font-mono text-slate-300">{p.wristband}</span>
-                      </div>
-                    </td>
-                    <td className="px-4 py-3.5">
-                      {p.special
-                        ?<span className="text-xs px-2 py-0.5 rounded-full border border-orange-400/20 bg-orange-400/10 text-orange-400">{p.special}</span>
-                        :<span className="text-slate-600">—</span>}
-                    </td>
-                    <td className="px-4 py-3.5">
-                      {p.boarded
-                        ?<span className="text-xs text-green-400 font-bold">✅ Boarded</span>
-                        :p.checkin
-                          ?<span className="text-xs text-sky-400 font-bold">✓ Checked In</span>
-                          :<span className="text-xs text-yellow-400 font-bold">⏳ Not Arrived</span>}
-                    </td>
-                    <td className="px-4 py-3.5">
-                      <div className="flex gap-1.5">
-                        <button className="p-1.5 rounded-lg bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 transition-colors">
-                          <Phone className="w-3.5 h-3.5"/>
-                        </button>
-                        <button className="p-1.5 rounded-lg bg-teal-500/10 hover:bg-teal-500/20 text-teal-400 transition-colors">
-                          <MessageSquare className="w-3.5 h-3.5"/>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <DataTable<Pax>
+              rows={filtPax}
+              rowKey={p=>p.id}
+              columns={[
+                {key:"name",label:"Passenger",primary:true,render:p=><span>{p.name} <span className="text-xs text-slate-500">{p.id}</span></span>},
+                {key:"flight",label:"Flight",render:p=><span className="font-mono">{flights.find(f=>f.pax.some(px=>px.id===p.id))?.flight||"—"}</span>},
+                {key:"seat",label:"Seat",render:p=><span className="font-mono">{p.seat}</span>},
+                {key:"class",label:"Class",render:p=>p.class},
+                {key:"bags",label:"Bags",render:p=>`🧳 ${p.bags}`},
+                {key:"wb",label:"Wristband",render:p=><span className="font-mono">{p.wristband}</span>},
+                {key:"special",label:"Special",render:p=>p.special
+                  ?<span className="text-xs px-2 py-0.5 rounded-full border border-orange-400/20 bg-orange-400/10 text-orange-400">{p.special}</span>
+                  :<span className="text-slate-600">—</span>},
+                {key:"status",label:"Status",render:p=>p.boarded
+                  ?<span className="text-xs text-green-400 font-bold">✅ Boarded</span>
+                  :p.checkin
+                    ?<span className="text-xs text-sky-400 font-bold">✓ Checked In</span>
+                    :<span className="text-xs text-yellow-400 font-bold">⏳ Not Arrived</span>},
+                {key:"actions",label:"Actions",render:()=>(
+                  <div className="flex gap-1.5">
+                    <button aria-label="Call" className="p-1.5 rounded-lg bg-sky-500/10 hover:bg-sky-500/20 text-sky-400"><Phone className="w-3.5 h-3.5"/></button>
+                    <button aria-label="Message" className="p-1.5 rounded-lg bg-teal-500/10 hover:bg-teal-500/20 text-teal-400"><MessageSquare className="w-3.5 h-3.5"/></button>
+                  </div>)},
+              ]}/>
           </div>
         </div>
       )}

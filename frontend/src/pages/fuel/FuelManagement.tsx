@@ -136,7 +136,7 @@ export function FuelManagement() {
           <Fuel className="w-5 h-5 text-yellow-400"/>
           <h2 className="font-semibold text-white">Fuelling Orders</h2>
         </div>
-        <table className="w-full text-sm">
+        <div className="table-scroll"><table className="w-full text-sm">
           <thead>
             <tr className="text-slate-500 text-xs uppercase">
               {["Flight","Type","Required","Loaded","Variance","Truck","Status"].map(h=>(
@@ -167,7 +167,7 @@ export function FuelManagement() {
               </tr>
             ))}
           </tbody>
-        </table>
+        </table></div>
       </div>
     </div>
   );

@@ -178,7 +178,7 @@ export function AdminControlPanel() {
               All endpoints operational
             </span>
           </div>
-          <table className="w-full text-sm">
+          <div className="table-scroll"><table className="w-full text-sm">
             <thead>
               <tr className="text-slate-500 text-xs uppercase">
                 {["Method","Endpoint","Description","Status","Latency"].map(h=>(
@@ -205,7 +205,7 @@ export function AdminControlPanel() {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table></div>
         </div>
       )}
 
@@ -218,7 +218,7 @@ export function AdminControlPanel() {
               Save Changes
             </button>
           </div>
-          <table className="w-full text-sm">
+          <div className="table-scroll"><table className="w-full text-sm">
             <thead>
               <tr className="text-slate-500 text-xs uppercase">
                 {["Config Key","Value","Category","Editable"].map(h=>(
@@ -251,7 +251,7 @@ export function AdminControlPanel() {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table></div>
         </div>
       )}
 

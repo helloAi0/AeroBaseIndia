@@ -213,7 +213,7 @@ export function AIPredictions() {
             <TrendingUp className="w-5 h-5 text-sky-400"/>
             <h2 className="font-semibold text-white">Flight Risk Assessment</h2>
           </div>
-          <table className="w-full text-sm">
+          <div className="table-scroll"><table className="w-full text-sm">
             <thead>
               <tr className="text-slate-500 text-xs uppercase">
                 {["Flight","Route","Status","Risk Level","Action"].map(h=>(
@@ -252,7 +252,7 @@ export function AIPredictions() {
                 );
               })}
             </tbody>
-          </table>
+          </table></div>
         </div>
       )}
     </div>

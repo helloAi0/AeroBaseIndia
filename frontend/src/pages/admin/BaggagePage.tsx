@@ -194,7 +194,7 @@ function StaffBaggageView() {
               Passenger names are private — only flight-level data shown to airport staff
             </p>
           </div>
-          <table className="w-full text-sm">
+          <div className="table-scroll"><table className="w-full text-sm">
             <thead>
               <tr className="text-slate-500 text-xs uppercase">
                 {["Flight","Airline","Terminal","Belt/Carousel","Total Bags","Status","ETA","Issues"].map(h=>(
@@ -259,7 +259,7 @@ function StaffBaggageView() {
                 );
               })}
             </tbody>
-          </table>
+          </table></div>
         </div>
 
         {/* Flight detail panel */}

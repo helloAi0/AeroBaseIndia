@@ -213,7 +213,7 @@ export function RetailPage() {
           <div className={`grid gap-5 ${selected?"xl:grid-cols-3":"xl:grid-cols-1"}`}>
             {/* Table */}
             <div className={`bg-navy-800 rounded-2xl border border-navy-600 overflow-hidden ${selected?"xl:col-span-2":""}`}>
-              <table className="w-full text-sm">
+              <div className="table-scroll"><table className="w-full text-sm">
                 <thead>
                   <tr className="text-slate-500 text-xs uppercase">
                     {["Store","Category","Terminal","Revenue","Rating","Warnings","Status","Actions"].map(h=>(
@@ -281,7 +281,7 @@ export function RetailPage() {
                     </tr>
                   ))}
                 </tbody>
-              </table>
+              </table></div>
             </div>
 
             {/* Detail panel */}

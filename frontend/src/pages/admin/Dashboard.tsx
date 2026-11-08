@@ -210,7 +210,7 @@ export function Dashboard() {
                 <p className="text-sm">No flights in database</p>
               </div>
             ) : (
-              <table className="w-full text-sm">
+              <div className="table-scroll"><table className="w-full text-sm">
                 <thead>
                   <tr className="text-slate-500 text-xs uppercase tracking-wider">
                     {["Flight","Route","Gate","Status","Delay"].map(h=>(
@@ -253,7 +253,7 @@ export function Dashboard() {
                     </tr>
                   ))}
                 </tbody>
-              </table>
+              </table></div>
             )}
           </div>
         </div>

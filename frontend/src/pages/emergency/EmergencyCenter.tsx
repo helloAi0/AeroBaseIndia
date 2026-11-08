@@ -131,7 +131,7 @@ export function EmergencyCenter() {
               {RESPONSE_TEAMS.filter(t=>t.status==="Standby").length} teams on standby
             </span>
           </div>
-          <table className="w-full text-sm">
+          <div className="table-scroll"><table className="w-full text-sm">
             <thead>
               <tr className="text-slate-500 text-xs uppercase">
                 {["Team","Status","Location","Members","ETA"].map(h=>(
@@ -164,7 +164,7 @@ export function EmergencyCenter() {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table></div>
         </div>
 
         {/* Emergency contacts */}

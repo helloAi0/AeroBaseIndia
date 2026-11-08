@@ -17,15 +17,18 @@ const ROLE_COLOR: Record<string,string> = {
   retailer:"orange", superadmin:"yellow",
 };
 
-function doLogout() {
-  try { localStorage.removeItem("aerobase-auth"); } catch(e){}
-  try { localStorage.removeItem("aerobase-app"); }  catch(e){}
-  window.location.reload();
-}
 
 export function ProfileModal({ onClose }: Props) {
-  const { user }          = useAuthStore();
-  const { setActivePage } = useAppStore();
+  const { user, logout }  = useAuthStore();
+  const { setActivePage, setSidebar } = useAppStore();
+
+  // Clear the session in the stores: App re-renders to <LoginPage/> with no page reload.
+  const doLogout = () => {
+    onClose();
+    setActivePage("dashboard");
+    setSidebar(typeof window === "undefined" || window.innerWidth >= 1024);
+    logout();
+  };
 
   if (!user) return null;
 

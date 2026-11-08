@@ -131,7 +131,7 @@ export function PartnerPortal() {
             No flights found for {airline.name} today
           </div>
         ) : (
-          <table className="w-full text-sm">
+          <div className="table-scroll"><table className="w-full text-sm">
             <thead>
               <tr className="text-slate-500 text-xs uppercase">
                 {["Flight","Route","Gate","Status"].map(h=>(
@@ -154,7 +154,7 @@ export function PartnerPortal() {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table></div>
         )}
       </div>
 

@@ -176,7 +176,7 @@ export function MaintenancePage() {
       {/* Aircraft status */}
       {tab==="aircraft" && (
         <div className="bg-navy-800 rounded-2xl border border-navy-600 overflow-hidden">
-          <table className="w-full text-sm">
+          <div className="table-scroll"><table className="w-full text-sm">
             <thead>
               <tr className="text-slate-500 text-xs uppercase">
                 {["Registration","Model","Airline","Flight Hours","Next Check","Status"].map(h=>(
@@ -200,7 +200,7 @@ export function MaintenancePage() {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table></div>
         </div>
       )}
     </div>

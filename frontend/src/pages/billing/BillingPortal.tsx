@@ -508,7 +508,7 @@ export function BillingPortal() {
           </div>
 
           <div className="rounded-2xl border overflow-hidden" style={{background:"#080d18",borderColor:"#1e2d4d"}}>
-            <table className="w-full text-sm">
+            <div className="table-scroll"><table className="w-full text-sm">
               <thead>
                 <tr style={{borderBottom:"1px solid #1e2d4d"}}>
                   {["Invoice #","Plan","Airports","Period","Amount","Date","Status","Actions"].map(h=>(
@@ -554,7 +554,7 @@ export function BillingPortal() {
                   <td colSpan={3}/>
                 </tr>
               </tfoot>
-            </table>
+            </table></div>
           </div>
         </div>
       )}
@@ -567,7 +567,7 @@ export function BillingPortal() {
               <h2 className="font-bold text-white">Airport Accounts</h2>
               <p className="text-xs text-slate-500">{SUBSCRIBERS.length} airports · {fmt(totalMRR)} total MRR</p>
             </div>
-            <table className="w-full text-sm">
+            <div className="table-scroll"><table className="w-full text-sm">
               <thead>
                 <tr style={{borderBottom:"1px solid #1e2d4d"}}>
                   {["Airport","Plan","Since","MRR","Users","Flights/mo","Status"].map(h=>(
@@ -606,7 +606,7 @@ export function BillingPortal() {
                   );
                 })}
               </tbody>
-            </table>
+            </table></div>
           </div>
 
           {/* Usage bars */}

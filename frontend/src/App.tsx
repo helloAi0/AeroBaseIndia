@@ -1,50 +1,52 @@
+import { lazy, Suspense } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Sidebar }            from "./components/layout/Sidebar";
 import { TopBar }             from "./components/layout/TopBar";
-import { Dashboard }          from "./pages/admin/Dashboard";
-import { PaymentsPage }       from "./pages/admin/PaymentsPage";
-import { MetricsPage }        from "./pages/admin/MetricsPage";
-import { PartnerPortal }      from "./pages/partner/PartnerPortal";
-import { BillingPortal }      from "./pages/billing/BillingPortal";
-import { AnalyticsDashboard } from "./pages/analytics/AnalyticsDashboard";
-import { PassengerPortal }    from "./pages/passenger/PassengerPortal";
-import { FlightsPage }        from "./pages/admin/FlightsPage";
-import { GatesPage }          from "./pages/admin/GatesPage";
-import { BaggagePage }        from "./pages/admin/BaggagePage";
-import { SecurityPage }       from "./pages/admin/SecurityPage";
-import { SettingsPage }       from "./pages/admin/SettingsPage";
-import { GraphQLExplorer }    from "./pages/graphql/GraphQLExplorer";
-import { DigitalTwin }        from "./pages/twin/DigitalTwin";
-import { AIPredictions }      from "./pages/ai/AIPredictions";
-import { NotificationCenter } from "./pages/notifications/NotificationCenter";
-import { StaffManagement }    from "./pages/staff/StaffManagement";
-import { RevenueDashboard }   from "./pages/revenue/RevenueDashboard";
-import { IncidentsPage }      from "./pages/incidents/IncidentsPage";
-import { ReportsPage }        from "./pages/reports/ReportsPage";
-import { CargoPage }          from "./pages/cargo/CargoPage";
-import { AirportMap }         from "./pages/wayfinding/AirportMap";
-import { FlightScheduler }    from "./pages/scheduler/FlightScheduler";
-import { CheckInSystem }      from "./pages/checkin/CheckInSystem";
-import { FuelManagement }     from "./pages/fuel/FuelManagement";
-import { MaintenancePage }    from "./pages/maintenance/MaintenancePage";
-import { WeatherMonitor }     from "./pages/weather/WeatherMonitor";
-import { ParkingPage }        from "./pages/parking/ParkingPage";
-import { RetailPage }         from "./pages/retail/RetailPage";
-import { FeedbackPage }       from "./pages/feedback/FeedbackPage";
-import { APITester }          from "./pages/api_tester/APITester";
-import { WebSocketFeed }      from "./pages/websocket/WebSocketFeed";
-import { TenantManager }      from "./pages/tenants/TenantManager";
-import { BrandingPage }       from "./pages/branding/BrandingPage";
-import { DeploymentPage }   from "./pages/deployment/DeploymentPage";
+const Dashboard = lazy(() => import("./pages/admin/Dashboard").then(m => ({ default: m.Dashboard })));
+const PaymentsPage = lazy(() => import("./pages/admin/PaymentsPage").then(m => ({ default: m.PaymentsPage })));
+const MetricsPage = lazy(() => import("./pages/admin/MetricsPage").then(m => ({ default: m.MetricsPage })));
+const PartnerPortal = lazy(() => import("./pages/partner/PartnerPortal").then(m => ({ default: m.PartnerPortal })));
+const BillingPortal = lazy(() => import("./pages/billing/BillingPortal").then(m => ({ default: m.BillingPortal })));
+const AnalyticsDashboard = lazy(() => import("./pages/analytics/AnalyticsDashboard").then(m => ({ default: m.AnalyticsDashboard })));
+const PassengerPortal = lazy(() => import("./pages/passenger/PassengerPortal").then(m => ({ default: m.PassengerPortal })));
+const FlightsPage = lazy(() => import("./pages/admin/FlightsPage").then(m => ({ default: m.FlightsPage })));
+const GatesPage = lazy(() => import("./pages/admin/GatesPage").then(m => ({ default: m.GatesPage })));
+const BaggagePage = lazy(() => import("./pages/admin/BaggagePage").then(m => ({ default: m.BaggagePage })));
+const SecurityPage = lazy(() => import("./pages/admin/SecurityPage").then(m => ({ default: m.SecurityPage })));
+const SettingsPage = lazy(() => import("./pages/admin/SettingsPage").then(m => ({ default: m.SettingsPage })));
+const GraphQLExplorer = lazy(() => import("./pages/graphql/GraphQLExplorer").then(m => ({ default: m.GraphQLExplorer })));
+const DigitalTwin = lazy(() => import("./pages/twin/DigitalTwin").then(m => ({ default: m.DigitalTwin })));
+const AIPredictions = lazy(() => import("./pages/ai/AIPredictions").then(m => ({ default: m.AIPredictions })));
+const NotificationCenter = lazy(() => import("./pages/notifications/NotificationCenter").then(m => ({ default: m.NotificationCenter })));
+const StaffManagement = lazy(() => import("./pages/staff/StaffManagement").then(m => ({ default: m.StaffManagement })));
+const RevenueDashboard = lazy(() => import("./pages/revenue/RevenueDashboard").then(m => ({ default: m.RevenueDashboard })));
+const IncidentsPage = lazy(() => import("./pages/incidents/IncidentsPage").then(m => ({ default: m.IncidentsPage })));
+const ReportsPage = lazy(() => import("./pages/reports/ReportsPage").then(m => ({ default: m.ReportsPage })));
+const CargoPage = lazy(() => import("./pages/cargo/CargoPage").then(m => ({ default: m.CargoPage })));
+const AirportMap = lazy(() => import("./pages/wayfinding/AirportMap").then(m => ({ default: m.AirportMap })));
+const FlightScheduler = lazy(() => import("./pages/scheduler/FlightScheduler").then(m => ({ default: m.FlightScheduler })));
+const CheckInSystem = lazy(() => import("./pages/checkin/CheckInSystem").then(m => ({ default: m.CheckInSystem })));
+const FuelManagement = lazy(() => import("./pages/fuel/FuelManagement").then(m => ({ default: m.FuelManagement })));
+const MaintenancePage = lazy(() => import("./pages/maintenance/MaintenancePage").then(m => ({ default: m.MaintenancePage })));
+const WeatherMonitor = lazy(() => import("./pages/weather/WeatherMonitor").then(m => ({ default: m.WeatherMonitor })));
+const ParkingPage = lazy(() => import("./pages/parking/ParkingPage").then(m => ({ default: m.ParkingPage })));
+const RetailPage = lazy(() => import("./pages/retail/RetailPage").then(m => ({ default: m.RetailPage })));
+const FeedbackPage = lazy(() => import("./pages/feedback/FeedbackPage").then(m => ({ default: m.FeedbackPage })));
+const APITester = lazy(() => import("./pages/api_tester/APITester").then(m => ({ default: m.APITester })));
+const WebSocketFeed = lazy(() => import("./pages/websocket/WebSocketFeed").then(m => ({ default: m.WebSocketFeed })));
+const TenantManager = lazy(() => import("./pages/tenants/TenantManager").then(m => ({ default: m.TenantManager })));
+const BrandingPage = lazy(() => import("./pages/branding/BrandingPage").then(m => ({ default: m.BrandingPage })));
+const DeploymentPage = lazy(() => import("./pages/deployment/DeploymentPage").then(m => ({ default: m.DeploymentPage })));
 import { ErrorBoundary }    from "./components/ui/ErrorBoundary";
-import { SubscriptionPage }   from "./pages/passenger/SubscriptionPage";
-import { AirlinePortal }   from "./pages/airline/AirlinePortal";
-import { PilotDashboard }  from "./pages/airline/PilotDashboard";
-import { RetailerDashboard } from "./pages/retailer/RetailerDashboard";
-import { SecurityOpsPage } from "./pages/security_ops/SecurityOpsPage";
+import { PageSkeleton }     from "./components/ui/Skeleton";
+const SubscriptionPage = lazy(() => import("./pages/passenger/SubscriptionPage").then(m => ({ default: m.SubscriptionPage })));
+const AirlinePortal = lazy(() => import("./pages/airline/AirlinePortal").then(m => ({ default: m.AirlinePortal })));
+const PilotDashboard = lazy(() => import("./pages/airline/PilotDashboard").then(m => ({ default: m.PilotDashboard })));
+const RetailerDashboard = lazy(() => import("./pages/retailer/RetailerDashboard").then(m => ({ default: m.RetailerDashboard })));
+const SecurityOpsPage = lazy(() => import("./pages/security_ops/SecurityOpsPage").then(m => ({ default: m.SecurityOpsPage })));
 import { useAppStore }        from "./store/appStore";
 import { useAuthStore }        from "./store/authStore";
-import { LoginPage }           from "./pages/auth/LoginPage";
+import { LoginPage } from "./pages/auth/LoginPage";
 import { useRealtime }        from "./hooks/useRealtime";
 
 const qc = new QueryClient({ defaultOptions:{ queries:{ retry:1, staleTime:5000 } } });
@@ -127,14 +129,14 @@ function AppContent() {
 
       {/* Main content wrapper — offset by sidebar width */}
       <div
-        className="flex-1 flex flex-col min-h-screen transition-all duration-300"
-        style={{ marginLeft: sidebarOpen ? "224px" : "56px" }}
+        className={`flex-1 min-w-0 flex flex-col min-h-screen transition-all duration-300 ${sidebarOpen ? "lg:ml-56" : "lg:ml-14"}`}
       >
         <TopBar />
 
         {/* Page content — below topbar */}
         <main className="flex-1 overflow-auto p-4 lg:p-6 mt-16">
-          <ErrorBoundary>
+          <ErrorBoundary resetKey={effectivePage}>
+          <Suspense fallback={<PageSkeleton />}>
           {PAGES[effectivePage] ?? (
             <div className="flex items-center justify-center h-64 text-slate-500">
               <div className="text-center">
@@ -144,6 +146,7 @@ function AppContent() {
               </div>
             </div>
           )}
+          </Suspense>
           </ErrorBoundary>
         </main>
       </div>

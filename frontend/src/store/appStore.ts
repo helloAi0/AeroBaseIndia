@@ -19,7 +19,7 @@ export const useAppStore = create<AppState>((set) => ({
   tenant:      { id: "DEL", name: "Delhi International Airport", code: "DEL" },
   flights:     [],
   health:      null,
-  sidebarOpen: true,
+  sidebarOpen: typeof window === "undefined" ? true : window.innerWidth >= 1024,
   activePage:  "dashboard",
 
   setTenant:     (tenant)     => set({ tenant }),

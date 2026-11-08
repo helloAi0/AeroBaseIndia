@@ -446,7 +446,7 @@ export function AirlinePortal() {
                 </div>
                 <div className="text-xs text-slate-500">Only your airline's flights · No others</div>
               </div>
-              <table className="w-full text-sm">
+              <div className="table-scroll"><table className="w-full text-sm">
                 <thead>
                   <tr style={{borderBottom:"1px solid #1e2d4d"}}>
                     {["Flight","Route","Gate","Dep","Passengers","Captain","Bags","Fuel","Status","Issues"].map(h=>(
@@ -490,7 +490,7 @@ export function AirlinePortal() {
                     </tr>
                   ))}
                 </tbody>
-              </table>
+              </table></div>
             </div>
 
             {/* Flight detail panel */}

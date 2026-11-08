@@ -364,7 +364,7 @@ export function RevenueDashboard() {
             <div className="p-5 border-b" style={{borderColor:"#1e2d4d"}}>
               <h2 className="font-bold text-white">Airline Revenue Detail</h2>
             </div>
-            <table className="w-full text-sm">
+            <div className="table-scroll"><table className="w-full text-sm">
               <thead>
                 <tr style={{borderBottom:"1px solid #1e2d4d"}}>
                   {["Airline","Flights","Revenue","Passengers","Rev/Flight","Rev/Pax"].map(h=>(
@@ -412,7 +412,7 @@ export function RevenueDashboard() {
                   <td colSpan={2} className="px-5 py-4 text-slate-500 text-xs">FY 2024 cumulative</td>
                 </tr>
               </tfoot>
-            </table>
+            </table></div>
           </div>
         </div>
       )}

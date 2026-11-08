@@ -339,7 +339,7 @@ function AdminPaymentView() {
           </div>
 
           <div className="rounded-2xl border overflow-hidden" style={{borderColor:"#1e2d4d",background:"#080d18"}}>
-            <table className="w-full text-sm">
+            <div className="table-scroll"><table className="w-full text-sm">
               <thead>
                 <tr style={{borderBottom:"1px solid #1e2d4d"}}>
                   {["Bill ID","Vendor","Category","Description","Amount","Due Date","Status","Action"].map(h=>(
@@ -382,7 +382,7 @@ function AdminPaymentView() {
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </table></div>
           </div>
         </div>
       )}
@@ -401,7 +401,7 @@ function AdminPaymentView() {
                 <Download className="w-3.5 h-3.5"/>Download Payslips
               </button>
             </div>
-            <table className="w-full text-sm">
+            <div className="table-scroll"><table className="w-full text-sm">
               <thead>
                 <tr style={{borderBottom:"1px solid #1e2d4d"}}>
                   {["Department","Headcount","Basic Salary","HRA","Total Payout","Status"].map(h=>(
@@ -442,7 +442,7 @@ function AdminPaymentView() {
                   <td className="px-4 py-4 text-xs text-slate-500">6/7 disbursed</td>
                 </tr>
               </tfoot>
-            </table>
+            </table></div>
           </div>
         </div>
       )}

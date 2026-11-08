@@ -219,7 +219,7 @@ export function SubscriptionPage() {
       {/* Comparison table */}
       {showCmp && (
         <div className="rounded-2xl border overflow-hidden" style={{background:"#080d18",borderColor:"#1e2d4d"}}>
-          <table className="w-full text-sm">
+          <div className="table-scroll"><table className="w-full text-sm">
             <thead>
               <tr style={{borderBottom:"1px solid #1e2d4d"}}>
                 <th className="px-5 py-4 text-left text-xs uppercase" style={{color:"#475569"}}>Feature</th>
@@ -251,7 +251,7 @@ export function SubscriptionPage() {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table></div>
         </div>
       )}
 

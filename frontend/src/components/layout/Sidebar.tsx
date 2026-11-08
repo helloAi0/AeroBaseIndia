@@ -101,7 +101,8 @@ export function Sidebar() {
 
   return (
     <aside
-      className="fixed left-0 top-0 h-screen z-40 flex flex-col bg-navy-800 border-r border-navy-600/60 transition-all duration-300 overflow-hidden"
+      className={`fixed left-0 top-0 h-screen z-40 flex flex-col bg-navy-800 border-r border-navy-600/60 transition-all duration-300 overflow-hidden
+        ${sidebarOpen ? "" : "max-lg:-translate-x-full"}`}
       style={{ width: sidebarOpen ? "224px" : "56px" }}
     >
       {/* Logo */}
