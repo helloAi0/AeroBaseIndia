@@ -12,7 +12,7 @@ const AIRLINES = [
   {code:"6E",  name:"IndiGo",         color:"#2563EB", flights:3},
   {code:"UK",  name:"Vistara",        color:"#7C3AED", flights:2},
   {code:"SG",  name:"SpiceJet",       color:"#EA580C", flights:3},
-  {code:"IX",  name:"Air Asia India", color:"#DC2626", flights:2},
+  {code:"IX",  name:"Air India Express", color:"#DC2626", flights:2},
 ];
 
 const perf = [

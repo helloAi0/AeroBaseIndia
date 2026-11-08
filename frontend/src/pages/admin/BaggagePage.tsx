@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useAuthStore } from "../../store/authStore";
+import { useAirlineScope } from "../../hooks/useAirlineScope";
 import { Package, CheckCircle, Clock, AlertTriangle,
          Plane, MapPin, Users, Search } from "lucide-react";
 
 // ── Flight-level baggage data (for airport staff/admin) ───────────────────────
-const FLIGHT_BAGGAGE = [
+const ALL_BAGGAGE = [
   {
     flight:"AI-101",  airline:"Air India",   origin:"DEL",
     terminal:"T3",    belt:"B3",  carousel:3,
@@ -34,7 +35,7 @@ const FLIGHT_BAGGAGE = [
     dep:"08:30",    pax:125,
   },
   {
-    flight:"IX-611",  airline:"Air Asia",    origin:"DEL",
+    flight:"IX-611",  airline:"Air India Express",    origin:"DEL",
     terminal:"T2",    belt:"—",   carousel:0,
     total:61,   loaded:58,  transit:2,   arrived:0,  missing:1,
     eta:"Unknown",  status:"Issue",        gate:"C2",
@@ -53,6 +54,55 @@ const FLIGHT_BAGGAGE = [
     total:95,   loaded:95,  transit:0,   arrived:95,  missing:0,
     eta:"Collected",status:"Collected",   gate:"E1",
     dep:"07:00",    pax:230,
+  },
+  {
+    flight:"EK-512",  airline:"Emirates",   origin:"DXB",
+    terminal:"T3",    belt:"E1",  carousel:1,
+    total:398,  loaded:398, transit:0,   arrived:352, missing:0,
+    eta:"Arrived",  status:"At Carousel",  gate:"D1",
+    dep:"07:30",    pax:398,
+  },
+  {
+    flight:"EK-511",  airline:"Emirates",   origin:"DEL",
+    terminal:"T3",    belt:"—",   carousel:0,
+    total:520,  loaded:310, transit:210, arrived:0,  missing:0,
+    eta:"Departing", status:"Loading",     gate:"D1",
+    dep:"16:00",    pax:412,
+  },
+  {
+    flight:"QP-201",  airline:"Akasa Air",  origin:"BOM",
+    terminal:"T1",    belt:"B4",  carousel:4,
+    total:198,  loaded:198, transit:0,   arrived:198, missing:0,
+    eta:"Collected",status:"Collected",    gate:"A4",
+    dep:"11:00",    pax:178,
+  },
+  {
+    flight:"QP-1401", airline:"Akasa Air",  origin:"DEL",
+    terminal:"T1",    belt:"—",   carousel:0,
+    total:162,  loaded:60,  transit:102, arrived:0,  missing:0,
+    eta:"Departing", status:"Loading",     gate:"A4",
+    dep:"15:30",    pax:186,
+  },
+  {
+    flight:"UK-555",  airline:"Vistara",    origin:"BOM",
+    terminal:"T3",    belt:"C1",  carousel:2,
+    total:156,  loaded:156, transit:0,   arrived:140, missing:1,
+    eta:"Arrived",  status:"Issue",        gate:"C1",
+    dep:"08:00",    pax:138,
+  },
+  {
+    flight:"SG-2801", airline:"SpiceJet",   origin:"DEL",
+    terminal:"T1",    belt:"—",   carousel:0,
+    total:176,  loaded:0,   transit:0,   arrived:0,  missing:0,
+    eta:"Departing", status:"Not Started", gate:"B3",
+    dep:"17:00",    pax:176,
+  },
+  {
+    flight:"IX-201",  airline:"Air India Express", origin:"COK",
+    terminal:"T2",    belt:"D1",  carousel:5,
+    total:172,  loaded:172, transit:0,   arrived:172, missing:0,
+    eta:"Collected",status:"Collected",    gate:"D2",
+    dep:"07:00",    pax:152,
   },
 ];
 
@@ -95,8 +145,10 @@ const BAG_STATUS_CFG: Record<string,string> = {
 
 // ── ADMIN / STAFF VIEW ────────────────────────────────────────────────────────
 function StaffBaggageView() {
+  const air = useAirlineScope();
+  const FLIGHT_BAGGAGE = air.scope(ALL_BAGGAGE, f=>f.flight);
   const [search,   setSearch]   = useState("");
-  const [selected, setSelected] = useState<typeof FLIGHT_BAGGAGE[0]|null>(null);
+  const [selected, setSelected] = useState<typeof ALL_BAGGAGE[0]|null>(null);
 
   const filtered = FLIGHT_BAGGAGE.filter(f=>
     !search ||
@@ -114,9 +166,13 @@ function StaffBaggageView() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Baggage Operations</h1>
+          <h1 className="text-2xl font-bold text-white">
+            {air.isAirline ? `${air.name} Baggage Operations` : "Baggage Operations"}
+          </h1>
           <p className="text-slate-400 text-sm mt-0.5">
-            Flight-level baggage tracking — Belt & carousel assignments
+            {air.isAirline
+              ? `${air.code} · Your airline's baggage only · Belt & carousel assignments`
+              : "Flight-level baggage tracking — Belt & carousel assignments"}
           </p>
         </div>
         {issues>0 && (

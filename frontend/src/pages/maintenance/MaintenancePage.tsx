@@ -18,7 +18,7 @@ const aircraft = [
   {reg:"VT-6EA",model:"Airbus A320neo",  airline:"IndiGo",     nextCheck:"Comp. repair",   flightHours:12840,status:"AOG"},
   {reg:"VT-UKA",model:"Airbus A320",     airline:"Vistara",    nextCheck:"Hydraulic fix",  flightHours:9620, status:"AOG"},
   {reg:"VT-SGA",model:"Boeing 737-700",  airline:"SpiceJet",   nextCheck:"C-Check May",    flightHours:22180,status:"Active"},
-  {reg:"VT-IXA",model:"Airbus A320",     airline:"Air Asia",   nextCheck:"Line maint ✓",   flightHours:8940, status:"Active"},
+  {reg:"VT-IXA",model:"Airbus A320",     airline:"Air India Express",   nextCheck:"Line maint ✓",   flightHours:8940, status:"Active"},
 ];
 
 const STATUS_STYLE: Record<string,string> = {
