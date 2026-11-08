@@ -9,3 +9,8 @@ node_modules/
 dist/
 .env
 *.log
+
+# secrets / local certs
+certs/
+*.key
+*.pem
