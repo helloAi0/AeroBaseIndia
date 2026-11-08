@@ -4,3 +4,8 @@ cloud-ready-config.yaml
 .kube/
 build/
 node_modules
+build/
+node_modules/
+dist/
+.env
+*.log
