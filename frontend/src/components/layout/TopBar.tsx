@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Bell, Search, Menu, Wifi, WifiOff, ChevronDown } from "lucide-react";
 import { useAppStore } from "../../store/appStore";
 import { useAuthStore } from "../../store/authStore";
+import { API_ENABLED } from "../../config";
 import { ProfileModal } from "../ui/ProfileModal";
 
 const ROLE_COLOR: Record<string,string> = {
@@ -35,9 +36,10 @@ export function TopBar() {
         <div className="flex items-center gap-2 sm:gap-3">
           {/* Connection status */}
           <div className="flex items-center gap-1.5 text-xs">
-            {ok ? <Wifi className="w-3.5 h-3.5 text-green-400"/> : <WifiOff className="w-3.5 h-3.5 text-red-400"/>}
-            <span className={`hidden sm:block ${ok?"text-green-400":"text-red-400"}`}>
-              {ok?"Live":"Offline"}
+            {!API_ENABLED ? <Wifi className="w-3.5 h-3.5 text-amber-400"/>
+              : ok ? <Wifi className="w-3.5 h-3.5 text-green-400"/> : <WifiOff className="w-3.5 h-3.5 text-red-400"/>}
+            <span className={`hidden sm:block ${!API_ENABLED?"text-amber-400":ok?"text-green-400":"text-red-400"}`}>
+              {!API_ENABLED?"Demo":ok?"Live":"Offline"}
             </span>
           </div>
 

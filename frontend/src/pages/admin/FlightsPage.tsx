@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useAuthStore } from "../../store/authStore";
+import { useLiveFlights } from "../../hooks/useLiveFlights";
+import type { Flight as LiveFlight } from "../../types";
 import { Plane, Search, AlertTriangle, Clock,
          CheckCircle, Users, Fuel, Wrench,
          TrendingUp } from "lucide-react";
@@ -55,6 +57,23 @@ const STATUS_BADGE: Record<string,string> = {
 
 type Flight = typeof ALL_AIRPORT_FLIGHTS[0];
 
+const fmtTime = (iso?: string) => {
+  if (!iso) return "—";
+  const d = new Date(iso);
+  return isNaN(d.getTime()) ? "—" : d.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", hour12: false });
+};
+
+/** Server rows only carry number/route/gate/status/times — everything else is honestly "—". */
+function fromServer(r: LiveFlight, i: number): Flight {
+  const code = r.flightNumber.split("-")[0];
+  return {
+    id: 10_000 + i, flight: r.flightNumber, airline: AIRLINE_NAMES[code] ?? code, airCode: code,
+    from: r.origin, to: r.destination, dep: fmtTime(r.departureTime), arr: fmtTime(r.arrivalTime),
+    gate: r.gate, terminal: "—", status: r.status, pax: 0, aircraft: "—", captain: "—",
+    fuel: "—", bags: 0, gc: 0, issue: null,
+  };
+}
+
 export function FlightsPage() {
   const { user } = useAuthStore();
   const [search,  setSearch]  = useState("");
@@ -69,9 +88,9 @@ export function FlightsPage() {
   const airlineName  = isAirlineUser ? (AIRLINE_NAMES[airlineCode!]||"") : "";
 
   // Filter flights
-  const flights = isAirlineUser
-    ? ALL_AIRPORT_FLIGHTS.filter(f=>f.airCode===airlineCode)
-    : ALL_AIRPORT_FLIGHTS;
+  const live = useLiveFlights();
+  const source: Flight[] = live.mode === "live" ? live.flights.map(fromServer) : ALL_AIRPORT_FLIGHTS;
+  const flights = isAirlineUser ? source.filter(f=>f.airCode===airlineCode) : source;
 
   const filtered = flights.filter(f=>
     (status==="All"||f.status===status) &&
@@ -99,8 +118,19 @@ export function FlightsPage() {
           <p className="text-slate-400 text-sm">
             {isAirlineUser
               ? `${airlineCode} · Only your airline's flights · Delhi IGI Airport`
-              : "Delhi IGI Airport · All airlines · Live data"}
+              : "Delhi IGI Airport · All airlines"}
           </p>
+          <div className="mt-1.5 inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full border"
+            style={live.mode==="live"
+              ? {color:"#4ade80",borderColor:"rgba(74,222,128,0.3)",background:"rgba(74,222,128,0.08)"}
+              : live.mode==="offline"
+                ? {color:"#f87171",borderColor:"rgba(248,113,113,0.3)",background:"rgba(248,113,113,0.08)"}
+                : {color:"#fbbf24",borderColor:"rgba(251,191,36,0.3)",background:"rgba(251,191,36,0.08)"}}>
+            <span className="w-1.5 h-1.5 rounded-full bg-current"/>
+            {live.mode==="live" ? `Live from server · ${live.flights.length} flight${live.flights.length!==1?"s":""}`
+              : live.mode==="offline" ? "Server unreachable — showing demo data"
+              : "Demo data"}
+          </div>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           {isAirlineUser && (
@@ -296,6 +326,13 @@ export function FlightsPage() {
               </tbody>
             </table>
           </div>
+          {filtered.length===0 && (
+            <div className="p-10 text-center text-sm text-slate-500">
+              {live.mode==="live" && flights.length===0
+                ? "The server has no flights for this airport yet."
+                : "No flights match your filters."}
+            </div>
+          )}
         </div>
 
         {/* Detail panel */}

@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Sidebar }            from "./components/layout/Sidebar";
 import { TopBar }             from "./components/layout/TopBar";
@@ -99,6 +99,18 @@ function AppContent() {
   useRealtime(10000);
   const { activePage, sidebarOpen, setSidebar } = useAppStore();
   const { isLoggedIn, user } = useAuthStore();
+
+  // Sign out when a server-issued JWT expires (checked on load and every 30s).
+  useEffect(() => {
+    const check = () => {
+      const { source, expiresAt, logout } = useAuthStore.getState();
+      if (source === "backend" && expiresAt && Date.now() >= expiresAt) logout();
+    };
+    check();
+    const t = setInterval(check, 30_000);
+    return () => clearInterval(t);
+  }, []);
+
   if (!isLoggedIn) return <LoginPage />;
 
 
