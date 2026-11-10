@@ -12,14 +12,17 @@ std::string& DelayPredictionService::mlServiceUrl() {
     return url;
 }
 
-void DelayPredictionService::predictDelay(double weather,
-                                           double congestion,
-                                           std::function<void(int)>&& callback) {
+void DelayPredictionService::predictDelayDetailed(
+    double weather, double congestion,
+    std::function<void(bool, int, const std::string&)>&& callback) {
     auto cb = std::move(callback);
 
     Json::Value body;
-    body["weather"]    = weather;
-    body["congestion"] = congestion;
+    // ml_service/app.py reads *_score; keep the short names for older ML builds.
+    body["weather_score"]    = weather;
+    body["congestion_score"] = congestion;
+    body["weather"]          = weather;
+    body["congestion"]       = congestion;
 
     auto client = drogon::HttpClient::newHttpClient(mlServiceUrl());
     auto req    = drogon::HttpRequest::newHttpJsonRequest(body);
@@ -27,11 +30,19 @@ void DelayPredictionService::predictDelay(double weather,
     req->setPath("/predict");
 
     client->sendRequest(req,
-        [cb = std::move(cb)](drogon::ReqResult res,
-                              const drogon::HttpResponsePtr& resp) mutable {
-            if (res != drogon::ReqResult::Ok || !resp) { cb(0); return; }
+        [cb = std::move(cb)](drogon::ReqResult res, const drogon::HttpResponsePtr& resp) mutable {
+            if (res != drogon::ReqResult::Ok || !resp || resp->statusCode() != drogon::k200OK) { cb(false, 0, ""); return; }
             auto json = resp->getJsonObject();
-            if (!json || !json->isMember("predicted_delay_minutes")) { cb(0); return; }
-            cb((*json)["predicted_delay_minutes"].asInt());
-        });
+            if (!json || !json->isMember("predicted_delay_minutes")) { cb(false, 0, ""); return; }
+            cb(true, (*json)["predicted_delay_minutes"].asInt(), json->get("model_used", "").asString());
+        },
+        3.0);
+}
+
+void DelayPredictionService::predictDelay(double weather,
+                                           double congestion,
+                                           std::function<void(int)>&& callback) {
+    auto cb = std::move(callback);
+    predictDelayDetailed(weather, congestion,
+        [cb = std::move(cb)](bool, int d, const std::string&) mutable { cb(d); });
 }
