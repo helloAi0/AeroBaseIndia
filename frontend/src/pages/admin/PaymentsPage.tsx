@@ -190,7 +190,7 @@ function AdminPaymentView() {
       )}
 
       {/* Tabs */}
-      <div className="flex gap-1 p-1 rounded-2xl w-fit"
+      <div className="flex gap-1 p-1 rounded-2xl w-fit max-w-full overflow-x-auto"
         style={{background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.07)"}}>
         {([
           {k:"summary",      l:"📊 Summary"},
@@ -301,7 +301,7 @@ function AdminPaymentView() {
                 );
               })}
             </div>
-            <div className="mt-4 p-3 rounded-xl flex justify-between text-sm"
+            <div className="mt-4 p-3 rounded-xl flex flex-wrap gap-x-3 gap-y-1 justify-between text-sm"
               style={{background:"rgba(255,255,255,0.03)"}}>
               <span className="text-slate-400">Total Construction Budget</span>
               <span className="font-black text-white">{fmt(conBudget)}</span>

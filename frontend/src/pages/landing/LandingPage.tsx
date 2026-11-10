@@ -52,7 +52,7 @@ export function LandingPage({ onEnter }: { onEnter: () => void }) {
         <div className="flex items-center gap-2 font-bold text-lg"><Icon3D size={34} tilt={false}><Plane className="w-5 h-5" /></Icon3D>AeroBase India</div>
         <button onClick={onEnter} className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-sm font-semibold">Sign in</button>
       </header>
-      <section className="relative z-10 px-6 lg:px-12 pt-20 pb-40 max-w-3xl">
+      <section className="relative z-10 px-6 lg:px-12 pt-16 pb-24 lg:pb-40 max-w-3xl">
         <h1 className="text-4xl lg:text-6xl font-extrabold leading-tight">One control tower for <span className="text-sky-400">every airport</span> you run.</h1>
         <p className="mt-5 text-slate-300 text-lg max-w-xl">Airport operations, airline portals, passenger services and analytics — built for Indian airports and their airline partners.</p>
         <button onClick={onEnter} className="mt-8 px-6 py-3 rounded-2xl bg-sky-500 hover:bg-sky-400 text-white font-semibold text-lg shadow-lg shadow-sky-500/30">Open the console</button>

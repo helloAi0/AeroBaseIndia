@@ -382,7 +382,7 @@ export function BillingPortal() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 p-1 rounded-2xl w-fit"
+      <div className="flex gap-1 p-1 rounded-2xl w-fit max-w-full overflow-x-auto"
         style={{background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.07)"}}>
         {([
           {k:"overview",    l:"📊 Overview"},

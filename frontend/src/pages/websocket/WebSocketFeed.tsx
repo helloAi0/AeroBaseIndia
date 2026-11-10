@@ -102,7 +102,7 @@ export function WebSocketFeed() {
           <h1 className="text-2xl font-bold text-white">WebSocket Live Feed</h1>
           <p className="text-slate-400 text-sm mt-0.5">Real-time event stream simulation</p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <div className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium ${
             connected?"bg-green-500/10 border-green-500/20 text-green-400":
                       "bg-red-500/10 border-red-500/20 text-red-400"}`}>

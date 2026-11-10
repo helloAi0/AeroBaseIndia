@@ -428,7 +428,7 @@ export function GatesPage() {
               }}>
               <div className="flex items-center justify-between mb-1.5">
                 <span className="text-xl font-black" style={{color:active?t.color:"#64748b"}}>{key}</span>
-                <div className="flex gap-1">
+                <div className="flex flex-wrap justify-end gap-1">
                   {boarding>0 && (
                     <span className="text-xs px-2 py-0.5 rounded-full font-semibold"
                       style={{background:"rgba(45,212,191,0.15)",color:"#2dd4bf"}}>

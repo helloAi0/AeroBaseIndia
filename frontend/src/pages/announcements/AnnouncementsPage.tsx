@@ -128,7 +128,7 @@ export function AnnouncementsPage() {
               </div>
               <div>
                 <label className="text-xs text-slate-400 mb-1.5 block">Language</label>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                   {["EN","HI","GU","PU","TA"].map(l=>(
                     <button key={l} onClick={()=>toggleLang(l)}
                       className={`px-3 py-2 rounded-lg text-xs font-bold border transition-all ${

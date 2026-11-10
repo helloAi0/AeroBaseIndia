@@ -28,6 +28,7 @@ export function ProfileModal({ onClose }: Props) {
     setActivePage("dashboard");
     setSidebar(typeof window === "undefined" || window.innerWidth >= 1024);
     logout();
+    try { history.replaceState(null, "", location.pathname); } catch { /* ignore */ }
   };
 
   if (!user) return null;

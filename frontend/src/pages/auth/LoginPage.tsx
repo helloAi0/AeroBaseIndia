@@ -19,7 +19,8 @@ const AIRLINES = [
   {code:"G8",  name:"Go First",         color:"#0284c7",icon:"✈"},
 ];
 
-const AIRLINE_DEMOS: Record<string,{l:string;e:string;p:string;badge:string;c:string}[]> = {
+type Demo = {l:string;e:string;p:string;badge:string;c:string};
+const AIRLINE_DEMOS: Record<string,Demo[]> = !DEMO_LOGIN_ENABLED ? {} : {
   AI:[
     {l:"Air India Operations Head", e:"ops@airindia.aerobase.in",      p:"AI@Ops2024",      badge:"Ops Head",  c:"#ef4444"},
     {l:"Capt. Arjun Sharma (AI)",   e:"captain@airindia.aerobase.in",  p:"AI@Captain2024",  badge:"Captain",   c:"#8b5cf6"},
@@ -43,7 +44,7 @@ const AIRLINE_DEMOS: Record<string,{l:string;e:string;p:string;badge:string;c:st
   ],
 };
 
-const AIRPORT_DEMOS = [
+const AIRPORT_DEMOS: Demo[] = !DEMO_LOGIN_ENABLED ? [] : [
   {l:"Delhi Airport Director",    e:"admin@del.aerobase.in",   p:"DEL@Admin2024", badge:"Admin",    c:"#0ea5e9"},
   {l:"Mumbai Airport Director",   e:"admin@bom.aerobase.in",   p:"BOM@Admin2024", badge:"Admin",    c:"#0ea5e9"},
   {l:"Bangalore Director",        e:"admin@blr.aerobase.in",   p:"BLR@Admin2024", badge:"Admin",    c:"#0ea5e9"},
@@ -52,7 +53,7 @@ const AIRPORT_DEMOS = [
   {l:"Passenger",                 e:"passenger@aerobase.in",   p:"Pass@2024",     badge:"Passenger",c:"#8b5cf6"},
 ];
 
-const RETAILER_DEMOS = [
+const RETAILER_DEMOS: Demo[] = !DEMO_LOGIN_ENABLED ? [] : [
   {l:"Aqua Blue Water Bar",    e:"retailer@del.aerobase.in",  p:"Retail@2024",badge:"Retailer",c:"#f97316"},
   {l:"Starbucks DEL T3",       e:"starbucks@del.aerobase.in", p:"Star@2024",  badge:"Retailer",c:"#f97316"},
   {l:"KFC Terminal 2",         e:"kfc@del.aerobase.in",       p:"KFC@2024",   badge:"Retailer",c:"#f97316"},

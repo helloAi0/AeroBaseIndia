@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Sidebar }            from "./components/layout/Sidebar";
 import { TopBar }             from "./components/layout/TopBar";
@@ -57,6 +57,7 @@ const SecurityOpsPage = lazy(() => import("./pages/security_ops/SecurityOpsPage"
 import { useAppStore }        from "./store/appStore";
 import { useAuthStore }        from "./store/authStore";
 import { LoginPage } from "./pages/auth/LoginPage";
+import { allowedPagesFor } from "./components/layout/Sidebar";
 import { OfflineBanner } from "./components/ui/OfflineBanner";
 import { useRealtime }        from "./hooks/useRealtime";
 import { useFlightAlerts }    from "./hooks/useFlightAlerts";
@@ -134,6 +135,27 @@ function AppContent() {
     return () => clearInterval(t);
   }, []);
 
+  // Keep the URL hash in sync with the page so Back/Forward and refresh work (no router in this app).
+  const role = user?.role;
+  const pendingHash = useRef<string | null>(null);
+  useEffect(() => {
+    if (!isLoggedIn || !role) return;
+    const allowed = allowedPagesFor(role);
+    const fromHash = () => { const p = location.hash.replace(/^#\/?/, ""); return p && allowed.has(p) ? p : null; };
+    const initial = fromHash();
+    if (initial && initial !== useAppStore.getState().activePage) { pendingHash.current = initial; setActivePage(initial); }
+    const onPop = () => setActivePage(fromHash() ?? "dashboard");
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, [isLoggedIn, role, setActivePage]);
+  useEffect(() => {
+    if (!isLoggedIn) return;
+    if (pendingHash.current && pendingHash.current !== activePage) return;   // wait until the hash page has been applied
+    pendingHash.current = null;
+    const want = "#/" + activePage;
+    if (location.hash !== want) history.pushState(null, "", want);
+  }, [isLoggedIn, activePage]);
+
   if (!isLoggedIn) return showLogin ? <LoginPage /> : (
     <Suspense fallback={<PageSkeleton />}><LandingPage onEnter={() => { setShowLogin(true); try { sessionStorage.setItem("aerobase.login", "1"); } catch { /* ignore */ } }} /></Suspense>
   );
@@ -172,7 +194,7 @@ function AppContent() {
         <OfflineBanner />
 
         {/* Page content — below topbar */}
-        <main className="flex-1 overflow-auto p-4 lg:p-6 mt-16">
+        <main className="flex-1 overflow-auto p-4 lg:p-6">
           <ErrorBoundary resetKey={effectivePage}>
           <Suspense fallback={<PageSkeleton />}>
           {PAGES[effectivePage] ?? (

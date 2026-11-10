@@ -125,8 +125,8 @@ export function AnalyticsDashboard() {
             Delhi IGI Airport · Live: {liveTime.toLocaleTimeString()}
           </p>
         </div>
-        <div className="flex items-center gap-3">
-          <div className="flex gap-1 p-1 rounded-xl"
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="flex gap-1 p-1 max-w-full overflow-x-auto rounded-xl"
             style={{background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.08)"}}>
             {(["day","week","month"] as const).map(p=>(
               <button key={p} onClick={()=>setPeriod(p)}

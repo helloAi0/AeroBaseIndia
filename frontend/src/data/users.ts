@@ -1,6 +1,9 @@
 
 
-export const MOCK_USERS: (any & { password: string; staffLevel?: string })[] = [
+import { DEMO_LOGIN_ENABLED } from "../config";
+
+/** Demo accounts. Empty in production builds (DEMO_LOGIN_ENABLED is a build-time constant, so the data is stripped from the bundle). */
+export const MOCK_USERS: (any & { password: string; staffLevel?: string })[] = !DEMO_LOGIN_ENABLED ? [] : [
   {id:"u001",name:"Arjun Sharma",     email:"admin@del.aerobase.in",   password:"DEL@Admin2024",role:"airport_admin",airport:"DEL",airportName:"Delhi Indira Gandhi Intl",lastLogin:"2024-04-26 09:00",verified:true},
   {id:"u002",name:"Priya Nair",       email:"admin@bom.aerobase.in",   password:"BOM@Admin2024",role:"airport_admin",airport:"BOM",airportName:"Mumbai Chhatrapati Shivaji",lastLogin:"2024-04-25 14:30",verified:true},
   {id:"u003",name:"Vikram Rao",       email:"admin@blr.aerobase.in",   password:"BLR@Admin2024",role:"airport_admin",airport:"BLR",airportName:"Bengaluru Kempegowda",lastLogin:"2024-04-24 11:00",verified:true},
