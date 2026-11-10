@@ -189,7 +189,7 @@ Json::Value PaymentService::getOrderStatus(const std::string& orderId) {
             result["error"] = "Order not found";
         }
     } catch (const std::exception& e) {
-        result["error"] = e.what();
+        result["error"] = "Internal server error";
     }
     return result;
 }

@@ -44,7 +44,7 @@ public:
             callback(HttpResponse::newHttpJsonResponse(response));
         } catch (const std::exception& e) {
             Json::Value err;
-            err["error"] = e.what();
+            err["error"] = "Internal server error";
             callback(HttpResponse::newHttpJsonResponse(err));
         }
     }
@@ -132,7 +132,7 @@ public:
             callback(HttpResponse::newHttpJsonResponse(res));
         } catch (const std::exception& e) {
             Json::Value err;
-            err["error"] = e.what();
+            err["error"] = "Internal server error";
             callback(HttpResponse::newHttpJsonResponse(err));
         }
     }

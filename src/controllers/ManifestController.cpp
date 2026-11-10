@@ -60,7 +60,7 @@ void ManifestController::uploadManifest(const HttpRequestPtr& req, std::function
     } catch (const std::exception& e) {
         Logger::error("Manifest Upload Failed: " + std::string(e.what()));
         Json::Value err;
-        err["error"] = std::string(e.what());
+        err["error"] = "Internal server error";
         auto resp = HttpResponse::newHttpJsonResponse(err);
         resp->setStatusCode(k400BadRequest);
         callback(resp);

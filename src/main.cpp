@@ -2,6 +2,7 @@
 #include "core/Logger.h"
 #include "services/JwtService.h"
 #include "config/StartupChecks.h"
+#include "middleware/RouteGuard.h"
 
 int main() {
     StartupChecks::run();
@@ -18,6 +19,9 @@ int main() {
                 "Content-Type,Authorization,X-Tenant-ID,X-Request-ID");
             resp->setStatusCode(drogon::k200OK);
             cb(resp);
+        } else if (auto denied = routeguard::check(req)) {
+            denied->addHeader("Access-Control-Allow-Origin", "*");
+            cb(denied);
         } else {
             ccb();
         }

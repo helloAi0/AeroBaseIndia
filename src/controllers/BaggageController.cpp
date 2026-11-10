@@ -58,7 +58,7 @@ public:
             callback(HttpResponse::newHttpJsonResponse(response));
         } catch (const std::exception& e) {
             Json::Value error;
-            error["error"] = e.what();
+            error["error"] = "Internal server error";
             auto resp = HttpResponse::newHttpJsonResponse(error);
             resp->setStatusCode(k500InternalServerError);
             callback(resp);
@@ -104,7 +104,7 @@ public:
             callback(HttpResponse::newHttpJsonResponse(response));
         } catch (const std::exception& e) {
             Json::Value error;
-            error["error"] = e.what();
+            error["error"] = "Internal server error";
             auto resp = HttpResponse::newHttpJsonResponse(error);
             resp->setStatusCode(k400BadRequest); // Usually a validation or logic error
             callback(resp);

@@ -42,7 +42,7 @@ void AirlineFlightController::syncFlight(const HttpRequestPtr& req, std::functio
 
     } catch (const std::exception& e) {
         Json::Value err;
-        err["error"] = "Database sync failed: " + std::string(e.what());
+        err["error"] = "Internal server error";
         auto resp = HttpResponse::newHttpJsonResponse(err);
         resp->setStatusCode(k500InternalServerError);
         callback(resp);

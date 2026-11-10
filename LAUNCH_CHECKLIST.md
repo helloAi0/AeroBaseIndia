@@ -31,3 +31,10 @@ Legend: ✅ verified by automated/browser/curl tests · ⚠️ built but NOT ver
 - AI delay prediction uses a rule-of-thumb until you train a model (`/data/training_data.csv`)
 - Carbon, baggage-ETA and biometric pages are estimates/demos and are labelled as such
 - Demo data is used when no backend is configured (`VITE_API_URL` unset)
+
+## Route guard (added in pre-check)
+`src/middleware/RouteGuard.h` runs before routing and enforces JWT on every sensitive route
+(admin-only: /audit, /payments/order*, /api/billing, /api/compliance, /traces, /metrics, /api/internal, /predict/cascade;
+any signed-in user: /flights/*, /graphql, /predict/*, /api/twin, /api/revenue, /api/passenger/*).
+Public: /health, /login, /docs, webhooks (signature-checked), partner routes (API-key filter).
+Prometheus can scrape /metrics with `METRICS_TOKEN` as the bearer. Raw DB/exception text is no longer returned to clients.

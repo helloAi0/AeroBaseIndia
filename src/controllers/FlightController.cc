@@ -142,7 +142,7 @@ void FlightController::addFlight(const HttpRequestPtr& req,
             SubscriptionValidator::validateFlightLimit(tenantId);
         } catch (const std::exception& e) {
             Json::Value error;
-            error["error"] = e.what();
+            error["error"] = "Internal server error";
             error["code"] = "PLAN_LIMIT_REACHED";
             auto resp = HttpResponse::newHttpJsonResponse(error);
             resp->setStatusCode(k403Forbidden);
@@ -230,7 +230,7 @@ void FlightController::addFlight(const HttpRequestPtr& req,
 
     } catch (const std::exception& e) {
         Json::Value err;
-        err["error"] = e.what();
+        err["error"] = "Internal server error";
         auto resp = HttpResponse::newHttpJsonResponse(err);
         resp->setStatusCode(k401Unauthorized);
         RequestTimer::logRequest(req->path(), start);
