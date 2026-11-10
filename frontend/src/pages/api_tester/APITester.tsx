@@ -1,3 +1,4 @@
+import { copyText } from "../../lib/clipboard";
 import { useState } from "react";
 import { api } from "../../api/client";
 import { Play, Copy, CheckCircle, Code2,
@@ -107,8 +108,8 @@ export function APITester() {
     setLoading(false);
   };
 
-  const copy = () => {
-    navigator.clipboard.writeText(JSON.stringify(response,null,2));
+  const copy = async () => {
+    if (!(await copyText(JSON.stringify(response,null,2)))) return;
     setCopied(true);
     setTimeout(()=>setCopied(false),1500);
   };

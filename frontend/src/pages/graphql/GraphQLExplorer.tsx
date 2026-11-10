@@ -1,3 +1,4 @@
+import { copyText } from "../../lib/clipboard";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { graphqlQuery } from "../../api/client";
@@ -25,8 +26,8 @@ export function GraphQLExplorer() {
 
   const run = () => mut.mutate(query);
 
-  const copy = () => {
-    navigator.clipboard.writeText(JSON.stringify(result, null, 2));
+  const copy = async () => {
+    if (!(await copyText(JSON.stringify(result, null, 2)))) return;
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };

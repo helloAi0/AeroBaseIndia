@@ -1,3 +1,4 @@
+import { copyText } from "../../lib/clipboard";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchHealth } from "../../api/client";
@@ -74,8 +75,8 @@ export function DeploymentPage() {
     return false;
   };
 
-  const copy = (cmd:string) => {
-    navigator.clipboard.writeText(cmd);
+  const copy = async (cmd:string) => {
+    if (!(await copyText(cmd))) return;
     setCopied(cmd);
     setTimeout(()=>setCopied(null),1500);
   };
@@ -104,8 +105,8 @@ export function DeploymentPage() {
           {label:"Database",    value:h?.database||"—",    ok:h?.database==="UP",       icon:<Database className="w-5 h-5"/>},
           {label:"Redis",       value:h?.redis||"—",       ok:h?.redis==="UP",          icon:<Cpu className="w-5 h-5"/>},
           {label:"AI Engine",   value:h?.ai_engine||"—",   ok:h?.ai_engine==="UP",      icon:<Activity className="w-5 h-5"/>},
-        ].map(({label,value,ok,icon})=>(
-          <div key={label} className={`rounded-2xl p-5 border ${
+        ].map(({label,value,ok,icon},idx)=>(
+          <div key={`${label}-${idx}`} className={`rounded-2xl p-5 border ${
             ok?"bg-green-500/5 border-green-500/20":"bg-red-500/5 border-red-500/20"}`}>
             <div className={`mb-3 ${ok?"text-green-400":"text-red-400"}`}>{icon}</div>
             <div className={`text-xl font-bold font-mono ${ok?"text-green-400":"text-red-400"}`}>{value}</div>
@@ -126,10 +127,10 @@ export function DeploymentPage() {
                 <h3 className="font-semibold text-white text-sm">{section}</h3>
               </div>
               <div className="divide-y divide-navy-700/50">
-                {items.map(({label,check})=>{
+                {items.map(({label,check},ii)=>{
                   const ok = getStatus(check);
                   return (
-                    <div key={label} className="flex items-center gap-3 px-5 py-3">
+                    <div key={`${label}-${ii}`} className="flex items-center gap-3 px-5 py-3">
                       {ok===true  && <CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0"/>}
                       {ok===false && <XCircle className="w-4 h-4 text-red-400 flex-shrink-0"/>}
                       {ok===null  && <Clock className="w-4 h-4 text-yellow-400 flex-shrink-0"/>}
@@ -151,8 +152,8 @@ export function DeploymentPage() {
               <Globe className="w-5 h-5 text-sky-400"/>Start Commands
             </h2>
             <div className="space-y-2">
-              {START_COMMANDS.map(({label,cmd})=>(
-                <div key={label} className="bg-navy-900 rounded-xl border border-navy-600 p-3.5">
+              {START_COMMANDS.map(({label,cmd},ci)=>(
+                <div key={`${label}-${ci}`} className="bg-navy-900 rounded-xl border border-navy-600 p-3.5">
                   <div className="text-xs text-slate-500 mb-1.5">{label}</div>
                   <div className="flex items-center justify-between gap-2">
                     <code className="text-xs text-green-300 font-mono truncate flex-1">{cmd}</code>
@@ -181,8 +182,8 @@ export function DeploymentPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {API_ENDPOINTS.map(e=>(
-                    <tr key={e.path} className="border-b border-navy-700/50 hover:bg-navy-700/30">
+                  {API_ENDPOINTS.map((e,ei)=>(
+                    <tr key={`${e.path}-${ei}`} className="border-b border-navy-700/50 hover:bg-navy-700/30">
                       <td className="px-4 py-2.5">
                         <span className={`px-2 py-0.5 rounded font-bold font-mono ${
                           e.method==="GET"?"bg-green-500/20 text-green-400":"bg-sky-500/20 text-sky-400"}`}>
@@ -208,8 +209,8 @@ export function DeploymentPage() {
                 {label:"API Endpoints",   value:"15+"},
                 {label:"DB Tables",       value:"35+"},
                 {label:"Load Capacity",   value:"18,512 req/s"},
-              ].map(({label,value})=>(
-                <div key={label} className="p-3 bg-navy-700/50 rounded-xl">
+              ].map(({label,value},vi)=>(
+                <div key={`${label}-${vi}`} className="p-3 bg-navy-700/50 rounded-xl">
                   <div className="text-xs text-slate-400">{label}</div>
                   <div className="font-bold font-mono text-white">{value}</div>
                 </div>
