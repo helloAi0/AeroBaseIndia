@@ -2,6 +2,7 @@
 #include <pqxx/pqxx>
 #include "../services/BillingService.h"
 #include "../services/JwtService.h"
+#include "../services/AuditWriter.h"
 #include "../repositories/BillingRepository.h"
 #include "../config/DatabaseManager.h" // Required for direct DB access
 
@@ -18,6 +19,7 @@ public:
         
         // API: GET /api/billing/subscription (Current Plan & Usage)
         ADD_METHOD_TO(BillingController::getSubscription, "/api/billing/subscription", Get);
+        ADD_METHOD_TO(BillingController::getSubscription, "/api/billing/current-plan", Get);
         
         // API: POST /api/billing/upgrade (Change Tier)
         ADD_METHOD_TO(BillingController::upgradePlan, "/api/billing/upgrade", Post);
@@ -30,8 +32,13 @@ public:
             auto json = req->getJsonObject();
             if (!json) throw std::runtime_error("Invalid JSON");
 
+            auto who = JwtService::verifyToken(req->getHeader("Authorization").substr(7));
+            std::string invTenant = (*json)["tenant_id"].asString();
+            if (who.get_payload_claim("role").as_string() != "SUPER_ADMIN")
+                invTenant = who.get_payload_claim("tenant_id").as_string();
+
             Invoice invoice = BillingService::generateInvoice(
-                (*json)["tenant_id"].asString(),
+                invTenant,
                 (*json)["subscription_id"].asString(),
                 (*json)["amount"].asDouble()
             );
@@ -125,11 +132,15 @@ public:
             std::string tenantId = decoded.get_payload_claim("tenant_id").as_string();
 
             BillingRepository::updatePlan(tenantId, newPlan);
+            { Json::Value d; d["new_plan"] = newPlan; AuditWriter::record(tenantId, decoded.get_payload_claim("user_id").as_string(), "PLAN_CHANGE", "subscription", d, req->peerAddr().toIp()); }
 
             Json::Value res;
             res["result"] = "success";
             res["new_plan"] = newPlan;
             callback(HttpResponse::newHttpJsonResponse(res));
+        } catch (const std::invalid_argument&) {
+            Json::Value err; err["error"] = "Unknown plan";
+            auto r = HttpResponse::newHttpJsonResponse(err); r->setStatusCode(k400BadRequest); callback(r);
         } catch (const std::exception& e) {
             Json::Value err;
             err["error"] = "Internal server error";

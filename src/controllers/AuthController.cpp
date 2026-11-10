@@ -1,6 +1,8 @@
 #include <drogon/drogon.h>
 #include "../services/AuthService.h"
 #include "../services/LoginThrottle.h"
+#include "../services/AuditWriter.h"
+#include "../services/JwtService.h"
 
 using namespace drogon;
 
@@ -46,9 +48,16 @@ public:
             const auto result = AuthService::authenticate(email, password);
             if (!result) {
                 LoginThrottle::recordFailure(ip, email);
+                { Json::Value d; d["email"] = email; AuditWriter::record("", "", "LOGIN_FAILED", "user", d, ip); }
                 return fail(k401Unauthorized, "Invalid credentials");
             }
             LoginThrottle::recordSuccess(ip, email);
+            {
+                std::string tid;
+                try { tid = JwtService::verifyToken(result->token).get_payload_claim("tenant_id").as_string(); } catch (...) {}
+                Json::Value d; d["email"] = result->email; d["role"] = result->role;
+                AuditWriter::record(tid, result->userId, "LOGIN", "user", d, ip);
+            }
 
             Json::Value user;
             user["id"]           = result->userId;

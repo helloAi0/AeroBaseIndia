@@ -10,7 +10,6 @@ public:
         ADD_METHOD_TO(FlightController::getFlights,   "/flights",                  Get);
         ADD_METHOD_TO(FlightController::addFlight,    "/flights",                  Post);
         ADD_METHOD_TO(FlightController::getLiveStatus,"/flights/{1}/live",         Get);
-        ADD_METHOD_TO(FlightController::syncFlight,   "/api/partner/flights/sync", Post);
     METHOD_LIST_END
 
     void getFlights(
@@ -27,7 +26,4 @@ public:
         std::string flightId);
 
     // Was missing — caused the "no declaration matches" error
-    void syncFlight(
-        const HttpRequestPtr& req,
-        std::function<void(const HttpResponsePtr&)>&& callback);
 };
