@@ -9,18 +9,30 @@ void PredictionController::predictDelay(
     std::function<void(const HttpResponsePtr&)>&& callback)
 {
     auto json = req->getJsonObject();
-    if (!json) {
-        auto r = HttpResponse::newHttpResponse();
-        r->setStatusCode(k400BadRequest);
-        callback(r); return;
-    }
+    auto fail = [&](HttpStatusCode code, const char* msg) {
+        Json::Value e; e["error"] = msg;
+        auto r = HttpResponse::newHttpJsonResponse(e);
+        r->setStatusCode(code);
+        callback(r);
+    };
+    if (!json) { fail(k400BadRequest, "JSON body required"); return; }
     double weather    = (*json).get("weather_score",    5.0).asDouble();
     double congestion = (*json).get("congestion_score", 5.0).asDouble();
+    if (weather < 0 || weather > 10 || congestion < 0 || congestion > 10) {
+        fail(k400BadRequest, "weather_score and congestion_score must be between 0 and 10"); return;
+    }
 
-    DelayPredictionService::predictDelay(weather, congestion,
-        [cb = std::move(callback)](int delayMins) mutable {
+    DelayPredictionService::predictDelayDetailed(weather, congestion,
+        [cb = std::move(callback)](bool ok, int delayMins, const std::string& model) mutable {
             Json::Value res;
+            if (!ok) {
+                res["error"] = "Prediction service unavailable";
+                auto r = HttpResponse::newHttpJsonResponse(res);
+                r->setStatusCode(k503ServiceUnavailable);
+                cb(r); return;
+            }
             res["predicted_delay_minutes"] = delayMins;
+            res["model_used"] = model;
             res["status"] = "ok";
             cb(HttpResponse::newHttpJsonResponse(res));
         });

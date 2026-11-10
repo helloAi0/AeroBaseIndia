@@ -1,4 +1,5 @@
 import os
+import re
 import joblib
 import pandas as pd
 from flask import Flask, request, jsonify
@@ -57,7 +58,10 @@ def predict():
             return jsonify({"error": "Missing JSON body"}), 400
 
         # 1. Identity the Tenant
-        tenant_id = data.get("tenant_id", "DEFAULT")
+        tenant_id = str(data.get("tenant_id", "DEFAULT"))
+        # tenant_id becomes part of a file path: allow only safe characters
+        if not re.fullmatch(r"[A-Za-z0-9_-]{1,32}", tenant_id):
+            return jsonify({"error": "Invalid tenant_id"}), 400
         
         # 2. Extract features
         features = [[

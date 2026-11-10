@@ -47,8 +47,25 @@ void FlightController::getFlights(const HttpRequestPtr& req,
         "{path=\"/flights\",method=\"GET\",status=\"200\"}");
 
     try {
-        std::string tenantId = req->getHeader("X-Tenant-ID");
-        if (tenantId.empty()) tenantId = "DEL";
+        // Authenticated; tenant comes from the token, not a client header.
+        // Only SUPER_ADMIN may view another airport via X-Tenant-ID.
+        std::string tenantId;
+        try {
+            const std::string authHeader = req->getHeader("Authorization");
+            if (authHeader.size() <= 7 || authHeader.rfind("Bearer ", 0) != 0) throw std::runtime_error("no token");
+            auto decoded = JwtService::verifyToken(authHeader.substr(7));
+            tenantId = decoded.has_payload_claim("airport") ? decoded.get_payload_claim("airport").as_string() : "";
+            const std::string role = decoded.get_payload_claim("role").as_string();
+            const std::string hdr = req->getHeader("X-Tenant-ID");
+            if (role == "SUPER_ADMIN" && !hdr.empty()) tenantId = hdr;
+            if (tenantId.empty()) throw std::runtime_error("no airport in token");
+        } catch (const std::exception&) {
+            Json::Value err; err["error"] = "Unauthorized";
+            auto r = HttpResponse::newHttpJsonResponse(err);
+            r->setStatusCode(k401Unauthorized);
+            callback(r);
+            return;
+        }
 
         auto conn = DatabaseManager::getConnection();
         pqxx::read_transaction txn(*conn);

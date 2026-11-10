@@ -1,7 +1,10 @@
 #include <drogon/drogon.h>
 #include "core/Logger.h"
+#include "services/JwtService.h"
 
 int main() {
+    JwtService::init();
+
     // Global CORS middleware
     drogon::app().registerPreRoutingAdvice([](const drogon::HttpRequestPtr& req,
         drogon::AdviceCallback&& cb, drogon::AdviceChainCallback&& ccb) {

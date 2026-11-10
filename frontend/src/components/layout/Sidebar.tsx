@@ -86,6 +86,13 @@ const ALL_NAV = [
   ]},
 ];
 
+/** Page ids this role may open (used to validate URL hashes / back-forward navigation). */
+export function allowedPagesFor(role: string): Set<string> {
+  const ids = new Set<string>(["dashboard"]);
+  ALL_NAV.filter(g => g.roles.includes(role)).forEach(g => g.items.forEach(i => ids.add(i.id)));
+  return ids;
+}
+
 export function Sidebar() {
   const { activePage, setActivePage, sidebarOpen, setSidebar, tenant } = useAppStore();
   const { user } = useAuthStore();

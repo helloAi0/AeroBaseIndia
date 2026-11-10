@@ -131,7 +131,7 @@ export function NotificationCenter() {
           <h1 className="text-2xl font-bold text-white">Notification Center</h1>
           <p className="text-slate-400 text-sm mt-0.5">Real-time alerts & system events</p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <NotifyToggle />
           {unread>0 && (
             <span className="bg-red-500 text-white text-xs font-bold px-2.5 py-1 rounded-full">
