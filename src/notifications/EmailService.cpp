@@ -2,12 +2,46 @@
 #include "../core/Logger.h"
 #include "../config/DatabaseManager.h"
 #include <pqxx/pqxx>
+#include <drogon/drogon.h>
+#include <regex>
+#include <cstdlib>
 #include <mutex>
 #include <chrono>
 #include <sstream>
 
 static std::vector<EmailPayload> emailQueue_;
 static std::mutex                queueMutex_;
+
+static std::string envs(const char* k, const char* d = "") { const char* v = std::getenv(k); return v ? v : d; }
+
+// Real delivery through Brevo (free tier ~300/day). Needs BREVO_API_KEY and BREVO_SENDER_EMAIL
+// (a sender verified in Brevo). Fire-and-forget; failures are logged without secrets.
+static void deliverViaBrevo(const EmailPayload& p) {
+    const std::string key = envs("BREVO_API_KEY"), sender = envs("BREVO_SENDER_EMAIL");
+    if (key.empty() || sender.empty()) return;
+    static const std::regex re(R"(^[^\s@<>",;]+@[^\s@<>",;]+\.[^\s@<>",;]+$)");
+    if (!std::regex_match(p.to, re)) { core::Logger::info("[Email] skipped: invalid recipient"); return; }
+    std::string subject = p.subject;
+    for (auto& c : subject) if (c == '\r' || c == '\n') c = ' ';
+
+    Json::Value b;
+    b["sender"]["email"] = sender;
+    b["sender"]["name"]  = envs("BREVO_SENDER_NAME", "AeroBase India");
+    b["to"][0]["email"]  = p.to;
+    b["subject"]         = subject;
+    b["textContent"]     = p.body;
+
+    auto client = drogon::HttpClient::newHttpClient(envs("BREVO_API_BASE", "https://api.brevo.com"));
+    auto req = drogon::HttpRequest::newHttpJsonRequest(b);
+    req->setMethod(drogon::Post);
+    req->setPath("/v3/smtp/email");
+    req->addHeader("api-key", key);
+    req->addHeader("accept", "application/json");
+    client->sendRequest(req, [](drogon::ReqResult r, const drogon::HttpResponsePtr& resp) {
+        if (r != drogon::ReqResult::Ok || !resp) core::Logger::info("[Email] Brevo unreachable");
+        else if (resp->statusCode() >= 300) core::Logger::info("[Email] Brevo error " + std::to_string(resp->statusCode()));
+    }, 10.0);
+}
 
 bool EmailService::send(const EmailPayload& payload) {
     // In production: integrate SMTP/SendGrid/AWS SES here
@@ -42,6 +76,7 @@ bool EmailService::send(const EmailPayload& payload) {
         // DB logging failure doesn't block email
     }
 
+    deliverViaBrevo(payload);
     return true;
 }
 

@@ -1,5 +1,6 @@
 #include "NotificationController.h"
 #include "../notifications/EmailService.h"
+#include "../middleware/AdminAuth.h"
 #include <json/json.h>
 
 using namespace drogon;
@@ -8,6 +9,7 @@ void NotificationController::sendEmail(
     const HttpRequestPtr& req,
     std::function<void(const HttpResponsePtr&)>&& cb)
 {
+    { HttpResponsePtr bad; if (!adminauth::require(req, bad)) { cb(bad); return; } }
     auto json = req->getJsonObject();
     if (!json) {
         Json::Value e; e["error"] = "Invalid JSON";
@@ -42,6 +44,7 @@ void NotificationController::getQueue(
     const HttpRequestPtr& req,
     std::function<void(const HttpResponsePtr&)>&& cb)
 {
+    { HttpResponsePtr bad; if (!adminauth::require(req, bad)) { cb(bad); return; } }
     auto queue = EmailService::getQueue();
     Json::Value arr(Json::arrayValue);
     for (auto& e : queue) {
@@ -62,6 +65,7 @@ void NotificationController::testDelay(
     const HttpRequestPtr& req,
     std::function<void(const HttpResponsePtr&)>&& cb)
 {
+    { HttpResponsePtr bad; if (!adminauth::require(req, bad)) { cb(bad); return; } }
     auto json = req->getJsonObject();
     std::string to     = json ? (*json).get("to","test@aerobase.in").asString() : "test@aerobase.in";
     std::string flight = json ? (*json).get("flight","AI-202").asString() : "AI-202";
@@ -82,6 +86,7 @@ void NotificationController::testBilling(
     const HttpRequestPtr& req,
     std::function<void(const HttpResponsePtr&)>&& cb)
 {
+    { HttpResponsePtr bad; if (!adminauth::require(req, bad)) { cb(bad); return; } }
     auto json      = req->getJsonObject();
     std::string to = json ? (*json).get("to","billing@aerobase.in").asString()
                           : "billing@aerobase.in";
