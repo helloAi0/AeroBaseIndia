@@ -11,24 +11,46 @@ public:
 
     void loginUser(const HttpRequestPtr& req,
                    std::function<void(const HttpResponsePtr&)>&& callback) {
-        auto json = req->getJsonObject();
+        auto reply = [&callback](HttpStatusCode code, const Json::Value& body) {
+            auto resp = HttpResponse::newHttpJsonResponse(body);
+            resp->setStatusCode(code);
+            callback(resp);
+        };
+        auto fail = [&reply](HttpStatusCode code, const char* msg) {
+            Json::Value e;
+            e["error"] = msg;
+            reply(code, e);
+        };
+
+        const auto json = req->getJsonObject();
+        if (!json || !json->isObject() || !(*json)["email"].isString() || !(*json)["password"].isString())
+            return fail(k400BadRequest, "Request body must be JSON with string fields 'email' and 'password'");
+
+        const std::string email    = (*json)["email"].asString();
+        const std::string password = (*json)["password"].asString();
+        if (email.empty() || password.empty() || email.size() > 254 || password.size() > 1024)
+            return fail(k400BadRequest, "Invalid email or password format");
 
         try {
-            std::string email = (*json)["email"].asString();
-            std::string password = (*json)["password"].asString();
+            const auto result = AuthService::authenticate(email, password);
+            if (!result)
+                return fail(k401Unauthorized, "Invalid credentials");
 
-            std::string token = AuthService::login(email, password);
+            Json::Value user;
+            user["id"]           = result->userId;
+            user["name"]         = result->name;
+            user["email"]        = result->email;
+            user["role"]         = result->role;
+            user["airport"]      = result->airportCode;
+            user["airport_name"] = result->airportName;
 
-            Json::Value response;
-            response["token"] = token;
-
-            auto resp = HttpResponse::newHttpJsonResponse(response);
-            callback(resp);
-
+            Json::Value ok;
+            ok["token"] = result->token;
+            ok["user"]  = user;
+            reply(k200OK, ok);
         } catch (const std::exception& ex) {
-            Json::Value error;
-            error["error"] = ex.what();
-            callback(HttpResponse::newHttpJsonResponse(error));
+            LOG_ERROR << "login failed: " << ex.what();   // details stay in the log, not the response
+            fail(k500InternalServerError, "Login failed");
         }
     }
 };
