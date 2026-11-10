@@ -1,4 +1,4 @@
-CREATE TABLE flights (
+CREATE TABLE IF NOT EXISTS flights (
     id UUID PRIMARY KEY,
     tenant_id UUID REFERENCES tenants(id) ON DELETE CASCADE,
     flight_number VARCHAR(20) NOT NULL,

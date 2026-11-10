@@ -1,4 +1,4 @@
-CREATE TABLE tickets (
+CREATE TABLE IF NOT EXISTS tickets (
     id UUID PRIMARY KEY,
     tenant_id UUID REFERENCES tenants(id) ON DELETE CASCADE,
     passenger_id UUID REFERENCES passengers(id) ON DELETE CASCADE,

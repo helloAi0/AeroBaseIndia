@@ -1,5 +1,9 @@
-build
 .git
-.vscode
-logs
+frontend/node_modules
+frontend/dist
+build
+**/node_modules
+certs
 .env
+*.key
+*.pem

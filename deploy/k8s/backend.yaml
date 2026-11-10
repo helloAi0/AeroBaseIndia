@@ -28,11 +28,25 @@ spec:
               value: "postgres-service"
             - name: REDIS_HOST
               value: "redis-service"
+            - name: AEROBASE_ENV
+              value: "production"
+            - name: ML_SERVICE_URL
+              value: "http://ml-service:5000"
+            - name: JWT_SECRET
+              valueFrom: { secretKeyRef: { name: aerobase-secrets, key: JWT_SECRET } }
+            - name: DB_PASSWORD
+              valueFrom: { secretKeyRef: { name: aerobase-secrets, key: DB_PASSWORD } }
           # Readiness probe ensures K8s doesn't send traffic to a 
           # pod that is still booting up or connecting to DB.
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 20
           readinessProbe:
             httpGet:
-              path: /api/health
+              path: /health
               port: 8080
             initialDelaySeconds: 5
             periodSeconds: 10

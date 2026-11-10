@@ -1,4 +1,4 @@
-CREATE TABLE payments (
+CREATE TABLE IF NOT EXISTS payments (
     id UUID PRIMARY KEY,
     invoice_id UUID REFERENCES invoices(id),
     provider VARCHAR(50),

@@ -1,4 +1,4 @@
-CREATE TABLE airline_partners (
+CREATE TABLE IF NOT EXISTS airline_partners (
     id UUID PRIMARY KEY,
     tenant_id UUID REFERENCES tenants(id),
     airline_code VARCHAR(10) UNIQUE NOT NULL, -- e.g., 'AI', '6E'

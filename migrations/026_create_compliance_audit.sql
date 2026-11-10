@@ -1,4 +1,4 @@
-CREATE TABLE compliance_audit (
+CREATE TABLE IF NOT EXISTS compliance_audit (
     id UUID PRIMARY KEY,
     tenant_id UUID REFERENCES tenants(id),
     user_id UUID,

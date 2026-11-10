@@ -1,4 +1,4 @@
-CREATE TABLE gates (
+CREATE TABLE IF NOT EXISTS gates (
     id UUID PRIMARY KEY,
     tenant_id UUID REFERENCES tenants(id) ON DELETE CASCADE,
     terminal VARCHAR(20) NOT NULL,

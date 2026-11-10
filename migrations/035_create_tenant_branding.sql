@@ -1,4 +1,4 @@
-CREATE TABLE tenant_branding (
+CREATE TABLE IF NOT EXISTS tenant_branding (
     id UUID PRIMARY KEY,
     tenant_id UUID UNIQUE REFERENCES tenants(id),
     company_name VARCHAR(255) NOT NULL,

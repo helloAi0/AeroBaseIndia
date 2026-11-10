@@ -1,4 +1,4 @@
-CREATE TABLE invoices (
+CREATE TABLE IF NOT EXISTS invoices (
     id UUID PRIMARY KEY,
     tenant_id UUID REFERENCES tenants(id) ON DELETE CASCADE,
     subscription_id UUID REFERENCES tenant_subscriptions(id),

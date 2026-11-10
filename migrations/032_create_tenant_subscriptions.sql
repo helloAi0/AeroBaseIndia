@@ -1,4 +1,4 @@
-CREATE TABLE tenant_subscriptions (
+CREATE TABLE IF NOT EXISTS tenant_subscriptions (
     id UUID PRIMARY KEY,
     tenant_id UUID REFERENCES tenants(id),
     plan_id UUID REFERENCES subscription_plans(id),

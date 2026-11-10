@@ -1,4 +1,4 @@
-CREATE TABLE staff (
+CREATE TABLE IF NOT EXISTS staff (
     id UUID PRIMARY KEY,
     tenant_id UUID REFERENCES tenants(id) ON DELETE CASCADE,
     full_name VARCHAR(255) NOT NULL,

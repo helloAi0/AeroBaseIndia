@@ -1,4 +1,4 @@
-CREATE TABLE permissions (
+CREATE TABLE IF NOT EXISTS permissions (
     id UUID PRIMARY KEY,
     name VARCHAR(150) UNIQUE NOT NULL,
     description TEXT,

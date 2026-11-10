@@ -28,6 +28,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS trigger_immutable_invoices ON invoices;
 CREATE TRIGGER trigger_immutable_invoices
 BEFORE UPDATE ON invoices
 FOR EACH ROW EXECUTE FUNCTION prevent_finalized_invoice_update();

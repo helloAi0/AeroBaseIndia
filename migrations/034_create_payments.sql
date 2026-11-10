@@ -10,4 +10,4 @@ CREATE TABLE IF NOT EXISTS payments (
     CONSTRAINT unique_transaction_ref UNIQUE (transaction_ref)
 );
 
-CREATE INDEX idx_payments_invoice ON payments(invoice_id);
+CREATE INDEX IF NOT EXISTS idx_payments_invoice ON payments(invoice_id);

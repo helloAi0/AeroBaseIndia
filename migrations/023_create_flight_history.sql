@@ -1,4 +1,4 @@
-CREATE TABLE flight_history (
+CREATE TABLE IF NOT EXISTS flight_history (
     id UUID PRIMARY KEY,
     tenant_id UUID REFERENCES tenants(id),
     flight_id UUID,

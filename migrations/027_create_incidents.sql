@@ -1,4 +1,4 @@
-CREATE TABLE incidents (
+CREATE TABLE IF NOT EXISTS incidents (
     id UUID PRIMARY KEY,
     tenant_id UUID REFERENCES tenants(id),
     severity VARCHAR(20),

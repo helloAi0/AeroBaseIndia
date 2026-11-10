@@ -1,4 +1,4 @@
-CREATE TABLE usage_metrics (
+CREATE TABLE IF NOT EXISTS usage_metrics (
     id UUID PRIMARY KEY,
     tenant_id UUID REFERENCES tenants(id),
     metric_name VARCHAR(100) NOT NULL,

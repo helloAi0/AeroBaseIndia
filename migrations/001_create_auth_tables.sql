@@ -1,4 +1,4 @@
-CREATE TABLE tenants (
+CREATE TABLE IF NOT EXISTS tenants (
     id UUID PRIMARY KEY,
     airport_name VARCHAR(255) NOT NULL,
     airport_code VARCHAR(10) UNIQUE NOT NULL,
@@ -6,7 +6,7 @@ CREATE TABLE tenants (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
     id UUID PRIMARY KEY,
     tenant_id UUID REFERENCES tenants(id) ON DELETE CASCADE,
     full_name VARCHAR(255) NOT NULL,

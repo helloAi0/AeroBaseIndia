@@ -10,4 +10,4 @@ CREATE TABLE IF NOT EXISTS retail_revenue (
     CONSTRAINT check_positive_sale CHECK (sale_amount >= 0)
 );
 
-CREATE INDEX idx_retail_tenant_date ON retail_revenue(tenant_id, recorded_at);
+CREATE INDEX IF NOT EXISTS idx_retail_tenant_date ON retail_revenue(tenant_id, recorded_at);

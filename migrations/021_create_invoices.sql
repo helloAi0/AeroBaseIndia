@@ -1,4 +1,4 @@
-CREATE TABLE invoices (
+CREATE TABLE IF NOT EXISTS invoices (
     id UUID PRIMARY KEY,
     tenant_id UUID REFERENCES tenants(id),
     amount NUMERIC(12,2) NOT NULL,

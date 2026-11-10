@@ -1,4 +1,4 @@
-CREATE TABLE passengers (
+CREATE TABLE IF NOT EXISTS passengers (
     id UUID PRIMARY KEY,
     tenant_id UUID REFERENCES tenants(id) ON DELETE CASCADE,
     first_name VARCHAR(100) NOT NULL,

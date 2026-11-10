@@ -1,4 +1,4 @@
-CREATE TABLE passenger_bookings (
+CREATE TABLE IF NOT EXISTS passenger_bookings (
     id UUID PRIMARY KEY,
     passenger_id UUID REFERENCES passenger_accounts(id),
     flight_id UUID REFERENCES flights(id),
