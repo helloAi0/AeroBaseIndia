@@ -1,5 +1,6 @@
 #include "SmsController.h"
 #include "../notifications/SmsService.h"
+#include "../notifications/TelegramService.h"
 #include "../services/JwtService.h"
 #include <chrono>
 #include <deque>
@@ -48,6 +49,7 @@ void SmsController::smsStatus(const HttpRequestPtr& req, std::function<void(cons
     std::string t, u; HttpResponsePtr bad;
     if (!authorize(req, t, u, bad)) { cb(bad); return; }
     Json::Value j; j["provider"] = SmsService::providerName(); j["dry_run"] = SmsService::providerName() == "log";
+    j["telegram_configured"] = TelegramService::configured();
     cb(HttpResponse::newHttpJsonResponse(j));
 }
 
@@ -79,6 +81,37 @@ void SmsController::sendSms(const HttpRequestPtr& req, std::function<void(const 
                 Json::Value out; out["provider"] = SmsService::providerName();
                 out["sent"] = agg->sent; out["failed"] = (int)agg->results.size() - agg->sent;
                 out["results"] = agg->results;
+                agg->cb(HttpResponse::newHttpJsonResponse(out));
+            }
+        });
+    }
+}
+
+void SmsController::sendTelegram(const HttpRequestPtr& req, std::function<void(const HttpResponsePtr&)>&& cb) {
+    std::string tenant, user; HttpResponsePtr bad;
+    if (!authorize(req, tenant, user, bad)) { cb(bad); return; }
+    auto json = req->getJsonObject();
+    if (!json || !(*json)["to"].isArray() || !(*json)["message"].isString()) {
+        cb(err(k400BadRequest, "Body must be {\"to\": [\"<chat id>\"], \"message\": \"...\"}")); return;
+    }
+    const std::string msg = (*json)["message"].asString();
+    const auto& to = (*json)["to"];
+    if (msg.empty() || msg.size() > 4000) { cb(err(k400BadRequest, "message must be 1-4000 characters")); return; }
+    if (to.empty() || to.size() > 50) { cb(err(k400BadRequest, "'to' must contain 1-50 chat ids")); return; }
+    if (!TelegramService::configured()) { cb(err(k503ServiceUnavailable, "Telegram is not configured")); return; }
+    if (!reserve(tenant, to.size())) { cb(err(k429TooManyRequests, "Rate limit reached (60/minute). Try again shortly.")); return; }
+
+    struct Agg { Json::Value results{Json::arrayValue}; size_t left; int sent = 0; std::function<void(const HttpResponsePtr&)> cb; std::mutex m; };
+    auto agg = std::make_shared<Agg>(); agg->left = to.size(); agg->cb = std::move(cb);
+    for (const auto& n : to) {
+        TelegramService::send(n.isString() ? n.asString() : "", msg, [agg](TgResult r) {
+            std::lock_guard<std::mutex> l(agg->m);
+            Json::Value x; x["to"] = r.chat.size() > 4 ? "***" + r.chat.substr(r.chat.size() - 4) : "***"; x["ok"] = r.ok;
+            if (r.ok) agg->sent++; else x["error"] = r.error;
+            agg->results.append(x);
+            if (--agg->left == 0) {
+                Json::Value out; out["provider"] = "telegram"; out["sent"] = agg->sent;
+                out["failed"] = (int)agg->results.size() - agg->sent; out["results"] = agg->results;
                 agg->cb(HttpResponse::newHttpJsonResponse(out));
             }
         });
