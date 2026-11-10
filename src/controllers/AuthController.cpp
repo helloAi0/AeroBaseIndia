@@ -1,5 +1,6 @@
 #include <drogon/drogon.h>
 #include "../services/AuthService.h"
+#include "../services/LoginThrottle.h"
 
 using namespace drogon;
 
@@ -31,10 +32,23 @@ public:
         if (email.empty() || password.empty() || email.size() > 254 || password.size() > 1024)
             return fail(k400BadRequest, "Invalid email or password format");
 
+        const std::string ip = req->getPeerAddr().toIp();
+        if (int wait = LoginThrottle::blockedFor(ip, email)) {
+            Json::Value e; e["error"] = "Too many failed attempts. Try again later.";
+            auto resp = HttpResponse::newHttpJsonResponse(e);
+            resp->setStatusCode(k429TooManyRequests);
+            resp->addHeader("Retry-After", std::to_string(wait));
+            callback(resp);
+            return;
+        }
+
         try {
             const auto result = AuthService::authenticate(email, password);
-            if (!result)
+            if (!result) {
+                LoginThrottle::recordFailure(ip, email);
                 return fail(k401Unauthorized, "Invalid credentials");
+            }
+            LoginThrottle::recordSuccess(ip, email);
 
             Json::Value user;
             user["id"]           = result->userId;

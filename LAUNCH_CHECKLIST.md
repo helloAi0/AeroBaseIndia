@@ -24,7 +24,7 @@ Legend: ✅ verified by automated/browser/curl tests · ⚠️ built but NOT ver
 - Kubernetes manifests (probe path fixed to `/health`; secrets must be created out-of-band)
 - 3D scenes on a real GPU; real Twilio/Telegram/Brevo/WhatsApp delivery; real Open-Meteo data
 - Billing/payment endpoints beyond SQL-schema compatibility (migration 038 makes their queries valid; flows not exercised)
-- Rate limiting for `/login`; password reset; email verification (not implemented)
+- Password reset and email verification (not implemented). `/login` is rate-limited per process (5 failures per IP+email, 30 per IP, per 15 min); behind a proxy all users share the proxy IP, so also rate-limit at the proxy
 
 ## Known limitations
 - AI delay prediction uses a rule-of-thumb until you train a model (`/data/training_data.csv`)
