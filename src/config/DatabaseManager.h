@@ -2,6 +2,7 @@
 #include <pqxx/pqxx>
 #include <cstdlib>
 #include <memory>
+#include <chrono>
 #include <string>
 
 class DatabaseManager {
@@ -17,10 +18,20 @@ public:
                " password="+ quote(env("DB_PASSWORD", "postgres"));
     }
 
-    /// Shared connection used by existing controllers. NOTE: a pqxx::connection is not
-    /// thread-safe; new code should prefer makeConnection().
+    /// Per-thread connection (a pqxx::connection is not thread-safe, and Drogon serves requests on
+    /// several IO threads). It is validated at most every 5s and transparently re-created if the
+    /// database was restarted or the connection dropped, so a DB blip never needs a server restart.
     static std::shared_ptr<pqxx::connection> getConnection() {
-        static auto conn = std::make_shared<pqxx::connection>(connectionString());
+        thread_local std::shared_ptr<pqxx::connection> conn;
+        thread_local std::chrono::steady_clock::time_point lastCheck{};
+        const auto now = std::chrono::steady_clock::now();
+        if (conn && now - lastCheck < std::chrono::seconds(5)) return conn;
+        if (conn) {
+            try { pqxx::nontransaction t(*conn); t.exec("SELECT 1"); lastCheck = now; return conn; }
+            catch (const std::exception&) { conn.reset(); }
+        }
+        conn = std::make_shared<pqxx::connection>(connectionString());   // throws if the DB is unreachable
+        lastCheck = now;
         return conn;
     }
 
