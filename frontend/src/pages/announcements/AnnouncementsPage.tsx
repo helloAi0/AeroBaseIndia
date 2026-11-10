@@ -7,7 +7,7 @@ import { Volume2, VolumeX, Megaphone, Clock, Play } from "lucide-react";
 const ANNOUNCEMENT_TEMPLATES = [
   {id:1,type:"Boarding",    template:(f:string,g:string)=>`Attention passengers. Flight ${f} is now boarding at Gate ${g}. Please proceed to the gate immediately.`,priority:"Normal"},
   {id:2,type:"Final Call",  template:(f:string,g:string)=>`Final boarding call for flight ${f}. This is the final call for all passengers on this flight. Please proceed to Gate ${g} immediately.`,priority:"Urgent"},
-  {id:3,type:"Delay",       template:(f:string,g:string)=>`We regret to inform that flight ${f} has been delayed. The new estimated departure time will be announced shortly. We apologize for the inconvenience.`,priority:"Info"},
+  {id:3,type:"Delay",       template:(f:string,_g:string)=>`We regret to inform that flight ${f} has been delayed. The new estimated departure time will be announced shortly. We apologize for the inconvenience.`,priority:"Info"},
   {id:4,type:"Gate Change", template:(f:string,g:string)=>`Important announcement. Flight ${f} gate has been changed to Gate ${g}. Please proceed to the new gate immediately.`,priority:"Urgent"},
   {id:5,type:"Cancellation",template:(f:string,_:string)=>`We regret to announce that flight ${f} has been cancelled. Please contact the airline counter for rebooking assistance.`,priority:"Critical"},
   {id:6,type:"Security",    template:(_:string,__:string)=>`Security announcement: All passengers are requested to keep their baggage with them at all times. Report any unattended baggage to security immediately.`,priority:"Info"},
