@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchFlights, fetchEmailQueue } from "../../api/client";
+import { NotifyToggle } from "../../components/ui/NotifyToggle";
 import { Bell, Mail, Plane, Shield, CreditCard,
          Zap, CheckCircle, Trash2 } from "lucide-react";
 
@@ -131,6 +132,7 @@ export function NotificationCenter() {
           <p className="text-slate-400 text-sm mt-0.5">Real-time alerts & system events</p>
         </div>
         <div className="flex items-center gap-3">
+          <NotifyToggle />
           {unread>0 && (
             <span className="bg-red-500 text-white text-xs font-bold px-2.5 py-1 rounded-full">
               {unread} unread

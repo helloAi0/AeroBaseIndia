@@ -160,7 +160,7 @@ export function SecurityPage() {
             <AlertTriangle className="w-5 h-5 text-red-400"/>
             <h2 className="font-semibold text-white">Security Incidents</h2>
           </div>
-          <table className="w-full text-sm">
+          <div className="table-scroll"><table className="w-full text-sm">
             <thead>
               <tr className="text-slate-500 text-xs uppercase">
                 {["ID","Type","Severity","Time","IP","Status"].map(h=>(
@@ -184,7 +184,7 @@ export function SecurityPage() {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table></div>
         </div>
       )}
 
@@ -195,7 +195,7 @@ export function SecurityPage() {
             <h2 className="font-semibold text-white">Audit Trail</h2>
             <span className="text-xs text-slate-500 ml-auto">Tamper-proof • SHA-256 chained</span>
           </div>
-          <table className="w-full text-sm">
+          <div className="table-scroll"><table className="w-full text-sm">
             <thead>
               <tr className="text-slate-500 text-xs uppercase">
                 {["Action","User","Time","Entity","Status"].map(h=>(
@@ -216,7 +216,7 @@ export function SecurityPage() {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table></div>
         </div>
       )}
 

@@ -12,7 +12,7 @@ const AIRLINES = [
   {code:"6E",  name:"IndiGo",         color:"#2563EB", flights:3},
   {code:"UK",  name:"Vistara",        color:"#7C3AED", flights:2},
   {code:"SG",  name:"SpiceJet",       color:"#EA580C", flights:3},
-  {code:"IX",  name:"Air Asia India", color:"#DC2626", flights:2},
+  {code:"IX",  name:"Air India Express", color:"#DC2626", flights:2},
 ];
 
 const perf = [
@@ -131,7 +131,7 @@ export function PartnerPortal() {
             No flights found for {airline.name} today
           </div>
         ) : (
-          <table className="w-full text-sm">
+          <div className="table-scroll"><table className="w-full text-sm">
             <thead>
               <tr className="text-slate-500 text-xs uppercase">
                 {["Flight","Route","Gate","Status"].map(h=>(
@@ -154,7 +154,7 @@ export function PartnerPortal() {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table></div>
         )}
       </div>
 

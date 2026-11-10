@@ -483,7 +483,7 @@ export function RetailerDashboard() {
                 </span>
               )}
             </div>
-            <table className="w-full text-sm">
+            <div className="table-scroll"><table className="w-full text-sm">
               <thead>
                 <tr style={{borderBottom:"1px solid #1e2d4d"}}>
                   {["Category","Amount","Due Date","Status","Action"].map(h=>(
@@ -533,7 +533,7 @@ export function RetailerDashboard() {
                   <td colSpan={3}/>
                 </tr>
               </tfoot>
-            </table>
+            </table></div>
           </div>
         </div>
       )}

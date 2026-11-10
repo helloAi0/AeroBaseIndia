@@ -62,7 +62,7 @@ export const DEMO_FLIGHTS = [
   {flight_number:"6E-2341", origin:"DEL", destination:"BLR", gate:"B3",  status:"Scheduled",  airline:"IndiGo",       dep:"11:00",arr:"13:15",aircraft:"A320neo",   terminal:"T2"},
   {flight_number:"UK-925",  origin:"DEL", destination:"HYD", gate:"C2",  status:"Delayed",    airline:"Vistara",      dep:"09:45",arr:"11:55",aircraft:"A320",      terminal:"T3"},
   {flight_number:"SG-3405", origin:"DEL", destination:"CCU", gate:"A4",  status:"Departed",   airline:"SpiceJet",     dep:"08:30",arr:"10:45",aircraft:"B737",      terminal:"T1"},
-  {flight_number:"IX-611",  origin:"DEL", destination:"COK", gate:"D1",  status:"Scheduled",  airline:"Air Asia",     dep:"14:00",arr:"17:00",aircraft:"A320",      terminal:"T2"},
+  {flight_number:"IX-611",  origin:"DEL", destination:"COK", gate:"D1",  status:"Scheduled",  airline:"Air India Express",     dep:"14:00",arr:"17:00",aircraft:"A320",      terminal:"T2"},
   {flight_number:"AI-2811", origin:"BOM", destination:"DEL", gate:"A2",  status:"Landed",     airline:"Air India",    dep:"07:00",arr:"09:05",aircraft:"A321",      terminal:"T3"},
   {flight_number:"6E-5317", origin:"BLR", destination:"DEL", gate:"B5",  status:"Boarding",   airline:"IndiGo",       dep:"12:30",arr:"14:45",aircraft:"A321XLR",  terminal:"T2"},
   {flight_number:"QP-1401", origin:"DEL", destination:"JAI", gate:"B1",  status:"Scheduled",  airline:"Akasa Air",    dep:"15:30",arr:"16:15",aircraft:"B737 MAX",  terminal:"T1"},

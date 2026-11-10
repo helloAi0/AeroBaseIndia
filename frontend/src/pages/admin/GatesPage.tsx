@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAirlineScope } from "../../hooks/useAirlineScope";
+import { AIRLINES, airlineOfFlight } from "../../data/airlines";
 import { DoorOpen, Plane, CheckCircle, Clock,
          XCircle, AlertTriangle, Users, Radio,
-         Wrench, Shield, Plus, X } from "lucide-react";
+         Wrench, Shield, Plus, X, Undo2, GripVertical } from "lucide-react";
 
 type Gate = {
   id:string; terminal:string; status:string;
@@ -22,13 +24,40 @@ const INITIAL_GATES: Gate[] = [
   {id:"B4",terminal:"T2",status:"Maintenance",flight:null,     airline:null,           dest:null, dep:null,   capacity:180,load:0, pax:0,  security:"Closed", notes:"Jetbridge maintenance — 2hr ETA"},
   {id:"B5",terminal:"T2",status:"Available", flight:null,      airline:null,           dest:null, dep:null,   capacity:220,load:0, pax:0,  security:"Clear",  notes:""},
   {id:"C1",terminal:"T3",status:"Available", flight:null,      airline:null,           dest:null, dep:null,   capacity:350,load:0, pax:0,  security:"Clear",  notes:""},
-  {id:"C2",terminal:"T3",status:"Delayed",   flight:"IX-611",  airline:"Air Asia",    dest:"COK",dep:"14:00",capacity:180,load:72,pax:130,security:"Clear",  notes:"Delay: Weather at COK — 45 min"},
+  {id:"C2",terminal:"T3",status:"Delayed",   flight:"IX-611",  airline:"Air India Express",    dest:"COK",dep:"14:00",capacity:180,load:72,pax:130,security:"Clear",  notes:"Delay: Weather at COK — 45 min"},
   {id:"C3",terminal:"T3",status:"Boarding",  flight:"AI-819",  airline:"Air India",   dest:"LHR",dep:"13:45",capacity:380,load:91,pax:346,security:"Active", notes:"International boarding — CISF check"},
   {id:"D1",terminal:"T3",status:"Occupied",  flight:"EK-511",  airline:"Emirates",    dest:"DXB",dep:"16:00",capacity:450,load:95,pax:428,security:"Active", notes:"Full A380 — extra CISF deployed"},
   {id:"D2",terminal:"T3",status:"Available", flight:null,      airline:null,           dest:null, dep:null,   capacity:350,load:0, pax:0,  security:"Clear",  notes:""},
   {id:"E1",terminal:"T3",status:"Occupied",  flight:"AI-2811", airline:"Air India",   dest:"DEL",dep:"07:00",capacity:280,load:82,pax:230,security:"Clear",  notes:""},
   {id:"E2",terminal:"T3",status:"Cleaning",  flight:null,      airline:null,           dest:null, dep:null,   capacity:280,load:0, pax:0,  security:"Closed", notes:"Deep clean — 1hr ETA"},
 ];
+
+type TrayFlight = {flight:string; dest:string; dep:string; pax:number};
+type Pick = {flight:string; from:"tray"|string};   // from = "tray" or a gate id
+
+const INITIAL_TRAY: TrayFlight[] = [
+  {flight:"6E-501", dest:"HYD", dep:"12:30", pax:172},
+  {flight:"AI-202", dest:"BLR", dep:"14:00", pax:198},
+  {flight:"AI-303", dest:"HYD", dep:"16:00", pax:167},
+  {flight:"AI-501", dest:"CCU", dep:"18:30", pax:189},
+  {flight:"6E-700", dest:"GOA", dep:"18:00", pax:186},
+  {flight:"UK-202", dest:"GOI", dep:"18:30", pax:156},
+  {flight:"AI-145", dest:"SIN", dep:"21:30", pax:260},
+];
+
+const INTL = new Set(["DXB","LHR","SIN","JFK"]);
+
+/** Returns an error message if the flight can't go to this gate, otherwise null. */
+function checkMove(f:TrayFlight, fromGateId:string|null, target:Gate): string|null {
+  if(target.id===fromGateId) return "Already at this gate";
+  if(target.flight)          return `${target.id} is occupied by ${target.flight}`;
+  if(target.status!=="Available") return `${target.id} is ${target.status.toLowerCase()}`;
+  if(INTL.has(f.dest) && target.terminal!=="T3") return `${f.flight} is international — T3 gates only`;
+  if(f.pax>target.capacity)  return `${target.id} handles ${target.capacity} pax; ${f.flight} has ${f.pax}`;
+  return null;
+}
+
+const clearGate = (g:Gate):Gate => ({...g,status:"Available",flight:null,airline:null,dest:null,dep:null,pax:0,load:0,security:g.security==="Closed"?"Closed":"Clear",notes:"Ready for next assignment"});
 
 const TERMINALS = {
   T1:{name:"Terminal 1",type:"Domestic",      color:"#0ea5e9"},
@@ -46,12 +75,25 @@ const STATUS_CFG: Record<string,{color:string;icon:React.ReactNode;pulse?:boolea
 };
 
 
-function GateCard({gate,selected,onClick}:{gate:Gate;selected:boolean;onClick:()=>void}) {
+type DnD = {
+  draggable?:boolean; onDragStart?:(e:React.DragEvent)=>void; onDragEnd?:()=>void;
+  onDragOver?:(e:React.DragEvent)=>void; onDrop?:(e:React.DragEvent)=>void;
+  dropState?:"valid"|"invalid"|null; dim?:boolean; mine?:boolean;
+};
+
+function GateCard({gate,selected,onClick,dnd={}}:{gate:Gate;selected:boolean;onClick:()=>void;dnd?:DnD}) {
   const cfg = STATUS_CFG[gate.status]||STATUS_CFG["Available"];
   const isCritical = gate.load>=90 && gate.flight;
   return (
-    <div onClick={onClick} className="rounded-2xl p-4 border-2 cursor-pointer select-none"
+    <div onClick={onClick} role="button" tabIndex={0}
+      onKeyDown={e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); onClick(); } }}
+      draggable={dnd.draggable} onDragStart={dnd.onDragStart} onDragEnd={dnd.onDragEnd}
+      onDragOver={dnd.onDragOver} onDrop={dnd.onDrop}
+      className={`rounded-2xl p-4 border-2 select-none ${dnd.draggable?"cursor-grab active:cursor-grabbing":"cursor-pointer"}`}
       style={{
+        opacity: dnd.dim ? 0.4 : 1,
+        outline: dnd.dropState==="valid" ? "2px dashed #22c55e" : dnd.dropState==="invalid" ? "2px dashed rgba(239,68,68,0.5)" : dnd.mine ? `2px solid ${cfg.color}` : "none",
+        outlineOffset: 3,
         background: selected ? cfg.color+"22" : cfg.color+"0d",
         borderColor: selected ? cfg.color : cfg.color+"33",
         transform: selected ? "scale(1.02)" : "scale(1)",
@@ -252,6 +294,64 @@ export function GatesPage() {
   const [filterStatus,setFilter]  = useState("All");
   const [showAdd,    setShowAdd]  = useState(false);
 
+  const air = useAirlineScope();
+  const canEdit = !air.isAirline;               // gate allocation is an airport-ops job
+  const [tray,    setTray]    = useState<TrayFlight[]>(INITIAL_TRAY);
+  const [picked,  setPicked]  = useState<Pick|null>(null);   // tap-to-place (touch friendly)
+  const [drag,    setDrag]    = useState<Pick|null>(null);   // native drag in progress
+  const [history, setHistory] = useState<{gates:Gate[];tray:TrayFlight[]}[]>([]);
+  const [toast,   setToast]   = useState<{msg:string;kind:"ok"|"error"}|null>(null);
+
+  useEffect(()=>{ if(!toast) return; const t=setTimeout(()=>setToast(null),3500); return ()=>clearTimeout(t); },[toast]);
+  useEffect(()=>{ const h=(e:KeyboardEvent)=>{ if(e.key==="Escape"){ setPicked(null); setDrag(null);} };
+                  window.addEventListener("keydown",h); return ()=>window.removeEventListener("keydown",h); },[]);
+  useEffect(()=>{ setSelected(s=>s ? gates.find(g=>g.id===s.id) ?? null : null); },[gates]);
+
+  const flightFor = (p:Pick):TrayFlight|null => {
+    if(p.from==="tray") return tray.find(t=>t.flight===p.flight) ?? null;
+    const g = gates.find(x=>x.id===p.from);
+    return g?.flight ? {flight:g.flight,dest:g.dest??"",dep:g.dep??"",pax:g.pax} : null;
+  };
+  const snapshot = () => setHistory(h=>[...h.slice(-19),{gates,tray}]);
+  const undo = () => setHistory(h=>{ const last=h[h.length-1]; if(!last) return h;
+    setGates(last.gates); setTray(last.tray); setToast({msg:"Undid last change",kind:"ok"}); return h.slice(0,-1); });
+
+  const move = (pick:Pick, target:Gate) => {
+    const tf = flightFor(pick); if(!tf) return;
+    const err = checkMove(tf, pick.from==="tray"?null:pick.from, target);
+    if(err){ setToast({msg:err,kind:"error"}); setDrag(null); return; }
+    snapshot();
+    setGates(prev=>prev.map(g=>{
+      if(g.id===target.id) return {...g,status:"Occupied",flight:tf.flight,
+        airline:AIRLINES[airlineOfFlight(tf.flight)]?.name??null,dest:tf.dest,dep:tf.dep,pax:tf.pax,
+        load:Math.min(100,Math.round(tf.pax/g.capacity*100)),notes:"",security:INTL.has(tf.dest)?"Active":g.security};
+      if(pick.from!=="tray" && g.id===pick.from) return clearGate(g);
+      return g;
+    }));
+    if(pick.from==="tray") setTray(t=>t.filter(x=>x.flight!==tf.flight));
+    setToast({msg:`${tf.flight} → Gate ${target.id}`,kind:"ok"}); setPicked(null); setDrag(null);
+  };
+
+  const unassign = (pick:Pick) => {
+    const src = gates.find(g=>g.id===pick.from); const tf = flightFor(pick);
+    if(!src||!tf) return;
+    if(src.status==="Boarding"){ setToast({msg:`${tf.flight} is boarding — can't be unassigned`,kind:"error"}); setDrag(null); return; }
+    snapshot();
+    setGates(prev=>prev.map(g=>g.id===src.id?clearGate(g):g));
+    setTray(t=>[...t,tf]);
+    setToast({msg:`${tf.flight} returned to unassigned`,kind:"ok"}); setDrag(null); setPicked(null);
+  };
+
+  const active = drag ?? picked;
+  const activeFlight = active ? flightFor(active) : null;
+  const dropStateFor = (g:Gate):"valid"|"invalid"|null =>
+    !activeFlight||!active ? null : checkMove(activeFlight, active.from==="tray"?null:active.from, g)===null ? "valid" : "invalid";
+
+  const onGateClick = (gate:Gate) => {
+    if(picked){ move(picked,gate); return; }
+    setSelected(selected?.id===gate.id?null:gate);
+  };
+
   const addGate = (g:Gate) => {
     setGates(prev=>[...prev,g]);
     setActiveT(g.terminal as keyof typeof TERMINALS);
@@ -277,13 +377,20 @@ export function GatesPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-white">Gate Management</h1>
-          <p className="text-slate-400 text-sm mt-0.5">Interactive real-time gate status — Delhi IGI Airport</p>
+          <p className="text-slate-400 text-sm mt-0.5">{air.isAirline
+              ? `${air.name} gates are highlighted · Gate allocation is managed by airport operations`
+              : "Drag flights onto available gates · Interactive real-time gate status — Delhi IGI Airport"}</p>
         </div>
+        {canEdit && <div className="flex gap-2">
+        <button onClick={undo} disabled={history.length===0} aria-label="Undo last gate change"
+          className="flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-semibold border border-white/10 text-slate-300 disabled:opacity-30 hover:bg-white/5">
+          <Undo2 className="w-4 h-4"/>Undo
+        </button>
         <button onClick={()=>setShowAdd(true)}
           className="flex items-center gap-2 px-5 py-3 rounded-xl font-semibold text-sm text-white transition-all hover:opacity-90 active:scale-95"
           style={{background:"linear-gradient(135deg,#0ea5e9,#14b8a6)"}}>
           <Plus className="w-4 h-4"/>Add Gate
-        </button>
+        </button></div>}
       </div>
 
       {/* KPIs */}
@@ -358,6 +465,59 @@ export function GatesPage() {
         <span className="text-xs text-slate-600 ml-auto">{filtered.length} gates</span>
       </div>
 
+      {/* Unassigned flights tray (also a drop zone to unassign) */}
+      {canEdit && (
+        <div className="rounded-2xl border border-dashed p-4 sticky top-[72px] z-10 backdrop-blur"
+          style={{borderColor: drag && drag.from!=="tray" ? "#f59e0b" : "rgba(255,255,255,0.12)",
+                  background: drag && drag.from!=="tray" ? "rgba(48,34,10,0.95)" : "rgba(12,18,34,0.95)"}}
+          onDragOver={e=>{ if(drag && drag.from!=="tray") e.preventDefault(); }}
+          onDrop={e=>{ e.preventDefault(); if(drag && drag.from!=="tray") unassign(drag); }}>
+          <div className="flex items-center justify-between flex-wrap gap-2 mb-3">
+            <div className="font-semibold text-white text-sm">Unassigned flights <span className="text-slate-500">({tray.length})</span></div>
+            <div className="text-xs text-slate-500">Drag onto an available gate — or tap a flight, then tap a gate. Drop a gate's flight here to unassign.</div>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {tray.length===0 && <div className="text-sm text-slate-500">Every flight has a gate ✓</div>}
+            {tray.map(f=>{
+              const info = AIRLINES[airlineOfFlight(f.flight)];
+              const isPicked = picked?.from==="tray" && picked.flight===f.flight;
+              return (
+                <button key={f.flight} draggable
+                  onDragStart={e=>{ setDrag({flight:f.flight,from:"tray"}); setPicked(null); e.dataTransfer.setData("text/plain",f.flight); e.dataTransfer.effectAllowed="move"; }}
+                  onDragEnd={()=>setDrag(null)}
+                  onClick={()=>setPicked(isPicked?null:{flight:f.flight,from:"tray"})}
+                  aria-pressed={isPicked}
+                  className="flex items-center gap-2 pl-2 pr-3 py-2 rounded-xl border text-left cursor-grab active:cursor-grabbing transition-all"
+                  style={{background:isPicked?`${info?.color}25`:"rgba(255,255,255,0.04)",
+                          borderColor:isPicked?info?.color:"rgba(255,255,255,0.1)"}}>
+                  <GripVertical className="w-3.5 h-3.5 text-slate-600"/>
+                  <div>
+                    <div className="font-mono font-bold text-sm" style={{color:info?.color}}>{f.flight}</div>
+                    <div className="text-xs text-slate-400">{f.dest} · {f.dep} · {f.pax} pax{INTL.has(f.dest)?" · INTL":""}</div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {picked && activeFlight && (
+        <div className="flex items-center justify-between gap-3 p-3 rounded-xl text-sm"
+          style={{background:"rgba(14,165,233,0.12)",border:"1px solid rgba(56,189,248,0.4)",color:"#7dd3fc"}}>
+          <span>Placing <b>{activeFlight.flight}</b> — tap a highlighted gate (green dashed). Esc to cancel.</span>
+          <button onClick={()=>setPicked(null)} className="px-3 py-1 rounded-lg text-xs font-semibold bg-white/10 text-white">Cancel</button>
+        </div>
+      )}
+
+      {toast && (
+        <div role="status" aria-live="polite"
+          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-xl text-sm font-semibold shadow-2xl"
+          style={{background:toast.kind==="ok"?"#065f46":"#7f1d1d",color:"white",border:`1px solid ${toast.kind==="ok"?"#10b981":"#ef4444"}`}}>
+          {toast.kind==="ok"?"✓ ":"✕ "}{toast.msg}
+        </div>
+      )}
+
       {/* Main grid + detail */}
       <div className={`grid gap-6 ${selected?"xl:grid-cols-3":"xl:grid-cols-1"}`}>
         {/* Gate cards */}
@@ -386,7 +546,18 @@ export function GatesPage() {
               {filtered.map(gate=>(
                 <GateCard key={gate.id} gate={gate}
                   selected={selected?.id===gate.id}
-                  onClick={()=>setSelected(selected?.id===gate.id?null:gate)}/>
+                  onClick={()=>onGateClick(gate)}
+                  dnd={{
+                    draggable: canEdit && !!gate.flight && gate.status!=="Boarding",
+                    onDragStart: e=>{ if(!gate.flight) return; setDrag({flight:gate.flight,from:gate.id}); setPicked(null);
+                                      e.dataTransfer.setData("text/plain",gate.flight); e.dataTransfer.effectAllowed="move"; },
+                    onDragEnd: ()=>setDrag(null),
+                    onDragOver: e=>{ if(drag) e.preventDefault(); },
+                    onDrop: e=>{ e.preventDefault(); if(drag) move(drag,gate); },
+                    dropState: dropStateFor(gate),
+                    mine: air.isAirline && !!gate.flight && airlineOfFlight(gate.flight)===air.code,
+                    dim:  air.isAirline && !!gate.flight && airlineOfFlight(gate.flight)!==air.code,
+                  }}/>
               ))}
             </div>
           )}
@@ -429,6 +600,13 @@ export function GatesPage() {
             </div>
 
             <div className="p-5 space-y-4 overflow-y-auto" style={{maxHeight:"calc(100vh - 300px)"}}>
+              {canEdit && selected.flight && selected.status!=="Boarding" && (
+                <button onClick={()=>{ setPicked({flight:selected.flight!,from:selected.id}); }}
+                  className="w-full py-2.5 rounded-xl text-sm font-semibold text-white"
+                  style={{background:"linear-gradient(135deg,#0ea5e9,#14b8a6)"}}>
+                  Move {selected.flight} to another gate
+                </button>
+              )}
               {/* Flight info */}
               {selected.flight && (
                 <div className="p-4 rounded-xl border"

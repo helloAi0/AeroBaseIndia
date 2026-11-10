@@ -1,5 +1,8 @@
 import { useState } from "react";
+import { parseQuery, matchFlight, describeQuery } from "../../lib/nlSearch";
 import { useAuthStore } from "../../store/authStore";
+import { useLiveFlights } from "../../hooks/useLiveFlights";
+import type { Flight as LiveFlight } from "../../types";
 import { Plane, Search, AlertTriangle, Clock,
          CheckCircle, Users, Fuel, Wrench,
          TrendingUp } from "lucide-react";
@@ -10,7 +13,7 @@ const ALL_AIRPORT_FLIGHTS = [
   {id:2, flight:"6E-2341", airline:"IndiGo",     airCode:"6E",  from:"DEL",to:"BLR",dep:"11:00",arr:"13:15",gate:"B3",terminal:"T2",status:"Scheduled", pax:186,aircraft:"A320neo",captain:"Capt. Gupta",    fuel:"91%",bags:0,  gc:7,  issue:null},
   {id:3, flight:"UK-925",  airline:"Vistara",    airCode:"UK",  from:"DEL",to:"HYD",dep:"09:45",arr:"11:55",gate:"C2",terminal:"T3",status:"Delayed",   pax:142,aircraft:"A320",   captain:"Capt. Pillai",  fuel:"88%",bags:167,gc:5,  issue:"Weather delay 45 min"},
   {id:4, flight:"SG-3405", airline:"SpiceJet",   airCode:"SG",  from:"DEL",to:"CCU",dep:"08:30",arr:"10:45",gate:"A4",terminal:"T1",status:"Departed",  pax:168,aircraft:"B737",   captain:"Capt. Joshi",   fuel:"—",  bags:192,gc:5,  issue:null},
-  {id:5, flight:"IX-611",  airline:"Air Asia",   airCode:"IX",  from:"DEL",to:"COK",dep:"14:00",arr:"17:00",gate:"D1",terminal:"T2",status:"Scheduled", pax:168,aircraft:"B737",   captain:"Capt. Thomas",  fuel:"88%",bags:0,  gc:5,  issue:null},
+  {id:5, flight:"IX-611",  airline:"Air India Express",   airCode:"IX",  from:"DEL",to:"COK",dep:"14:00",arr:"17:00",gate:"D1",terminal:"T2",status:"Scheduled", pax:168,aircraft:"B737",   captain:"Capt. Thomas",  fuel:"88%",bags:0,  gc:5,  issue:null},
   {id:6, flight:"AI-2811", airline:"Air India",  airCode:"AI",  from:"BOM",to:"DEL",dep:"07:00",arr:"09:05",gate:"A2",terminal:"T3",status:"Landed",    pax:228,aircraft:"B737",   captain:"Capt. Das",     fuel:"—",  bags:287,gc:8,  issue:null},
   {id:7, flight:"6E-5317", airline:"IndiGo",     airCode:"6E",  from:"BLR",to:"DEL",dep:"12:30",arr:"14:45",gate:"B5",terminal:"T2",status:"Boarding",  pax:178,aircraft:"A321neo",captain:"Capt. Ananya",  fuel:"—",  bags:214,gc:7,  issue:null},
   {id:8, flight:"QP-1401", airline:"Akasa Air",  airCode:"QP",  from:"DEL",to:"JAI",dep:"15:30",arr:"16:15",gate:"B1",terminal:"T1",status:"Scheduled", pax:186,aircraft:"B737MAX",captain:"Capt. Mehta",   fuel:"84%",bags:0,  gc:4,  issue:null},
@@ -55,6 +58,23 @@ const STATUS_BADGE: Record<string,string> = {
 
 type Flight = typeof ALL_AIRPORT_FLIGHTS[0];
 
+const fmtTime = (iso?: string) => {
+  if (!iso) return "—";
+  const d = new Date(iso);
+  return isNaN(d.getTime()) ? "—" : d.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", hour12: false });
+};
+
+/** Server rows only carry number/route/gate/status/times — everything else is honestly "—". */
+function fromServer(r: LiveFlight, i: number): Flight {
+  const code = r.flightNumber.split("-")[0];
+  return {
+    id: 10_000 + i, flight: r.flightNumber, airline: AIRLINE_NAMES[code] ?? code, airCode: code,
+    from: r.origin, to: r.destination, dep: fmtTime(r.departureTime), arr: fmtTime(r.arrivalTime),
+    gate: r.gate, terminal: "—", status: r.status, pax: 0, aircraft: "—", captain: "—",
+    fuel: "—", bags: 0, gc: 0, issue: null,
+  };
+}
+
 export function FlightsPage() {
   const { user } = useAuthStore();
   const [search,  setSearch]  = useState("");
@@ -69,17 +89,13 @@ export function FlightsPage() {
   const airlineName  = isAirlineUser ? (AIRLINE_NAMES[airlineCode!]||"") : "";
 
   // Filter flights
-  const flights = isAirlineUser
-    ? ALL_AIRPORT_FLIGHTS.filter(f=>f.airCode===airlineCode)
-    : ALL_AIRPORT_FLIGHTS;
+  const live = useLiveFlights();
+  const source: Flight[] = live.mode === "live" ? live.flights.map(fromServer) : ALL_AIRPORT_FLIGHTS;
+  const flights = isAirlineUser ? source.filter(f=>f.airCode===airlineCode) : source;
 
+  const parsed = parseQuery(search);
   const filtered = flights.filter(f=>
-    (status==="All"||f.status===status) &&
-    (!search||f.flight.toLowerCase().includes(search.toLowerCase())||
-     f.to.toLowerCase().includes(search.toLowerCase())||
-     f.from.toLowerCase().includes(search.toLowerCase())||
-     f.airline.toLowerCase().includes(search.toLowerCase())||
-     f.captain.toLowerCase().includes(search.toLowerCase()))
+    (status==="All"||f.status===status) && (!search.trim() || matchFlight(f, parsed))
   );
 
   const boarding  = flights.filter(f=>f.status==="Boarding").length;
@@ -99,8 +115,19 @@ export function FlightsPage() {
           <p className="text-slate-400 text-sm">
             {isAirlineUser
               ? `${airlineCode} · Only your airline's flights · Delhi IGI Airport`
-              : "Delhi IGI Airport · All airlines · Live data"}
+              : "Delhi IGI Airport · All airlines"}
           </p>
+          <div className="mt-1.5 inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full border"
+            style={live.mode==="live"
+              ? {color:"#4ade80",borderColor:"rgba(74,222,128,0.3)",background:"rgba(74,222,128,0.08)"}
+              : live.mode==="offline"
+                ? {color:"#f87171",borderColor:"rgba(248,113,113,0.3)",background:"rgba(248,113,113,0.08)"}
+                : {color:"#fbbf24",borderColor:"rgba(251,191,36,0.3)",background:"rgba(251,191,36,0.08)"}}>
+            <span className="w-1.5 h-1.5 rounded-full bg-current"/>
+            {live.mode==="live" ? `Live from server · ${live.flights.length} flight${live.flights.length!==1?"s":""}`
+              : live.mode==="offline" ? "Server unreachable — showing demo data"
+              : "Demo data"}
+          </div>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           {isAirlineUser && (
@@ -200,13 +227,18 @@ export function FlightsPage() {
 
       {/* Search & filter */}
       <div className="flex flex-wrap gap-3">
-        <div className="flex items-center gap-2 rounded-xl px-3.5 py-2.5 border flex-1 max-w-xs"
+        <div className="flex items-center gap-2 rounded-xl px-3.5 py-2.5 border flex-1 max-w-md"
           style={{background:"rgba(255,255,255,0.04)",borderColor:"rgba(255,255,255,0.08)"}}>
           <Search className="w-4 h-4 text-slate-500"/>
           <input className="bg-transparent text-sm text-white placeholder-slate-500 outline-none w-full"
-            placeholder={isAirlineUser?`Search ${airlineName} flights...`:"Search flight, airline, route, captain..."}
+            placeholder={isAirlineUser?`Try “delayed to mumbai”…`:"Try “delayed indigo flights to mumbai”, “gate B3”…"}
             value={search} onChange={e=>setSearch(e.target.value)}/>
         </div>
+        {search.trim() && (
+          <div className="basis-full text-xs text-slate-400">
+            Understood as: <span className="text-sky-300">{describeQuery(parsed) || "—"}</span> · {filtered.length} match{filtered.length===1?"":"es"}
+          </div>
+        )}
         <div className="flex gap-1.5 flex-wrap">
           {["All","Boarding","Scheduled","Delayed","Departed","Landed","Cancelled"].map(s=>(
             <button key={s} onClick={()=>setStatus(s)}
@@ -296,6 +328,13 @@ export function FlightsPage() {
               </tbody>
             </table>
           </div>
+          {filtered.length===0 && (
+            <div className="p-10 text-center text-sm text-slate-500">
+              {live.mode==="live" && flights.length===0
+                ? "The server has no flights for this airport yet."
+                : "No flights match your filters."}
+            </div>
+          )}
         </div>
 
         {/* Detail panel */}

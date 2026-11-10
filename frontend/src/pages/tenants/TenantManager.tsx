@@ -131,7 +131,7 @@ export function TenantManager() {
       {tab==="tenants" && (
         <div className={`grid gap-5 ${selected?"xl:grid-cols-3":"xl:grid-cols-1"}`}>
           <div className={`bg-navy-800 rounded-2xl border border-navy-600 overflow-hidden ${selected?"xl:col-span-2":""}`}>
-            <table className="w-full text-sm">
+            <div className="table-scroll"><table className="w-full text-sm">
               <thead>
                 <tr className="text-slate-500 text-xs uppercase">
                   {["Airport","Code","City","Plan","Flights","Users","Revenue","Status"].map(h=>(
@@ -170,7 +170,7 @@ export function TenantManager() {
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </table></div>
           </div>
 
           {selected && (

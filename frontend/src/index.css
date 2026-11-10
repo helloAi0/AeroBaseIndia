@@ -40,3 +40,16 @@ body {
   font-family: 'Poppins', sans-serif;
   font-variant-numeric: tabular-nums;
 }
+
+/* ── Shimmer skeletons ─────────────────────────────── */
+@keyframes shimmer { 0% { background-position: -400px 0; } 100% { background-position: 400px 0; } }
+.skeleton {
+  border-radius: 12px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.10) 37%, rgba(255,255,255,0.04) 63%);
+  background-size: 800px 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) { .skeleton { animation: none; } }
+
+/* Horizontal scroll wrapper for wide tables on phones */
+.table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
