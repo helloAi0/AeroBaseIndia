@@ -2,7 +2,10 @@ import { useState } from "react";
 import { Bell, Search, Menu, Wifi, WifiOff, ChevronDown } from "lucide-react";
 import { useAppStore } from "../../store/appStore";
 import { useAuthStore } from "../../store/authStore";
+import { API_ENABLED } from "../../config";
 import { ProfileModal } from "../ui/ProfileModal";
+import { AirportSwitch } from "./AirportSwitch";
+import { useAirport } from "../../hooks/useAirport";
 
 const ROLE_COLOR: Record<string,string> = {
   superadmin:"orange", airport_admin:"sky", staff:"teal", passenger:"purple",
@@ -11,6 +14,7 @@ const ROLE_COLOR: Record<string,string> = {
 export function TopBar() {
   const { sidebarOpen, setSidebar, setActivePage, health } = useAppStore();
   const { user } = useAuthStore();
+  const airport = useAirport();
   const [showProfile, setShowProfile] = useState(false);
   const ok = (health as any)?.status === "healthy";
   const color = ROLE_COLOR[user?.role||"airport_admin"]||"sky";
@@ -35,9 +39,10 @@ export function TopBar() {
         <div className="flex items-center gap-2 sm:gap-3">
           {/* Connection status */}
           <div className="flex items-center gap-1.5 text-xs">
-            {ok ? <Wifi className="w-3.5 h-3.5 text-green-400"/> : <WifiOff className="w-3.5 h-3.5 text-red-400"/>}
-            <span className={`hidden sm:block ${ok?"text-green-400":"text-red-400"}`}>
-              {ok?"Live":"Offline"}
+            {!API_ENABLED ? <Wifi className="w-3.5 h-3.5 text-amber-400"/>
+              : ok ? <Wifi className="w-3.5 h-3.5 text-green-400"/> : <WifiOff className="w-3.5 h-3.5 text-red-400"/>}
+            <span className={`hidden sm:block ${!API_ENABLED?"text-amber-400":ok?"text-green-400":"text-red-400"}`}>
+              {!API_ENABLED?"Demo":ok?"Live":"Offline"}
             </span>
           </div>
 
@@ -50,6 +55,7 @@ export function TopBar() {
             <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-red-500 rounded-full"/>
           </button>
 
+          <AirportSwitch />
           <div className="w-px h-5 bg-navy-600 hidden sm:block"/>
 
           {/* Profile button */}
@@ -66,7 +72,7 @@ export function TopBar() {
                 {user?.name?.split(" ")[0]||"Guest"}
               </div>
               <div className="text-xs text-slate-500 leading-tight">
-                {user?.airport||"—"} • {user?.role==="airport_admin"?"Admin":user?.role==="staff"?"Staff":user?.role==="superadmin"?"SuperAdmin":"Passenger"}
+                {airport.code} • {user?.role==="airport_admin"?"Admin":user?.role==="staff"?"Staff":user?.role==="superadmin"?"SuperAdmin":"Passenger"}
               </div>
             </div>
             <ChevronDown className="w-3 h-3 text-slate-500 hidden md:block"/>

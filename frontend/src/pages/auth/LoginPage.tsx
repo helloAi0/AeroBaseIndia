@@ -3,6 +3,8 @@ import { Eye, EyeOff, Plane, Lock, ArrowRight,
          AlertCircle, CheckCircle, Store, Building2 } from "lucide-react";
 import { useAuthStore } from "../../store/authStore";
 import { MOCK_USERS } from "../../data/users";
+import { loginWithBackend, LoginError } from "../../api/auth";
+import { API_ENABLED, DEMO_LOGIN_ENABLED } from "../../config";
 
 type LoginMode = "all" | "retailer" | "airline";
 
@@ -83,12 +85,40 @@ export function LoginPage() {
 
   const handleLogin = async (e:React.FormEvent) => {
     e.preventDefault(); setLoad(true); setError("");
-    await new Promise(r=>setTimeout(r,800));
-    const u = MOCK_USERS.find(x=>x.email.toLowerCase()===email.toLowerCase()&&x.password===password);
-    if(u){ const {password:_,...safe}=u; login(safe as any,"tok_"+safe.id); }
-    else if(MOCK_USERS.find(x=>x.email.toLowerCase()===email.toLowerCase())) setError("Incorrect password.");
-    else setError("Account not found. Check your credentials.");
-    setLoad(false);
+    const demoUser = () => MOCK_USERS.find(x=>x.email.toLowerCase()===email.toLowerCase()&&x.password===password);
+    try {
+      // 1. Real server first (only when VITE_API_URL is configured)
+      let fallbackReason = "";
+      if (API_ENABLED) {
+        try {
+          const s = await loginWithBackend(email, password);
+          login(s.user, s.token, { source:"backend", expiresAt:s.expiresAt });
+          return;
+        } catch (err) {
+          if (!(err instanceof LoginError)) throw err;
+          const canFallBack = DEMO_LOGIN_ENABLED && !!demoUser();
+          if (!canFallBack) {
+            setError(err.kind==="invalid" ? err.message
+              : DEMO_LOGIN_ENABLED ? "Account not found. Check your credentials."
+              : err.message);
+            return;
+          }
+          fallbackReason = err.kind==="invalid" ? "Not a server account"
+            : err.kind==="unavailable" ? "Server unreachable" : "Server login unavailable";
+        }
+      }
+      // 2. Built-in demo accounts (dev / demo builds only)
+      if (!DEMO_LOGIN_ENABLED) { setError("Sign-in is unavailable: no server is configured."); return; }
+      await new Promise(r=>setTimeout(r,500));
+      const u = demoUser();
+      if (u) {
+        const {password:_,...safe}=u;
+        login(safe as any,"tok_"+safe.id,{source:"demo"});
+        if (fallbackReason) console.info(`Signed in with a demo account (${fallbackReason}).`);
+      }
+      else if (MOCK_USERS.find(x=>x.email.toLowerCase()===email.toLowerCase())) setError("Incorrect password.");
+      else setError("Account not found. Check your credentials.");
+    } finally { setLoad(false); }
   };
 
   const fill = (e:string,p:string) => { detectRole(e); setPass(p); };

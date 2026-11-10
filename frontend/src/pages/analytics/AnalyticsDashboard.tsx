@@ -328,7 +328,7 @@ export function AnalyticsDashboard() {
             <h2 className="font-bold text-white">Airline Performance</h2>
             <p className="text-xs text-slate-500 mt-0.5">Click row for details</p>
           </div>
-          <table className="w-full text-sm">
+          <div className="table-scroll"><table className="w-full text-sm">
             <thead>
               <tr style={{borderBottom:"1px solid #1e2d4d"}}>
                 {["Airline","Flights","On-Time","Pax","Avg Delay"].map(h=>(
@@ -370,7 +370,7 @@ export function AnalyticsDashboard() {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table></div>
         </div>
       </div>
 

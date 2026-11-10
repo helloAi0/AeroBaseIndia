@@ -79,7 +79,7 @@ export function SecurityOpsPage() {
           <h2 className="font-semibold text-white">Live Incidents</h2>
           <div className="w-2 h-2 rounded-full bg-red-400 animate-pulse ml-1"/>
         </div>
-        <table className="w-full text-sm">
+        <div className="table-scroll"><table className="w-full text-sm">
           <thead>
             <tr className="text-slate-500 text-xs uppercase">
               {["Zone","Incident","Location","Time","Priority","Status","Action"].map(h=>(
@@ -115,7 +115,7 @@ export function SecurityOpsPage() {
               </tr>
             ))}
           </tbody>
-        </table>
+        </table></div>
       </div>
 
       {/* Emergency contacts */}

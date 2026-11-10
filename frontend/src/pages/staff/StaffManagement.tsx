@@ -87,7 +87,7 @@ export function StaffManagement() {
       <div className={`grid gap-5 ${selected?"xl:grid-cols-3":"xl:grid-cols-1"}`}>
         {/* Staff table */}
         <div className={`bg-navy-800 rounded-2xl border border-navy-600 overflow-hidden ${selected?"xl:col-span-2":""}`}>
-          <table className="w-full text-sm">
+          <div className="table-scroll"><table className="w-full text-sm">
             <thead>
               <tr className="text-slate-500 text-xs uppercase border-b border-navy-700">
                 {["Staff","Role","Dept","Shift","Certifications","Rating","Status"].map(h=>(
@@ -140,7 +140,7 @@ export function StaffManagement() {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table></div>
         </div>
 
         {/* Detail panel */}

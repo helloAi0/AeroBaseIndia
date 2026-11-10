@@ -26,7 +26,7 @@ export function FlightsTable({ flights }: { flights: Flight[] }) {
             <p>No flights yet — add one via POST /flights</p>
           </div>
         ) : (
-          <table className="w-full text-sm">
+          <div className="table-scroll"><table className="w-full text-sm">
             <thead>
               <tr className="text-slate-400 text-xs uppercase tracking-wider border-b border-navy-600">
                 {["Flight","Origin","Destination","Gate","Status","Delay Risk"].map(h => (
@@ -63,7 +63,7 @@ export function FlightsTable({ flights }: { flights: Flight[] }) {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table></div>
         )}
       </div>
     </div>

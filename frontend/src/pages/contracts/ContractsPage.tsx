@@ -86,7 +86,7 @@ export function ContractsPage() {
 
       <div className={`grid gap-5 ${selected?"xl:grid-cols-3":"xl:grid-cols-1"}`}>
         <div className={`bg-navy-800 rounded-2xl border border-navy-600 overflow-hidden ${selected?"xl:col-span-2":""}`}>
-          <table className="w-full text-sm">
+          <div className="table-scroll"><table className="w-full text-sm">
             <thead>
               <tr className="text-slate-500 text-xs uppercase">
                 {["ID","Party","Type","Value","Period","SLA","Compliance","Status"].map(h=>(
@@ -119,7 +119,7 @@ export function ContractsPage() {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table></div>
         </div>
         {selected && (
           <div className="bg-navy-800 rounded-2xl border border-sky-500/30 p-5 space-y-4 h-fit">

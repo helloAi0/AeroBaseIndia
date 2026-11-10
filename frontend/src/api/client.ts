@@ -1,60 +1,58 @@
-// @silence-offline — backend errors suppressed in frontend-only mode
-const _origErr = console.error.bind(console);
-console.error = (...a: unknown[]) => {
-  const s = String(a[0]??'');
-  if(s.includes('ERR_CONNECTION_REFUSED')||s.includes('Failed to load resource')||s.includes('favicon')) return;
-  _origErr(...a);
-};
-const _origWarn = console.warn.bind(console);
-console.warn = (...a: unknown[]) => {
-  const s = String(a[0]??'');
-  if(s.includes('ERR_CONNECTION_REFUSED')) return;
-  _origWarn(...a);
-};
+import axios from "axios";
+import { API_URL, API_ENABLED } from "../config";
+import { useAppStore } from "../store/appStore";
+import { useAuthStore } from "../store/authStore";
 
-// Silence backend connection errors in frontend-only mode
-if (typeof window !== "undefined") {
-  const origError = console.error;
-  console.error = (...args: any[]) => {
-    const msg = String(args[0] || "");
-    if (msg.includes("ERR_CONNECTION_REFUSED") || msg.includes("Failed to load resource")) return;
-    origError(...args);
-  };
+/** The backend reports some failures as HTTP 200 with `{ "error": "..." }`; we surface those as errors. */
+export class ApiError extends Error {
+  status: number;
+  constructor(message: string, status = 200) {
+    super(message);
+    this.name = "ApiError";
+    this.status = status;
+  }
 }
 
-import axios from "axios";
-
-const BASE = import.meta.env.VITE_API_URL || "http://localhost:8080";
-
 export const api = axios.create({
-  baseURL: BASE,
+  baseURL: API_URL,
   timeout: 10000,
 });
 
 api.interceptors.request.use((config) => {
-  const token    = localStorage.getItem("token");
-  const tenantId = localStorage.getItem("tenantId") || "DEL";
-  if (token)    config.headers.Authorization = `Bearer ${token}`;
-  if (tenantId) config.headers["X-Tenant-ID"] = tenantId;
+  // Demo mode: never touch the network (a relative URL would hit the page's own origin).
+  if (!API_ENABLED) return Promise.reject(new ApiError("Demo mode: no API configured (set VITE_API_URL)", 0));
+  const { token, user, source } = useAuthStore.getState();
+  // Demo tokens ("tok_u001") are not JWTs — never send them to a real server.
+  if (token && source === "backend") config.headers.Authorization = `Bearer ${token}`;
+  const active = useAppStore.getState().activeAirport;
+  config.headers["X-Tenant-ID"] = (user?.role === "superadmin" && active) || user?.airport || "DEL";
   return config;
 });
 
 api.interceptors.response.use(
-  (r) => r,
+  (res) => {
+    const d = res.data;
+    if (d && typeof d === "object" && !Array.isArray(d) && typeof d.error === "string" && d.error) {
+      return Promise.reject(new ApiError(d.error, res.status));
+    }
+    return res;
+  },
   (err) => {
-    if (err.response?.status === 401) localStorage.removeItem("token");
+    // Expired / invalid server session → sign out (demo sessions never hit this).
+    if (err.response?.status === 401 && useAuthStore.getState().source === "backend") {
+      useAuthStore.getState().logout();
+    }
     return Promise.reject(err);
   }
 );
 
-// API functions
-export const fetchHealth    = ()              => api.get("/health").then(r => r.data);
-export const fetchFlights   = ()              => api.get("/flights").then(r => r.data);
-export const fetchMetrics   = ()              => api.get("/metrics").then(r => r.data);
-export const fetchTraces    = ()              => api.get("/traces").then(r => r.data);
-export const fetchOrders    = ()              => api.get("/payments/orders").then(r => r.data);
-export const fetchEmailQueue= ()              => api.get("/notify/queue").then(r => r.data);
-export const createOrder    = (body: object) => api.post("/payments/order", body).then(r => r.data);
-export const sendEmail      = (body: object) => api.post("/notify/email", body).then(r => r.data);
-export const graphqlQuery   = (query: string)=>
-  api.post("/graphql", { query }).then(r => r.data);
+// API functions (names kept stable — many pages import these)
+export const fetchHealth     = ()              => api.get("/health").then(r => r.data);
+export const fetchFlights    = ()              => api.get("/flights").then(r => r.data);
+export const fetchMetrics    = ()              => api.get("/metrics").then(r => r.data);
+export const fetchTraces     = ()              => api.get("/traces").then(r => r.data);
+export const fetchOrders     = ()              => api.get("/payments/orders").then(r => r.data);
+export const fetchEmailQueue = ()              => api.get("/notify/queue").then(r => r.data);
+export const createOrder     = (body: object)  => api.post("/payments/order", body).then(r => r.data);
+export const sendEmail       = (body: object)  => api.post("/notify/email", body).then(r => r.data);
+export const graphqlQuery    = (query: string) => api.post("/graphql", { query }).then(r => r.data);

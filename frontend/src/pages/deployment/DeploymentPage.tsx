@@ -172,7 +172,7 @@ export function DeploymentPage() {
               <span className="text-xs text-slate-500 font-normal">base: localhost:8080</span>
             </h2>
             <div className="bg-navy-800 rounded-2xl border border-navy-600 overflow-hidden">
-              <table className="w-full text-xs">
+              <div className="table-scroll"><table className="w-full text-xs">
                 <thead>
                   <tr className="text-slate-600 uppercase border-b border-navy-700">
                     <th className="px-4 py-2.5 text-left">Method</th>
@@ -194,7 +194,7 @@ export function DeploymentPage() {
                     </tr>
                   ))}
                 </tbody>
-              </table>
+              </table></div>
             </div>
           </div>
 

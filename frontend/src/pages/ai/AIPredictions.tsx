@@ -39,6 +39,7 @@ export function AIPredictions() {
   const [weather,    setWeather]    = useState(5);
   const [congestion, setCongestion] = useState(5);
   const [prediction, setPrediction] = useState<number|null>(null);
+  const [modelUsed, setModelUsed] = useState<string>("");
 
   const {data:flights=[]} = useQuery({queryKey:["flights"],queryFn:fetchFlights});
   const fl = flights as any[];
@@ -50,7 +51,8 @@ export function AIPredictions() {
       });
       return r.data;
     },
-    onSuccess: (d) => setPrediction(d.predicted_delay_minutes??0),
+    onMutate: () => { setPrediction(null); setModelUsed(""); },
+    onSuccess: (d) => { setPrediction(d.predicted_delay_minutes??0); setModelUsed(d.model_used ?? ""); },
   });
 
   const getRiskLevel = (v:number) => v<=3?"Low":v<=6?"Medium":v<=8?"High":"Critical";
@@ -133,6 +135,13 @@ export function AIPredictions() {
             {mut.isPending?"Predicting...":"Run AI Prediction"}
           </button>
 
+          {mut.isError && (
+            <div role="alert" className="mt-5 p-4 rounded-2xl border border-red-500/30 bg-red-500/10 text-sm text-red-300">
+              Couldn’t get a prediction: {(mut.error as any)?.response?.data?.error ?? (mut.error as Error).message}.
+              The ML service may be offline — try again shortly.
+            </div>
+          )}
+
           {prediction !== null && (
             <div className={`mt-5 p-5 rounded-2xl border text-center ${
               prediction<=10?"bg-green-500/10 border-green-500/20":
@@ -144,6 +153,9 @@ export function AIPredictions() {
                 prediction<=30?"text-yellow-400":"text-red-400"
               }`}>{prediction}</div>
               <div className="text-white font-semibold">minutes predicted delay</div>
+              {modelUsed && <div className="text-[11px] text-slate-500 mt-0.5">
+                {modelUsed === "heuristic_fallback" ? "Rule-of-thumb estimate (no trained model deployed yet)" : `Model: ${modelUsed}`}
+              </div>}
               <div className="text-sm text-slate-400 mt-1">
                 {prediction<=10?"✓ Minimal impact — flight likely on time":
                  prediction<=30?"⚠ Moderate delay — notify passengers":
@@ -213,7 +225,7 @@ export function AIPredictions() {
             <TrendingUp className="w-5 h-5 text-sky-400"/>
             <h2 className="font-semibold text-white">Flight Risk Assessment</h2>
           </div>
-          <table className="w-full text-sm">
+          <div className="table-scroll"><table className="w-full text-sm">
             <thead>
               <tr className="text-slate-500 text-xs uppercase">
                 {["Flight","Route","Status","Risk Level","Action"].map(h=>(
@@ -252,7 +264,7 @@ export function AIPredictions() {
                 );
               })}
             </tbody>
-          </table>
+          </table></div>
         </div>
       )}
     </div>

@@ -160,7 +160,7 @@ export function ParkingPage() {
           <Bus className="w-5 h-5 text-teal-400"/>
           <h2 className="font-semibold text-white">Ground Transport Services</h2>
         </div>
-        <table className="w-full text-sm">
+        <div className="table-scroll"><table className="w-full text-sm">
           <thead>
             <tr className="text-slate-500 text-xs uppercase">
               {["Service","Frequency","Destination","Fare","Status"].map(h=>(
@@ -185,7 +185,7 @@ export function ParkingPage() {
               </tr>
             ))}
           </tbody>
-        </table>
+        </table></div>
       </div>
     </div>
   );
