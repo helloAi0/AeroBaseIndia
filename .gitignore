@@ -14,3 +14,8 @@ dist/
 certs/
 *.key
 *.pem
+
+# Production secrets
+deploy/.env.prod
+deploy/.env.prod.*
+!deploy/.env.prod.example

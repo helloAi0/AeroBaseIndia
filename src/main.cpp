@@ -1,8 +1,10 @@
 #include <drogon/drogon.h>
 #include "core/Logger.h"
 #include "services/JwtService.h"
+#include "config/StartupChecks.h"
 
 int main() {
+    StartupChecks::run();
     JwtService::init();
 
     // Global CORS middleware
