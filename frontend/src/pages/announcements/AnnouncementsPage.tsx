@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchFlights } from "../../api/client";
+import { speak, stopSpeaking, voiceSupported } from "../../lib/voice";
 import { Volume2, VolumeX, Megaphone, Clock, Play } from "lucide-react";
 
 const ANNOUNCEMENT_TEMPLATES = [
-  {id:1,type:"Boarding",    template:(f:string,g:string)=>`Attention passengers. Flight ${f} to ${g} is now boarding at Gate ${g}. Please proceed to the gate immediately.`,priority:"Normal"},
-  {id:2,type:"Final Call",  template:(f:string,g:string)=>`Final boarding call for flight ${f}. This is the final call for all passengers travelling to ${g}. Please proceed to Gate ${g} immediately.`,priority:"Urgent"},
-  {id:3,type:"Delay",       template:(f:string,g:string)=>`We regret to inform that flight ${f} to ${g} has been delayed. The new estimated departure time will be announced shortly. We apologize for the inconvenience.`,priority:"Info"},
+  {id:1,type:"Boarding",    template:(f:string,g:string)=>`Attention passengers. Flight ${f} is now boarding at Gate ${g}. Please proceed to the gate immediately.`,priority:"Normal"},
+  {id:2,type:"Final Call",  template:(f:string,g:string)=>`Final boarding call for flight ${f}. This is the final call for all passengers on this flight. Please proceed to Gate ${g} immediately.`,priority:"Urgent"},
+  {id:3,type:"Delay",       template:(f:string,g:string)=>`We regret to inform that flight ${f} has been delayed. The new estimated departure time will be announced shortly. We apologize for the inconvenience.`,priority:"Info"},
   {id:4,type:"Gate Change", template:(f:string,g:string)=>`Important announcement. Flight ${f} gate has been changed to Gate ${g}. Please proceed to the new gate immediately.`,priority:"Urgent"},
   {id:5,type:"Cancellation",template:(f:string,_:string)=>`We regret to announce that flight ${f} has been cancelled. Please contact the airline counter for rebooking assistance.`,priority:"Critical"},
   {id:6,type:"Security",    template:(_:string,__:string)=>`Security announcement: All passengers are requested to keep their baggage with them at all times. Report any unattended baggage to security immediately.`,priority:"Info"},
@@ -50,7 +51,8 @@ export function AnnouncementsPage() {
       flight, type:selectedTmpl.type, gate, lang, status:"Playing",
     };
     setLog(prev=>[newEntry,...prev]);
-    setTimeout(()=>{ setPlaying(null); setLog(p=>p.map(e=>e.id===newEntry.id?{...e,status:"Played"}:e)); }, 3000);
+    const done = () => { setPlaying(null); setLog(p=>p.map(e=>e.id===newEntry.id?{...e,status:"Played"}:e)); };
+    if (voiceSupported()) speak(preview).then(done); else setTimeout(done, 3000);
   };
 
   const toggleLang = (l:string) =>
@@ -63,7 +65,7 @@ export function AnnouncementsPage() {
           <h1 className="text-2xl font-bold text-white">PA System & Announcements</h1>
           <p className="text-slate-400 text-sm mt-0.5">Public address system control panel</p>
         </div>
-        <button onClick={()=>setMuted(m=>!m)}
+        <button onClick={()=>{ if(!muted) stopSpeaking(); setMuted(m=>!m); }}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border transition-all ${
             muted?"bg-red-500/15 text-red-400 border-red-500/20":"bg-green-500/15 text-green-400 border-green-500/20"}`}>
           {muted?<VolumeX className="w-4 h-4"/>:<Volume2 className="w-4 h-4"/>}

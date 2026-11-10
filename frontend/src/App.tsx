@@ -28,6 +28,7 @@ const FlightScheduler = lazy(() => import("./pages/scheduler/FlightScheduler").t
 const CheckInSystem = lazy(() => import("./pages/checkin/CheckInSystem").then(m => ({ default: m.CheckInSystem })));
 const FuelManagement = lazy(() => import("./pages/fuel/FuelManagement").then(m => ({ default: m.FuelManagement })));
 const MaintenancePage = lazy(() => import("./pages/maintenance/MaintenancePage").then(m => ({ default: m.MaintenancePage })));
+const AnnouncementsPage = lazy(() => import("./pages/announcements/AnnouncementsPage").then(m => ({ default: m.AnnouncementsPage })));
 const WeatherMonitor = lazy(() => import("./pages/weather/WeatherMonitor").then(m => ({ default: m.WeatherMonitor })));
 const ParkingPage = lazy(() => import("./pages/parking/ParkingPage").then(m => ({ default: m.ParkingPage })));
 const RetailPage = lazy(() => import("./pages/retail/RetailPage").then(m => ({ default: m.RetailPage })));
@@ -48,6 +49,7 @@ import { useAppStore }        from "./store/appStore";
 import { useAuthStore }        from "./store/authStore";
 import { LoginPage } from "./pages/auth/LoginPage";
 import { useRealtime }        from "./hooks/useRealtime";
+import { useFlightAlerts }    from "./hooks/useFlightAlerts";
 
 const qc = new QueryClient({ defaultOptions:{ queries:{ retry:1, staleTime:5000 } } });
 
@@ -73,6 +75,7 @@ const PAGES: Record<string, React.ReactNode> = {
   fuel:          <FuelManagement />,
   maintenance:   <MaintenancePage />,
   weather:       <WeatherMonitor />,
+  announcements: <AnnouncementsPage />,
   parking:       <ParkingPage />,
   retail:        <RetailPage />,
   feedback:      <FeedbackPage />,
@@ -97,6 +100,7 @@ const PAGES: Record<string, React.ReactNode> = {
 
 function AppContent() {
   useRealtime(10000);
+  useFlightAlerts();
   const { activePage, sidebarOpen, setSidebar } = useAppStore();
   const { isLoggedIn, user } = useAuthStore();
 

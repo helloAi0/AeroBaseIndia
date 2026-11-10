@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { parseQuery, matchFlight, describeQuery } from "../../lib/nlSearch";
 import { useAuthStore } from "../../store/authStore";
 import { useLiveFlights } from "../../hooks/useLiveFlights";
 import type { Flight as LiveFlight } from "../../types";
@@ -92,13 +93,9 @@ export function FlightsPage() {
   const source: Flight[] = live.mode === "live" ? live.flights.map(fromServer) : ALL_AIRPORT_FLIGHTS;
   const flights = isAirlineUser ? source.filter(f=>f.airCode===airlineCode) : source;
 
+  const parsed = parseQuery(search);
   const filtered = flights.filter(f=>
-    (status==="All"||f.status===status) &&
-    (!search||f.flight.toLowerCase().includes(search.toLowerCase())||
-     f.to.toLowerCase().includes(search.toLowerCase())||
-     f.from.toLowerCase().includes(search.toLowerCase())||
-     f.airline.toLowerCase().includes(search.toLowerCase())||
-     f.captain.toLowerCase().includes(search.toLowerCase()))
+    (status==="All"||f.status===status) && (!search.trim() || matchFlight(f, parsed))
   );
 
   const boarding  = flights.filter(f=>f.status==="Boarding").length;
@@ -230,13 +227,18 @@ export function FlightsPage() {
 
       {/* Search & filter */}
       <div className="flex flex-wrap gap-3">
-        <div className="flex items-center gap-2 rounded-xl px-3.5 py-2.5 border flex-1 max-w-xs"
+        <div className="flex items-center gap-2 rounded-xl px-3.5 py-2.5 border flex-1 max-w-md"
           style={{background:"rgba(255,255,255,0.04)",borderColor:"rgba(255,255,255,0.08)"}}>
           <Search className="w-4 h-4 text-slate-500"/>
           <input className="bg-transparent text-sm text-white placeholder-slate-500 outline-none w-full"
-            placeholder={isAirlineUser?`Search ${airlineName} flights...`:"Search flight, airline, route, captain..."}
+            placeholder={isAirlineUser?`Try “delayed to mumbai”…`:"Try “delayed indigo flights to mumbai”, “gate B3”…"}
             value={search} onChange={e=>setSearch(e.target.value)}/>
         </div>
+        {search.trim() && (
+          <div className="basis-full text-xs text-slate-400">
+            Understood as: <span className="text-sky-300">{describeQuery(parsed) || "—"}</span> · {filtered.length} match{filtered.length===1?"":"es"}
+          </div>
+        )}
         <div className="flex gap-1.5 flex-wrap">
           {["All","Boarding","Scheduled","Delayed","Departed","Landed","Cancelled"].map(s=>(
             <button key={s} onClick={()=>setStatus(s)}
