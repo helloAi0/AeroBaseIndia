@@ -3,9 +3,10 @@
 Legend: ✅ verified by automated/browser/curl tests · ⚠️ built but NOT verified end-to-end · ⬜ you must do
 
 ## Before first deploy (⬜ you)
-- [ ] `openssl rand -hex 32` → `JWT_SECRET`; set a strong `DB_PASSWORD` / `REDIS_PASSWORD` (`deploy/.env.prod`, never commit)
-- [ ] Rotate anything that was ever committed: the old `.env` and `certs/server.key` are still in git history. Make the repo private or purge history (`git filter-repo`), and issue a new TLS key.
-- [ ] Rotate the Twilio auth token and Google API key that were pasted in chat
+- [ ] On the server run `scripts/init-prod-env.sh https://api.your-domain.example` (generates strong `JWT_SECRET`, `DB_PASSWORD`, `REDIS_PASSWORD`; never commit `deploy/.env.prod`)
+- [ ] Rotate the Twilio Auth Token and the Google API key that were pasted in chat (steps in `docs/SECURITY.md`; only you can do this)
+- [x] Git history audited: the old `.env` held placeholders only and the cert was a self-signed localhost cert (no purge needed — see `docs/SECURITY.md`)
+- [ ] Run `scripts/install-hooks.sh` once per clone (pre-commit secret check)
 - [ ] Set `PUBLIC_API_URL` to your backend's public https URL
 - [ ] Create the first admin: `DB_PASSWORD=… scripts/create_user.py --email … --name … --role SUPER_ADMIN --airport DEL` (a tenant row with that airport_code must exist)
 - [ ] Put the backend behind HTTPS (nginx/Caddy/Cloudflare). Restrict CORS (currently `*`)
