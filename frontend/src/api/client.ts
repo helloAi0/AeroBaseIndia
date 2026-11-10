@@ -1,5 +1,6 @@
 import axios from "axios";
 import { API_URL, API_ENABLED } from "../config";
+import { useAppStore } from "../store/appStore";
 import { useAuthStore } from "../store/authStore";
 
 /** The backend reports some failures as HTTP 200 with `{ "error": "..." }`; we surface those as errors. */
@@ -23,7 +24,8 @@ api.interceptors.request.use((config) => {
   const { token, user, source } = useAuthStore.getState();
   // Demo tokens ("tok_u001") are not JWTs — never send them to a real server.
   if (token && source === "backend") config.headers.Authorization = `Bearer ${token}`;
-  config.headers["X-Tenant-ID"] = user?.airport || "DEL";
+  const active = useAppStore.getState().activeAirport;
+  config.headers["X-Tenant-ID"] = (user?.role === "superadmin" && active) || user?.airport || "DEL";
   return config;
 });
 

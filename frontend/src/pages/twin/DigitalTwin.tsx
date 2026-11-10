@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchFlights } from "../../api/client";
+import { lazy, Suspense } from "react";
 import { Activity, Wind, Eye, Thermometer, Users } from "lucide-react";
+
+const Twin3D = lazy(() => import("../../components/three/Twin3D").then(m => ({ default: m.Twin3D })));
 
 const TERMINALS = [
   { id:"T1", x:60,  y:80,  w:200, h:120, gates:["A1","A2","A3","A4"], color:"#0ea5e9" },
@@ -156,6 +159,7 @@ function AirportMap({flights}:{flights:any[]}) {
 export function DigitalTwin() {
   const {data:flights=[]} = useQuery({queryKey:["flights"],queryFn:fetchFlights,refetchInterval:8000});
   const fl = flights as any[];
+  const [view, setView] = useState<"2D"|"3D">("2D");
 
   const [weather] = useState({temp:32, wind:14, visibility:8, humidity:65});
 
@@ -189,7 +193,17 @@ export function DigitalTwin() {
       </div>
 
       {/* Airport map */}
-      <AirportMap flights={fl}/>
+      <div className="flex justify-end gap-1 -mb-3">
+        {(["2D","3D"] as const).map(v=>(
+          <button key={v} onClick={()=>setView(v)} className={`px-3 py-1 text-xs rounded-md border ${view===v?"bg-sky-500/20 text-sky-300 border-sky-500/30":"text-slate-400 border-navy-600"}`}>{v}</button>))}
+      </div>
+      {view==="2D" ? <AirportMap flights={fl}/> : (
+        <div className="bg-navy-900 rounded-2xl border border-navy-600 overflow-hidden">
+          <div className="p-4 border-b border-navy-600 text-white font-semibold">3D Digital Twin <span className="text-xs text-slate-500 font-normal ml-2">drag to rotate · scroll to zoom</span></div>
+          <Suspense fallback={<div className="h-[420px] animate-pulse"/>}>
+            <Twin3D gates={GATE_STATUS} terminals={TERMINALS}/>
+          </Suspense>
+        </div>)}
 
       {/* Gate status grid */}
       <div className="bg-navy-800 rounded-2xl border border-navy-600 overflow-hidden">

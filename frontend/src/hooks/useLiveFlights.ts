@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchFlights } from "../api/client";
 import { API_ENABLED } from "../config";
 import { useAuthStore } from "../store/authStore";
+import { useAirport } from "./useAirport";
 import type { Flight } from "../types";
 
 /** Row shape returned by GET /flights (src/controllers/FlightController.cc). */
@@ -34,7 +35,7 @@ export function normaliseFlight(r: FlightRow, i: number): Flight {
 
 /** Shared React Query options, so the Dashboard poller and the Flights page share ONE request. */
 export function useFlightsQuery() {
-  const tenant = useAuthStore(s => s.user?.airport) ?? "DEL";
+  const tenant = useAirport().code;
   const isLoggedIn = useAuthStore(s => s.isLoggedIn);
   return useQuery({
     queryKey: ["flights", tenant],

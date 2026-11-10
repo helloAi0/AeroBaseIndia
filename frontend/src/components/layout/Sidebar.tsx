@@ -7,8 +7,9 @@ import {
   Gauge, Wrench, CloudSun, ParkingSquare, Store,
   MessageSquare, TestTube, Radio, Building2, Palette,
   Shield, Settings, Flame, Target, Volume2, Link,
-  Globe, Crown
+  Globe, Crown, Leaf, ScanFace, Plug, MessageCircle, Timer
 } from "lucide-react";
+import { Icon3D } from "../ui/Icon3D";
 import { useAppStore } from "../../store/appStore";
 import { useAuthStore } from "../../store/authStore";
 
@@ -20,6 +21,8 @@ const ALL_NAV = [
     {id:"baggage",     label:"Baggage",        icon:Briefcase},
     {id:"scheduler",   label:"Scheduler",      icon:CalendarDays},
     {id:"checkin",     label:"Check-in",       icon:ClipboardCheck},
+    {id:"biometric",   label:"Biometric Check-in",icon:ScanFace},
+    {id:"baggage_predict",label:"Bag Claim ETA", icon:Timer},
   ]},
   { group:"Business", roles:["superadmin","airport_admin"], items:[
     {id:"analytics",     label:"Analytics",    icon:BarChart3},
@@ -35,6 +38,7 @@ const ALL_NAV = [
     {id:"maintenance",   label:"Maintenance",  icon:Wrench},
     {id:"weather",       label:"Weather",      icon:CloudSun},
     {id:"parking",       label:"Parking",      icon:ParkingSquare},
+    {id:"carbon",        label:"Carbon",       icon:Leaf},
     {id:"map",           label:"Airport Map",  icon:Map},
   ]},
   { group:"Passenger", roles:["superadmin","airport_admin","staff","passenger"], items:[
@@ -66,6 +70,8 @@ const ALL_NAV = [
     {id:"twin",          label:"Digital Twin", icon:Cpu},
     {id:"ai",            label:"AI Predictions",icon:Flame},
     {id:"integrations",  label:"Integrations", icon:Link},
+    {id:"marketplace",   label:"API Marketplace",icon:Plug},
+    {id:"whatsapp",      label:"WhatsApp Bot", icon:MessageCircle},
     {id:"metrics",       label:"Metrics",      icon:Activity},
     {id:"traces",        label:"Traces",       icon:GitBranch},
     {id:"graphql",       label:"GraphQL",      icon:Code2},
@@ -149,7 +155,7 @@ export function Sidebar() {
                       : "text-slate-500 hover:bg-navy-700/80 hover:text-slate-200"
                     }
                     ${!sidebarOpen ? "justify-center" : ""}`}>
-                  <Icon className="w-4 h-4 flex-shrink-0"/>
+                  <Icon3D size={24} color={activePage === id ? "#0ea5e9" : "#475569"}><Icon className="w-3.5 h-3.5"/></Icon3D>
                   {sidebarOpen && <span className="truncate text-left">{label}</span>}
                 </button>
               ))}

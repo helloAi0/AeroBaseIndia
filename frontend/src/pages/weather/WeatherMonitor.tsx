@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Wind, Eye, Droplets, Gauge, AlertTriangle, RefreshCw, CloudOff } from "lucide-react";
 import { Line, LineChart, XAxis, YAxis, Tooltip, ResponsiveContainer, AreaChart, Area } from "recharts";
-import { useAuthStore } from "../../store/authStore";
+import { useAirport } from "../../hooks/useAirport";
 
 /**
  * Live weather from Open-Meteo (https://open-meteo.com): free, no API key, CORS-enabled.
@@ -93,8 +93,9 @@ async function fetchWx(code: Code): Promise<Wx> {
 }
 
 export function WeatherMonitor() {
-  const home = useAuthStore(s => s.user?.airport);
-  const [code, setCode] = useState<Code>((home && home in AIRPORTS ? home : "DEL") as Code);
+  const { code: airportCode } = useAirport();
+  const [code, setCode] = useState<Code>((airportCode in AIRPORTS ? airportCode : "DEL") as Code);
+  useEffect(() => { if (airportCode in AIRPORTS) setCode(airportCode as Code); }, [airportCode]);
   const [clock, setClock] = useState(new Date().toLocaleTimeString());
   useEffect(() => { const t = setInterval(() => setClock(new Date().toLocaleTimeString()), 1000); return () => clearInterval(t); }, []);
 

@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Sidebar }            from "./components/layout/Sidebar";
 import { TopBar }             from "./components/layout/TopBar";
@@ -29,6 +29,15 @@ const CheckInSystem = lazy(() => import("./pages/checkin/CheckInSystem").then(m 
 const FuelManagement = lazy(() => import("./pages/fuel/FuelManagement").then(m => ({ default: m.FuelManagement })));
 const MaintenancePage = lazy(() => import("./pages/maintenance/MaintenancePage").then(m => ({ default: m.MaintenancePage })));
 const AnnouncementsPage = lazy(() => import("./pages/announcements/AnnouncementsPage").then(m => ({ default: m.AnnouncementsPage })));
+const ContractsPage = lazy(() => import("./pages/contracts/ContractsPage").then(m => ({ default: m.ContractsPage })));
+const KPIDashboard = lazy(() => import("./pages/kpi/KPIDashboard").then(m => ({ default: m.KPIDashboard })));
+const IntegrationsHub = lazy(() => import("./pages/integrations/IntegrationsHub").then(m => ({ default: m.IntegrationsHub })));
+const CarbonDashboard = lazy(() => import("./pages/carbon/CarbonDashboard").then(m => ({ default: m.CarbonDashboard })));
+const BaggageClaimPredictor = lazy(() => import("./pages/baggage_predict/BaggageClaimPredictor").then(m => ({ default: m.BaggageClaimPredictor })));
+const BiometricCheckIn = lazy(() => import("./pages/biometric/BiometricCheckIn").then(m => ({ default: m.BiometricCheckIn })));
+const ApiMarketplace = lazy(() => import("./pages/marketplace/ApiMarketplace").then(m => ({ default: m.ApiMarketplace })));
+const WhatsAppBot = lazy(() => import("./pages/whatsapp/WhatsAppBot").then(m => ({ default: m.WhatsAppBot })));
+const LandingPage = lazy(() => import("./pages/landing/LandingPage").then(m => ({ default: m.LandingPage })));
 const WeatherMonitor = lazy(() => import("./pages/weather/WeatherMonitor").then(m => ({ default: m.WeatherMonitor })));
 const ParkingPage = lazy(() => import("./pages/parking/ParkingPage").then(m => ({ default: m.ParkingPage })));
 const RetailPage = lazy(() => import("./pages/retail/RetailPage").then(m => ({ default: m.RetailPage })));
@@ -48,6 +57,7 @@ const SecurityOpsPage = lazy(() => import("./pages/security_ops/SecurityOpsPage"
 import { useAppStore }        from "./store/appStore";
 import { useAuthStore }        from "./store/authStore";
 import { LoginPage } from "./pages/auth/LoginPage";
+import { OfflineBanner } from "./components/ui/OfflineBanner";
 import { useRealtime }        from "./hooks/useRealtime";
 import { useFlightAlerts }    from "./hooks/useFlightAlerts";
 
@@ -76,6 +86,14 @@ const PAGES: Record<string, React.ReactNode> = {
   maintenance:   <MaintenancePage />,
   weather:       <WeatherMonitor />,
   announcements: <AnnouncementsPage />,
+  contracts:     <ContractsPage />,
+  carbon:        <CarbonDashboard />,
+  baggage_predict: <BaggageClaimPredictor />,
+  biometric:     <BiometricCheckIn />,
+  marketplace:   <ApiMarketplace />,
+  whatsapp:      <WhatsAppBot />,
+  kpi:           <KPIDashboard />,
+  integrations:  <IntegrationsHub />,
   parking:       <ParkingPage />,
   retail:        <RetailPage />,
   feedback:      <FeedbackPage />,
@@ -101,8 +119,9 @@ const PAGES: Record<string, React.ReactNode> = {
 function AppContent() {
   useRealtime(10000);
   useFlightAlerts();
-  const { activePage, sidebarOpen, setSidebar } = useAppStore();
+  const { activePage, sidebarOpen, setSidebar, setActivePage } = useAppStore();
   const { isLoggedIn, user } = useAuthStore();
+  const [showLogin, setShowLogin] = useState(() => { try { return sessionStorage.getItem("aerobase.login") === "1" || location.hash === "#login"; } catch { return false; } });
 
   // Sign out when a server-issued JWT expires (checked on load and every 30s).
   useEffect(() => {
@@ -115,7 +134,9 @@ function AppContent() {
     return () => clearInterval(t);
   }, []);
 
-  if (!isLoggedIn) return <LoginPage />;
+  if (!isLoggedIn) return showLogin ? <LoginPage /> : (
+    <Suspense fallback={<PageSkeleton />}><LandingPage onEnter={() => { setShowLogin(true); try { sessionStorage.setItem("aerobase.login", "1"); } catch { /* ignore */ } }} /></Suspense>
+  );
 
 
   // Auto-route by role
@@ -148,6 +169,7 @@ function AppContent() {
         className={`flex-1 min-w-0 flex flex-col min-h-screen transition-all duration-300 ${sidebarOpen ? "lg:ml-56" : "lg:ml-14"}`}
       >
         <TopBar />
+        <OfflineBanner />
 
         {/* Page content — below topbar */}
         <main className="flex-1 overflow-auto p-4 lg:p-6 mt-16">
@@ -157,8 +179,9 @@ function AppContent() {
             <div className="flex items-center justify-center h-64 text-slate-500">
               <div className="text-center">
                 <div className="text-5xl mb-4">✈</div>
-                <p className="text-xl font-semibold text-white capitalize mb-1">{activePage}</p>
-                <p className="text-sm text-slate-400">Module coming soon</p>
+                <p className="text-xl font-semibold text-white mb-1">Page not available</p>
+                <p className="text-sm text-slate-400 mb-4">“{activePage}” isn’t available for your account.</p>
+                <button onClick={() => setActivePage("dashboard")} className="px-4 py-2 rounded-lg bg-sky-500/20 text-sky-300 text-sm">Back to dashboard</button>
               </div>
             </div>
           )}
