@@ -38,3 +38,9 @@ Legend: ✅ verified by automated/browser/curl tests · ⚠️ built but NOT ver
 any signed-in user: /flights/*, /graphql, /predict/*, /api/twin, /api/revenue, /api/passenger/*).
 Public: /health, /login, /docs, webhooks (signature-checked), partner routes (API-key filter).
 Prometheus can scrape /metrics with `METRICS_TOKEN` as the bearer. Raw DB/exception text is no longer returned to clients.
+
+## Partner (airline) API
+Migration 039 adds `partner_api_keys` and the flight-sync columns/unique index. Admins create and revoke keys in
+API Marketplace > Partner API keys (or `POST /api/partner-keys`). Airlines call `POST /api/partner/flights/sync`
+with `X-API-Key` + `X-Partner-Id`; the call is an idempotent upsert per airport/flight number/departure.
+Run `scripts/migrate.sh` on the server so 039 is applied.
