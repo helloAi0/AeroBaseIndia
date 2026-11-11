@@ -52,18 +52,26 @@ std::string PartnerApiKeyService::createKeyForPartner(const std::string& partner
 }
 
 bool PartnerApiKeyService::verifyKey(const std::string& partnerId, const std::string& rawKey) {
-    std::string providedHash = hashKey(rawKey);
-
+    const std::string providedHash = hashKey(rawKey);
     try {
         auto conn = DatabaseManager::getConnection();
-        pqxx::read_transaction txn(*conn);
+        pqxx::work txn(*conn);
         auto result = txn.exec_params(
-            "SELECT 1 FROM partner_api_keys WHERE partner_id = $1 AND key_hash = $2 AND is_active = TRUE",
-            partnerId, providedHash
-        );
-        
+            "UPDATE partner_api_keys SET last_used_at = NOW() "
+            "WHERE partner_id = $1 AND key_hash = $2 AND is_active = TRUE RETURNING 1",
+            partnerId, providedHash);
+        txn.commit();
         return !result.empty();
     } catch (...) {
         return false;
     }
+}
+
+std::string PartnerApiKeyService::tenantFor(const std::string& partnerId) {
+    try {
+        auto conn = DatabaseManager::getConnection();
+        pqxx::read_transaction txn(*conn);
+        auto r = txn.exec_params("SELECT COALESCE(tenant_id::text,'') FROM partner_api_keys WHERE partner_id = $1 AND is_active = TRUE ORDER BY created_at DESC LIMIT 1", partnerId);
+        return r.empty() ? "" : r[0][0].c_str();
+    } catch (...) { return ""; }
 }

@@ -33,7 +33,13 @@ void PartnerAuthFilter::doFilter(const HttpRequestPtr& req,
 
     // 3. MAANG Logic: Redis Rate Limiting
     // We do this AFTER auth to avoid wasting Redis CPU on unauthorized junk traffic.
-auto redisClient = drogon::app().getRedisClient("default");
+drogon::nosql::RedisClientPtr redisClient;
+    try { redisClient = drogon::app().getRedisClient("default"); } catch (...) {}
+    if (!redisClient) {            // no Redis configured: fail open, like a Redis outage
+        req->getAttributes()->insert("verified_partner_id", partnerId);
+        fccb();
+        return;
+    }
     std::string rateLimitKey = "rate_limit:partner:" + partnerId;
 
     // We use a multi-command or Lua-style approach to ensure atomicity

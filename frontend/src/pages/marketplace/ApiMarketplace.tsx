@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Copy, Play, Check, Plug } from "lucide-react";
 import { api } from "../../api/client";
 import { API_ENABLED, API_URL } from "../../config";
+import { PartnerKeys } from "./PartnerKeys";
 import { useAirport } from "../../hooks/useAirport";
 
 interface Endpoint { id: string; name: string; method: "GET" | "POST"; path: string; desc: string; auth: string; body?: object; tag: string }
@@ -54,6 +55,7 @@ export function ApiMarketplace() {
           {out && <pre className="bg-navy-900 border border-navy-600 rounded-xl p-4 text-xs overflow-x-auto"><span className={typeof out.status === "number" && out.status < 300 ? "text-green-400" : "text-red-400"}>HTTP {out.status}</span>{"\n"}<span className="text-slate-300">{out.body}</span></pre>}
         </div>
       </div>
+      <PartnerKeys />
     </div>
   );
 }

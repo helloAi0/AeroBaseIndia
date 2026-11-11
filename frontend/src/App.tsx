@@ -40,6 +40,15 @@ const WhatsAppBot = lazy(() => import("./pages/whatsapp/WhatsAppBot").then(m => 
 const Autopilot = lazy(() => import("./pages/ops/Autopilot").then(m => ({ default: m.Autopilot })));
 const WhatIf = lazy(() => import("./pages/ops/WhatIf").then(m => ({ default: m.WhatIf })));
 const Copilot = lazy(() => import("./pages/ops/Copilot").then(m => ({ default: m.Copilot })));
+const CrowdHeatmap = lazy(() => import("./pages/ops2/CrowdHeatmap").then(m => ({ default: m.CrowdHeatmap })));
+const GateOptimizer = lazy(() => import("./pages/ops2/GateOptimizer").then(m => ({ default: m.GateOptimizer })));
+const CarbonOps = lazy(() => import("./pages/ops2/CarbonOps").then(m => ({ default: m.CarbonOps })));
+const Playbooks = lazy(() => import("./pages/ops2/Playbooks").then(m => ({ default: m.Playbooks })));
+const Turnaround = lazy(() => import("./pages/ops2/Turnaround").then(m => ({ default: m.Turnaround })));
+const AccessibilityConcierge = lazy(() => import("./pages/ops2/Accessibility").then(m => ({ default: m.AccessibilityConcierge })));
+const LostFound = lazy(() => import("./pages/ops2/LostFound").then(m => ({ default: m.LostFound })));
+const MyJourney = lazy(() => import("./pages/ops2/MyJourney").then(m => ({ default: m.MyJourney })));
+const RetailBids = lazy(() => import("./pages/ops2/RetailBids").then(m => ({ default: m.RetailBids })));
 const LandingPage = lazy(() => import("./pages/landing/LandingPage").then(m => ({ default: m.LandingPage })));
 const WeatherMonitor = lazy(() => import("./pages/weather/WeatherMonitor").then(m => ({ default: m.WeatherMonitor })));
 const ParkingPage = lazy(() => import("./pages/parking/ParkingPage").then(m => ({ default: m.ParkingPage })));
@@ -95,6 +104,16 @@ const PAGES: Record<string, React.ReactNode> = {
   autopilot:     <Autopilot />,
   whatif:        <WhatIf />,
   copilot:       <Copilot />,
+  heatmap: <CrowdHeatmap />,
+  gateopt: <GateOptimizer />,
+  carbonops: <CarbonOps />,
+  playbooks: <Playbooks />,
+  turnaround: <Turnaround />,
+  accessibility: <AccessibilityConcierge />,
+  lostfound: <LostFound />,
+  journey: <MyJourney />,
+  bids: <RetailBids />,
+
   baggage_predict: <BaggageClaimPredictor />,
   biometric:     <BiometricCheckIn />,
   marketplace:   <ApiMarketplace />,
@@ -170,7 +189,7 @@ function AppContent() {
   // Auto-route by role
   const sl = user?.staffLevel||"";
   const effectivePage =
-    user?.role==="retailer" && !["retailer","map","flights","payments","passenger","checkin"].includes(activePage)
+    user?.role==="retailer" && !["retailer","map","flights","payments","passenger","checkin","bids"].includes(activePage)
       ? "retailer"
     : sl.startsWith("pilot_") && activePage==="dashboard"
       ? "pilot"

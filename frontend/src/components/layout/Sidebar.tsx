@@ -7,7 +7,7 @@ import {
   Gauge, Wrench, CloudSun, ParkingSquare, Store,
   MessageSquare, TestTube, Radio, Building2, Palette,
   Shield, Settings, Flame, Target, Volume2, Link,
-  Globe, Crown, Leaf, ScanFace, Plug, MessageCircle, Timer, Siren, FlaskConical, Bot
+  Globe, Crown, Leaf, ScanFace, Plug, MessageCircle, Timer, Siren, FlaskConical, Bot, Flame as FlameIcon, Route, LayoutGrid, CloudLightning, PlaneTakeoff, Accessibility as AccIcon, SearchCheck, Handshake
 } from "lucide-react";
 import { Icon3D } from "../ui/Icon3D";
 import { useAppStore } from "../../store/appStore";
@@ -26,10 +26,17 @@ const ALL_NAV = [
     {id:"autopilot",   label:"Disruption Autopilot",icon:Siren},
     {id:"whatif",      label:"What-if Simulator",icon:FlaskConical},
     {id:"copilot",     label:"Ops Copilot",    icon:Bot},
+    {id:"heatmap",     label:"Crowd Heatmap",  icon:FlameIcon},
+    {id:"gateopt",     label:"Smart Gates",    icon:LayoutGrid},
+    {id:"carbonops",   label:"Carbon Ops",     icon:Leaf},
+    {id:"playbooks",   label:"Weather Playbooks",icon:CloudLightning},
+    {id:"turnaround",  label:"Turnaround Timer",icon:PlaneTakeoff},
+    {id:"accessibility",label:"Accessibility",  icon:AccIcon},
   ]},
   { group:"Business", roles:["superadmin","airport_admin"], items:[
     {id:"analytics",     label:"Analytics",    icon:BarChart3},
     {id:"revenue",       label:"Revenue",      icon:TrendingUp},
+    {id:"bids",          label:"Offer Marketplace",icon:Handshake},
     {id:"payments",      label:"Payments",     icon:CreditCard},
     {id:"billing",       label:"Billing",      icon:FileText},
     {id:"retail",        label:"Retail",       icon:Store},
@@ -46,10 +53,13 @@ const ALL_NAV = [
   ]},
   { group:"Passenger", roles:["superadmin","airport_admin","staff","passenger"], items:[
     {id:"passenger",     label:"Passengers",   icon:Users},
+    {id:"journey",       label:"My Journey",   icon:Route},
+    {id:"lostfound",     label:"Lost & Found", icon:SearchCheck},
     {id:"map",           label:"Airport Map",  icon:Map},
   ]},
   { group:"My Shop", roles:["retailer"], items:[
       {id:"retailer",     label:"My Shop Dashboard",icon:Store},
+      {id:"bids",         label:"Offer Marketplace",icon:Handshake},
       {id:"map",          label:"Airport Map",       icon:Map},
       {id:"flights",      label:"Flight Info",       icon:Plane},
   ]},

@@ -13,6 +13,9 @@ public:
     /**
      * Verifies if a provided raw key matches the stored hash for a partner.
      */
+    /** Tenant a partner's active key belongs to ("" if none). */
+    static std::string tenantFor(const std::string& partnerId);
+
     static bool verifyKey(const std::string& partnerId, const std::string& rawKey);
 
 private:
