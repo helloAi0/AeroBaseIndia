@@ -49,13 +49,15 @@ void FlightController::getFlights(const HttpRequestPtr& req,
     try {
         // Authenticated; tenant comes from the token, not a client header.
         // Only SUPER_ADMIN may view another airport via X-Tenant-ID.
-        std::string tenantId;
+        std::string tenantId, orgFilter;
         try {
             const std::string authHeader = req->getHeader("Authorization");
             if (authHeader.size() <= 7 || authHeader.rfind("Bearer ", 0) != 0) throw std::runtime_error("no token");
             auto decoded = JwtService::verifyToken(authHeader.substr(7));
             tenantId = decoded.has_payload_claim("airport") ? decoded.get_payload_claim("airport").as_string() : "";
             const std::string role = decoded.get_payload_claim("role").as_string();
+            if ((role == "AIRLINE_OPS" || role == "PILOT") && decoded.has_payload_claim("org"))
+                orgFilter = decoded.get_payload_claim("org").as_string();   // airline staff see only their airline
             const std::string hdr = req->getHeader("X-Tenant-ID");
             if (role == "SUPER_ADMIN" && !hdr.empty()) tenantId = hdr;
             if (tenantId.empty()) throw std::runtime_error("no airport in token");
@@ -71,9 +73,14 @@ void FlightController::getFlights(const HttpRequestPtr& req,
         pqxx::read_transaction txn(*conn);
         
         auto result = txn.exec_params(
-            "SELECT f.flight_number, f.destination, f.status, f.gate, f.id, f.origin FROM flights f JOIN tenants t ON f.tenant_id=t.id WHERE t.airport_code=$1 ORDER BY f.created_at DESC LIMIT 100", 
-            tenantId
-        );
+            "SELECT f.flight_number, f.destination, f.status, f.gate, f.id, f.origin, "
+            "       to_char(f.departure_time,'YYYY-MM-DD\"T\"HH24:MI:SS'), to_char(f.arrival_time,'YYYY-MM-DD\"T\"HH24:MI:SS'), "
+            "       COALESCE(f.airline,''), COALESCE(f.airline_code,''), COALESCE(f.aircraft,''), COALESCE(f.terminal,''), "
+            "       COALESCE(f.passengers,0), COALESCE(f.issue,''), COALESCE(f.delay_minutes,0) "
+            "FROM flights f JOIN tenants t ON f.tenant_id=t.id "
+            "WHERE t.airport_code=$1 AND ($2 = '' OR f.airline_code = $2) "
+            "ORDER BY f.departure_time ASC LIMIT 300",
+            tenantId, orgFilter);
 
         Json::Value flights(Json::arrayValue);
         for (auto const &row : result) {
@@ -84,6 +91,15 @@ void FlightController::getFlights(const HttpRequestPtr& req,
             f["gate"]          = row[3].c_str();
             f["id"]            = row[4].c_str();
             f["origin"]        = row[5].is_null() ? "" : row[5].c_str();
+            f["departure_time"] = row[6].is_null() ? "" : row[6].c_str();
+            f["arrival_time"]   = row[7].is_null() ? "" : row[7].c_str();
+            f["airline"]       = row[8].c_str();
+            f["airline_code"]  = row[9].c_str();
+            f["aircraft"]      = row[10].c_str();
+            f["terminal"]      = row[11].c_str();
+            f["passengers"]    = row[12].as<int>();
+            f["issue"]         = row[13].c_str();
+            f["delay_minutes"] = row[14].as<int>();
             flights.append(f);
         }
 

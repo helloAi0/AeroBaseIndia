@@ -32,7 +32,7 @@ AuthService::authenticate(const std::string& email, const std::string& password)
 
     const auto rows = tx.exec_params(
         "SELECT u.id, u.tenant_id, u.full_name, u.email, u.password_hash, u.role, "
-        "       t.airport_code, t.airport_name "
+        "       t.airport_code, t.airport_name, u.org_code "
         "FROM users u LEFT JOIN tenants t ON t.id = u.tenant_id "
         "WHERE lower(u.email) = lower($1) "
         "ORDER BY (u.email = $1) DESC LIMIT 1",
@@ -71,6 +71,7 @@ AuthService::authenticate(const std::string& email, const std::string& password)
         {"email",        out.email},
         {"airport",      out.airportCode},
         {"airport_name", out.airportName},
+        {"org",          str("org_code")},
     });
     return out;
 }

@@ -7,7 +7,7 @@ Password is prompted for if not given. Uses psql with the DB_* env vars.
 """
 import argparse, getpass, hashlib, os, secrets, subprocess, sys
 
-ROLES = ["SUPER_ADMIN", "AIRPORT_ADMIN", "GROUND_STAFF", "SECURITY_OFFICER"]
+ROLES = ["SUPER_ADMIN", "AIRPORT_ADMIN", "GROUND_STAFF", "SECURITY_OFFICER", "AIRLINE_OPS", "PILOT", "RETAILER"]
 ITER = int(os.environ.get("PASSWORD_PBKDF2_ITERATIONS", "600000"))
 
 
@@ -22,6 +22,7 @@ def main():
     a.add_argument("--email", required=True)
     a.add_argument("--name", required=True)
     a.add_argument("--role", required=True, choices=ROLES)
+    a.add_argument("--org", default="", help="airline code (AI, 6E…) or shop id for AIRLINE_OPS/PILOT/RETAILER")
     a.add_argument("--airport", required=True, help="airport_code of an existing tenant, e.g. DEL")
     a.add_argument("--password")
     a = a.parse_args()
@@ -29,16 +30,16 @@ def main():
     if len(pw) < 8:
         sys.exit("Password must be at least 8 characters")
     env = dict(os.environ, PGPASSWORD=os.environ.get("DB_PASSWORD", "postgres"))
-    sql = """INSERT INTO users (id, tenant_id, full_name, email, password_hash, role)
-SELECT gen_random_uuid(), id, :'name', :'email', :'hash', :'role' FROM tenants WHERE airport_code = :'airport'
+    sql = """INSERT INTO users (id, tenant_id, full_name, email, password_hash, role, org_code)
+SELECT gen_random_uuid(), id, :'name', :'email', :'hash', :'role', NULLIF(:'org','') FROM tenants WHERE airport_code = :'airport'
 ON CONFLICT (email) DO UPDATE SET full_name = EXCLUDED.full_name,
-  password_hash = EXCLUDED.password_hash, role = EXCLUDED.role, tenant_id = EXCLUDED.tenant_id
+  password_hash = EXCLUDED.password_hash, role = EXCLUDED.role, org_code = EXCLUDED.org_code, tenant_id = EXCLUDED.tenant_id
 RETURNING email;"""
     r = subprocess.run(
         ["psql", "-h", os.environ.get("DB_HOST", "localhost"), "-p", os.environ.get("DB_PORT", "5432"),
          "-U", os.environ.get("DB_USER", "postgres"), "-d", os.environ.get("DB_NAME", "aerobase"),
          "-v", "ON_ERROR_STOP=1", "-v", f"name={a.name}", "-v", f"email={a.email}",
-         "-v", f"hash={hash_pw(pw)}", "-v", f"role={a.role}", "-v", f"airport={a.airport}",
+         "-v", f"hash={hash_pw(pw)}", "-v", f"role={a.role}", "-v", f"org={a.org}", "-v", f"airport={a.airport}",
          "-tA", "-f", "-"],
         input=sql, text=True, capture_output=True, env=env)
     if r.returncode or not r.stdout.strip():
