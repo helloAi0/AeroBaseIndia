@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchFlights } from "../../api/client";
 import { speak, stopSpeaking, voiceSupported } from "../../lib/voice";
+import { translate, LANG_BCP47, hasVoice } from "../../lib/announceI18n";
 import { Volume2, VolumeX, Megaphone, Clock, Play } from "lucide-react";
 
 const ANNOUNCEMENT_TEMPLATES = [
@@ -42,6 +43,7 @@ export function AnnouncementsPage() {
   const fl = flights as any[];
 
   const preview = selectedTmpl.template(flight, gate);
+  const missingVoice = lang.filter(l => l !== "EN" && !hasVoice(l));
 
   const broadcast = () => {
     setPlaying(selectedTmpl.id);
@@ -52,7 +54,16 @@ export function AnnouncementsPage() {
     };
     setLog(prev=>[newEntry,...prev]);
     const done = () => { setPlaying(null); setLog(p=>p.map(e=>e.id===newEntry.id?{...e,status:"Played"}:e)); };
-    if (voiceSupported()) speak(preview).then(done); else setTimeout(done, 3000);
+    if (!voiceSupported()) { setTimeout(done, 3000); return; }
+    // Speak every selected language in turn (English first), each in its own voice.
+    const order = ["EN", ...lang.filter(l => l !== "EN")].filter(l => lang.includes(l));
+    (async () => {
+      for (const l of order) {
+        const text = l === "EN" ? preview : translate(selectedTmpl.type, l, flight, gate);
+        if (text) await speak(text, LANG_BCP47[l] ?? "en-IN");
+      }
+      done();
+    })();
   };
 
   const toggleLang = (l:string) =>
@@ -144,6 +155,12 @@ export function AnnouncementsPage() {
             <div className="p-4 bg-navy-900 rounded-xl border border-navy-600 mb-4">
               <div className="text-xs text-slate-500 mb-2">Announcement Preview</div>
               <div className="text-sm text-slate-200 leading-relaxed italic">"{preview}"</div>
+              {lang.filter(l => l !== "EN").map(l => (
+                <div key={l} className="text-sm text-slate-300 leading-relaxed mt-2"><span className="text-xs text-sky-400 font-bold mr-2">{l}</span>{translate(selectedTmpl.type, l, flight, gate)}</div>
+              ))}
+              {missingVoice.length > 0 && (
+                <div className="mt-3 text-xs text-yellow-400">This device has no voice for {missingVoice.join(", ")}; it will be read in the default voice. Install the language voice in your OS, or use a different browser/device for the PA terminal.</div>
+              )}
             </div>
 
             <button onClick={broadcast} disabled={!!playing||muted}

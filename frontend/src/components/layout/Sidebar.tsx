@@ -7,7 +7,7 @@ import {
   Gauge, Wrench, CloudSun, ParkingSquare, Store,
   MessageSquare, TestTube, Radio, Building2, Palette,
   Shield, Settings, Flame, Target, Volume2, Link,
-  Globe, Crown, Leaf, ScanFace, Plug, MessageCircle, Timer
+  Globe, Crown, Leaf, ScanFace, Plug, MessageCircle, Timer, Siren, FlaskConical, Bot
 } from "lucide-react";
 import { Icon3D } from "../ui/Icon3D";
 import { useAppStore } from "../../store/appStore";
@@ -23,6 +23,9 @@ const ALL_NAV = [
     {id:"checkin",     label:"Check-in",       icon:ClipboardCheck},
     {id:"biometric",   label:"Biometric Check-in",icon:ScanFace},
     {id:"baggage_predict",label:"Bag Claim ETA", icon:Timer},
+    {id:"autopilot",   label:"Disruption Autopilot",icon:Siren},
+    {id:"whatif",      label:"What-if Simulator",icon:FlaskConical},
+    {id:"copilot",     label:"Ops Copilot",    icon:Bot},
   ]},
   { group:"Business", roles:["superadmin","airport_admin"], items:[
     {id:"analytics",     label:"Analytics",    icon:BarChart3},

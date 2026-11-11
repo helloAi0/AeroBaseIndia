@@ -37,6 +37,9 @@ const BaggageClaimPredictor = lazy(() => import("./pages/baggage_predict/Baggage
 const BiometricCheckIn = lazy(() => import("./pages/biometric/BiometricCheckIn").then(m => ({ default: m.BiometricCheckIn })));
 const ApiMarketplace = lazy(() => import("./pages/marketplace/ApiMarketplace").then(m => ({ default: m.ApiMarketplace })));
 const WhatsAppBot = lazy(() => import("./pages/whatsapp/WhatsAppBot").then(m => ({ default: m.WhatsAppBot })));
+const Autopilot = lazy(() => import("./pages/ops/Autopilot").then(m => ({ default: m.Autopilot })));
+const WhatIf = lazy(() => import("./pages/ops/WhatIf").then(m => ({ default: m.WhatIf })));
+const Copilot = lazy(() => import("./pages/ops/Copilot").then(m => ({ default: m.Copilot })));
 const LandingPage = lazy(() => import("./pages/landing/LandingPage").then(m => ({ default: m.LandingPage })));
 const WeatherMonitor = lazy(() => import("./pages/weather/WeatherMonitor").then(m => ({ default: m.WeatherMonitor })));
 const ParkingPage = lazy(() => import("./pages/parking/ParkingPage").then(m => ({ default: m.ParkingPage })));
@@ -89,6 +92,9 @@ const PAGES: Record<string, React.ReactNode> = {
   announcements: <AnnouncementsPage />,
   contracts:     <ContractsPage />,
   carbon:        <CarbonDashboard />,
+  autopilot:     <Autopilot />,
+  whatif:        <WhatIf />,
+  copilot:       <Copilot />,
   baggage_predict: <BaggageClaimPredictor />,
   biometric:     <BiometricCheckIn />,
   marketplace:   <ApiMarketplace />,
