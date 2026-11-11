@@ -1,20 +1,22 @@
 import { useState } from "react";
+import { useCollection } from "../../hooks/useCollection";
 import { Search, Upload } from "lucide-react";
 import { COLOURS, dominantColour } from "../../lib/colour";
 import { Card, PageHead } from "../../components/ui/PageHead";
 
-interface Item { id: number; desc: string; cat: string; colour: string; where: string; when: string }
+interface Item { desc: string; cat: string; colour: string; where: string; when: string }
 const CATS = ["Bag", "Phone", "Wallet", "Laptop", "Jacket", "Documents", "Other"];
-const SEED: Item[] = [
-  { id: 1, desc: "Black laptop backpack with name tag", cat: "Bag", colour: "black", where: "T3 gate B12", when: "Today 08:10" },
-  { id: 2, desc: "Blue suitcase, broken wheel", cat: "Bag", colour: "blue", where: "T2 baggage belt 4", when: "Yesterday" },
-  { id: 3, desc: "Red leather wallet", cat: "Wallet", colour: "red", where: "T1 security", when: "Today 06:45" },
-  { id: 4, desc: "Grey hoodie", cat: "Jacket", colour: "grey", where: "T3 food court", when: "Yesterday" },
-  { id: 5, desc: "White earbuds case, iPhone", cat: "Phone", colour: "white", where: "T2 gate A4", when: "2 days ago" },
+const SEED: (Item & { id: string })[] = [
+  { id: "s1", desc: "Black laptop backpack with name tag", cat: "Bag", colour: "black", where: "T3 gate B12", when: "Today 08:10" },
+  { id: "s2", desc: "Blue suitcase, broken wheel", cat: "Bag", colour: "blue", where: "T2 baggage belt 4", when: "Yesterday" },
+  { id: "s3", desc: "Red leather wallet", cat: "Wallet", colour: "red", where: "T1 security", when: "Today 06:45" },
+  { id: "s4", desc: "Grey hoodie", cat: "Jacket", colour: "grey", where: "T3 food court", when: "Yesterday" },
+  { id: "s5", desc: "White earbuds case, iPhone", cat: "Phone", colour: "white", where: "T2 gate A4", when: "2 days ago" },
 ];
 
 export function LostFound() {
-  const [items, setItems] = useState(SEED);
+  const col = useCollection<Item>("lostfound", SEED);
+  const items = col.items;
   const [cat, setCat] = useState("Bag"); const [colour, setColour] = useState("black"); const [kw, setKw] = useState("");
   const [note, setNote] = useState(""); const [nd, setNd] = useState({ desc: "", where: "" });
 
@@ -25,12 +27,12 @@ export function LostFound() {
     if (!f) return; setNote("Reading photo…");
     try { const c = await dominantColour(f); setColour(c); setNote(`Detected main colour: ${c}. Adjust if wrong.`); } catch { setNote("Could not read that photo. Choose the colour manually."); }
   };
-  const add = (e: React.FormEvent) => { e.preventDefault(); if (!nd.desc.trim()) return; setItems(p => [{ id: Date.now(), desc: nd.desc.trim(), cat, colour, where: nd.where.trim() || "Unknown", when: "Just now" }, ...p]); setNd({ desc: "", where: "" }); };
+  const add = (e: React.FormEvent) => { e.preventDefault(); if (!nd.desc.trim()) return; void col.add({ desc: nd.desc.trim(), cat, colour, where: nd.where.trim() || "Unknown", when: new Date().toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" }) }); setNd({ desc: "", where: "" }); };
   const inp = "bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-white text-sm min-w-0 w-full";
   return (
     <div className="space-y-6">
       <PageHead title="Lost & Found" sub="Upload a photo or describe the item and see the closest matches."
-        note="Matching uses category, the photo's dominant colour (analysed in your browser, never uploaded) and keywords. It is not object recognition, so always confirm with the owner before release." />
+        note={(col.live ? "Items are saved on the server. " : "Demo mode: items stay in this tab. ") + "Matching uses category, the photo's dominant colour (analysed in your browser, never uploaded) and keywords. It is not object recognition, so always confirm with the owner before release."} />
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-5">
         <Card className="space-y-3">
           <label className="flex items-center gap-2 text-sm text-sky-300 cursor-pointer"><Upload className="w-4 h-4" />Choose photo<input type="file" accept="image/*" className="hidden" onChange={e => void onPhoto(e.target.files?.[0])} /></label>

@@ -1,11 +1,12 @@
 import { useMemo, useState } from "react";
-import { ALL_AIRPORT_FLIGHTS } from "../../data/airportFlights";
+import { useBoard } from "../../hooks/useBoard";
 import { capacityOf, fmt, toMin } from "../../lib/opsEngine";
 import { readyAfter, tasksFor } from "../../lib/opsEngine2";
 import { Card, PageHead } from "../../components/ui/PageHead";
 
 export function Turnaround() {
-  const list = ALL_AIRPORT_FLIGHTS.filter(f => f.status === "Scheduled" || f.status === "Boarding" || f.status === "Delayed");
+  const { flights } = useBoard();
+  const list = flights.filter(f => f.status === "Scheduled" || f.status === "Boarding" || f.status === "Delayed");
   const [id, setId] = useState(list[0]?.id ?? 0);
   const f = list.find(x => x.id === id) ?? list[0];
   const wide = f ? capacityOf(f) >= 300 : false;

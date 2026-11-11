@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { CloudFog, CloudLightning, Sun, CloudRain, Check } from "lucide-react";
+import { useCollection } from "../../hooks/useCollection";
 import { useAirport } from "../../hooks/useAirport";
 import { notifyUser } from "../../lib/notify";
 import { speak, voiceSupported } from "../../lib/voice";
@@ -24,6 +25,7 @@ export function Playbooks() {
   const [det, setDet] = useState<string>("Checking live weather…");
   const [done, setDone] = useState<Record<string, boolean>>({});
   const [ran, setRan] = useState<string | null>(null);
+  const log = useCollection<{ kind: string; playbook: string; note: string; steps_done: number }>("actions");
 
   useEffect(() => {
     const [la, lo] = COORDS[code] ?? COORDS.DEL; const ac = new AbortController(); const t = setTimeout(() => ac.abort(), 6000);
@@ -36,7 +38,7 @@ export function Playbooks() {
     return () => { ac.abort(); clearTimeout(t); };
   }, [code]);
 
-  const run = () => { setRan(sel.id); notifyUser(`${sel.label} playbook started`, `${name}: ${sel.steps.length} steps assigned`, "playbook"); if (voiceSupported()) void speak(sel.say); };
+  const run = () => { setRan(sel.id); void log.add({ kind: "PLAYBOOK_STARTED", playbook: sel.label, steps_done: sel.steps.filter((_, i) => done[sel.id + i]).length, note: `${name}: ${sel.label} playbook approved` }); notifyUser(`${sel.label} playbook started`, `${name}: ${sel.steps.length} steps assigned`, "playbook"); if (voiceSupported()) void speak(sel.say); };
   return (
     <div className="space-y-6">
       <PageHead title="Weather Playbooks" sub="A ready response plan for each weather event. Review, tick off steps, then publish the announcement." />

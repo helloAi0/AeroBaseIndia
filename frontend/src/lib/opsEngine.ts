@@ -19,6 +19,7 @@ export const fmt = (min: number) => { const m = ((Math.round(min) % 1440) + 1440
 
 export function delayMinutes(f: DemoFlight): number {
   const m = /(\d+)\s*min/i.exec(f.issue ?? "");
+  const d = (f as { delay?: number }).delay; if (d && d > 0) return d;
   if (m) return +m[1];
   return f.status === "Delayed" ? ASSUME.defaultDelayMin : 0;
 }
@@ -51,8 +52,8 @@ export function buildDisruptions(flights: DemoFlight[]): Disruption[] {
 export interface Scenario { closeStart: number; closeMin: number; capacityPct: number; extraDelay: number }
 export interface SimRow { flight: DemoFlight; planned: number; actual: number; delay: number }
 
-export function simulate(flights: DemoFlight[], sc: Scenario): SimRow[] {
-  const deps = flights.filter(f => f.from === "DEL" && (f.status === "Scheduled" || f.status === "Boarding" || f.status === "Delayed"))
+export function simulate(flights: DemoFlight[], sc: Scenario, home = "DEL"): SimRow[] {
+  const deps = flights.filter(f => f.from === home && (f.status === "Scheduled" || f.status === "Boarding" || f.status === "Delayed"))
     .sort((a, b) => toMin(a.dep) - toMin(b.dep));
   const slot = 60 / Math.max(1, ASSUME.runwayPerHour * (sc.capacityPct / 100));
   const closeEnd = sc.closeStart + sc.closeMin;

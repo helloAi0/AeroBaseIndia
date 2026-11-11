@@ -64,7 +64,12 @@ export async function loginWithBackend(email: string, password: string): Promise
   const claims = decodeJwt(token);
   if (!claims) throw new LoginError("unsupported", "The server returned a malformed token.");
 
-  const mapped = ROLE_MAP[String(claims.role ?? "")];
+  const org = String(claims.org ?? "").replace(/[^A-Za-z0-9]/g, "");
+  const backendRole = String(claims.role ?? "");
+  const mapped = backendRole === "AIRLINE_OPS" && org ? { role: "staff" as UserRole, staffLevel: `airline_${org}` }
+    : backendRole === "PILOT" && org ? { role: "staff" as UserRole, staffLevel: `pilot_captain_${org}` }
+    : backendRole === "RETAILER" ? { role: "retailer" as UserRole }
+    : ROLE_MAP[backendRole];
   if (!mapped) throw new LoginError("unsupported", `Role "${String(claims.role)}" has no dashboard yet.`);
 
   const airport = String(claims.airport ?? "DEL");

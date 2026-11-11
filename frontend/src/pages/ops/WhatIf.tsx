@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
-import { ALL_AIRPORT_FLIGHTS } from "../../data/airportFlights";
+import { useBoard } from "../../hooks/useBoard";
+import { useAirport } from "../../hooks/useAirport";
 import { ASSUME, fmt, simulate, summarise, toMin, type Scenario } from "../../lib/opsEngine";
 
 const PRESETS: { label: string; sc: Scenario }[] = [
@@ -11,8 +12,9 @@ const PRESETS: { label: string; sc: Scenario }[] = [
 
 export function WhatIf() {
   const [sc, setSc] = useState<Scenario>(PRESETS[0].sc);
-  const base = useMemo(() => summarise(simulate(ALL_AIRPORT_FLIGHTS, { closeStart: 0, closeMin: 0, capacityPct: 100, extraDelay: 0 })), []);
-  const rows = useMemo(() => simulate(ALL_AIRPORT_FLIGHTS, sc), [sc]);
+  const { flights } = useBoard(); const home = useAirport().code;
+  const base = useMemo(() => summarise(simulate(flights, { closeStart: 0, closeMin: 0, capacityPct: 100, extraDelay: 0 }, home)), [flights, home]);
+  const rows = useMemo(() => simulate(flights, sc, home), [flights, sc, home]);
   const s = useMemo(() => summarise(rows), [rows]);
   const set = (k: keyof Scenario, v: number) => setSc(p => ({ ...p, [k]: v }));
   const data = rows.map(r => ({ name: r.flight.flight, delay: r.delay }));
@@ -20,7 +22,7 @@ export function WhatIf() {
   return (
     <div className="space-y-6">
       <div><h1 className="text-2xl font-bold text-white">What-if Simulator</h1>
-        <p className="text-slate-400 text-sm mt-0.5">Close a runway or cut capacity and see the knock-on delay for every Delhi departure.</p></div>
+        <p className="text-slate-400 text-sm mt-0.5">Close a runway or cut capacity and see the knock-on delay for every departure from this airport.</p></div>
       <div className="text-xs text-slate-500 bg-navy-800 border border-navy-600 rounded-xl px-4 py-3">Single-runway queue model at {ASSUME.runwayPerHour} movements/hour (planning figure) over today's board. It shows relative impact for decisions, not a forecast of exact times.</div>
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-5">
         <div className="bg-navy-800 border border-navy-600 rounded-2xl p-5 space-y-4">

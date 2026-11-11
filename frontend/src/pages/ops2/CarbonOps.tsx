@@ -1,11 +1,12 @@
 import { useMemo } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
-import { ALL_AIRPORT_FLIGHTS } from "../../data/airportFlights";
+import { useBoard } from "../../hooks/useBoard";
 import { CARBON, carbonOps } from "../../lib/opsEngine2";
 import { Card, PageHead } from "../../components/ui/PageHead";
 
 export function CarbonOps() {
-  const c = useMemo(() => carbonOps(ALL_AIRPORT_FLIGHTS), []);
+  const { flights } = useBoard();
+  const c = useMemo(() => carbonOps(flights), [flights]);
   return (
     <div className="space-y-6">
       <PageHead title="Carbon-aware Ops" sub="Taxi and ground-power actions that cut emissions, with a scorecard per airline."

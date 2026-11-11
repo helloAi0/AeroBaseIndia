@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchFlights } from "../../api/client";
 import { speak, stopSpeaking, voiceSupported } from "../../lib/voice";
+import { useCollection } from "../../hooks/useCollection";
 import { translate, LANG_BCP47, hasVoice } from "../../lib/announceI18n";
 import { Volume2, VolumeX, Megaphone, Clock, Play } from "lucide-react";
 
@@ -14,12 +15,13 @@ const ANNOUNCEMENT_TEMPLATES = [
   {id:6,type:"Security",    template:(_:string,__:string)=>`Security announcement: All passengers are requested to keep their baggage with them at all times. Report any unattended baggage to security immediately.`,priority:"Info"},
 ];
 
-const LOG = [
-  {id:1,time:"14:32",flight:"AI-101",type:"Boarding",   gate:"A1",lang:["EN","HI"],status:"Played"},
-  {id:2,time:"14:15",flight:"6E-202",type:"Boarding",   gate:"B3",lang:["EN","HI"],status:"Played"},
-  {id:3,time:"13:58",flight:"UK-303",type:"Delay",       gate:"C2",lang:["EN","HI","GU"],status:"Played"},
-  {id:4,time:"13:42",flight:"SG-404",type:"Gate Change", gate:"D4",lang:["EN","HI"],status:"Played"},
-  {id:5,time:"13:20",flight:"IX-505",type:"Final Call",  gate:"A2",lang:["EN"],status:"Played"},
+type LogRec = {time:string;flight:string;type:string;gate:string;lang:string[];status:string};
+const LOG: (LogRec&{id:string})[] = [
+  {id:"s1",time:"14:32",flight:"AI-101",type:"Boarding",   gate:"A1",lang:["EN","HI"],status:"Played"},
+  {id:"s2",time:"14:15",flight:"6E-202",type:"Boarding",   gate:"B3",lang:["EN","HI"],status:"Played"},
+  {id:"s3",time:"13:58",flight:"UK-303",type:"Delay",       gate:"C2",lang:["EN","HI","GU"],status:"Played"},
+  {id:"s4",time:"13:42",flight:"SG-404",type:"Gate Change", gate:"D4",lang:["EN","HI"],status:"Played"},
+  {id:"s5",time:"13:20",flight:"IX-505",type:"Final Call",  gate:"A2",lang:["EN"],status:"Played"},
 ];
 
 const PRIORITY_STYLE: Record<string,string> = {
@@ -37,7 +39,8 @@ export function AnnouncementsPage() {
   const [zone,         setZone]   = useState("All Terminals");
   const [playing,      setPlaying] = useState<number|null>(null);
   const [muted,        setMuted]   = useState(false);
-  const [log,          setLog]     = useState(LOG);
+  const col = useCollection<LogRec>("announcements", LOG);
+  const log = col.items;
 
   const {data:flights=[]} = useQuery({queryKey:["flights"],queryFn:fetchFlights});
   const fl = flights as any[];
@@ -47,13 +50,8 @@ export function AnnouncementsPage() {
 
   const broadcast = () => {
     setPlaying(selectedTmpl.id);
-    const newEntry = {
-      id: log.length+1,
-      time: new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"}),
-      flight, type:selectedTmpl.type, gate, lang, status:"Playing",
-    };
-    setLog(prev=>[newEntry,...prev]);
-    const done = () => { setPlaying(null); setLog(p=>p.map(e=>e.id===newEntry.id?{...e,status:"Played"}:e)); };
+    const entry: LogRec = { time: new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"}), flight, type:selectedTmpl.type, gate, lang, status:"Played" };
+    const done = () => { setPlaying(null); void col.add(entry); };
     if (!voiceSupported()) { setTimeout(done, 3000); return; }
     // Speak every selected language in turn (English first), each in its own voice.
     const order = ["EN", ...lang.filter(l => l !== "EN")].filter(l => lang.includes(l));

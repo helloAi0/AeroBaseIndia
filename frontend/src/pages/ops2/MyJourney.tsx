@@ -1,13 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { Share2, Download } from "lucide-react";
-import { ALL_AIRPORT_FLIGHTS } from "../../data/airportFlights";
+import { useBoard } from "../../hooks/useBoard";
 import { crowdAt } from "../../lib/opsEngine2";
 import { fmt, toMin } from "../../lib/opsEngine";
 import { copyText } from "../../lib/clipboard";
 import { Card, PageHead } from "../../components/ui/PageHead";
 
 export function MyJourney() {
-  const flights = ALL_AIRPORT_FLIGHTS.filter(f => f.status === "Scheduled" || f.status === "Boarding" || f.status === "Delayed");
+  const fleet = useBoard().flights;
+  const flights = fleet.filter(f => f.status === "Scheduled" || f.status === "Boarding" || f.status === "Delayed");
   const [id, setId] = useState(flights[0]?.id ?? 0);
   const [tick, setTick] = useState(0); const [msg, setMsg] = useState("");
   const [bip, setBip] = useState<any>(null);
@@ -16,13 +17,13 @@ export function MyJourney() {
   const f = flights.find(x => x.id === id) ?? flights[0];
   const steps = useMemo(() => {
     if (!f) return [];
-    const dep = toMin(f.dep), z = crowdAt(ALL_AIRPORT_FLIGHTS, dep - 120).filter(q => q.terminal === f.terminal);
+    const dep = toMin(f.dep), z = crowdAt(fleet, dep - 120).filter(q => q.terminal === f.terminal);
     const secWait = Math.max(5, z.find(q => q.kind === "Security")?.wait ?? 10), ciWait = Math.max(5, z.find(q => q.kind === "Check-in")?.wait ?? 8);
     const walk = 5 + Math.round((f.gate.charCodeAt(0) - 65) * 2);
     const board = dep - 40, gate = board - 10, sec = gate - walk - secWait, bag = sec - 10, arrive = bag - ciWait - 5;
     return [["Reach the terminal", arrive, f.terminal], ["Check-in / bag drop", arrive + 5, `about ${ciWait} min queue`], ["Security", sec, `about ${secWait} min queue`],
       ["Walk to gate " + f.gate, gate - walk, `${walk} min walk`], ["Be at the gate", gate, ""], ["Boarding starts", board, ""], ["Departure", dep, f.flight]] as [string, number, string][];
-  }, [f]);
+  }, [f, fleet]);
   if (!f) return null;
   void tick; const d = new Date(); const now = d.getHours() * 60 + d.getMinutes();
   const board = toMin(f.dep) - 40, left = board - now;

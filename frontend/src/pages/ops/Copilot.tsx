@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Mic, Send, Bot, User } from "lucide-react";
-import { ALL_AIRPORT_FLIGHTS } from "../../data/airportFlights";
+import { useBoard } from "../../hooks/useBoard";
 import { answer, type CopilotAnswer } from "../../lib/opsEngine";
 import { useAppStore } from "../../store/appStore";
 import { speak, voiceSupported } from "../../lib/voice";
@@ -9,6 +9,7 @@ interface Msg { who: "me" | "bot"; text: string; actions?: CopilotAnswer["action
 const SUGGEST = ["Why is UK-925 late?", "Which gates are free in 30 min?", "How many flights are delayed?", "Flights to Mumbai", "Which terminal is busiest?"];
 
 export function Copilot() {
+  const { flights } = useBoard();
   const setPage = useAppStore(s => s.setActivePage);
   const [msgs, setMsgs] = useState<Msg[]>([{ who: "bot", text: "Hi, I'm the ops copilot. Ask about flights, gates or delays. I answer from the current flight board." }]);
   const [q, setQ] = useState(""); const [speakOn, setSpeakOn] = useState(false); const [listening, setListening] = useState(false);
@@ -17,7 +18,7 @@ export function Copilot() {
 
   const ask = (text: string) => {
     const t = text.trim(); if (!t) return;
-    const now = new Date(); const a = answer(t, ALL_AIRPORT_FLIGHTS, now.getHours() * 60 + now.getMinutes());
+    const now = new Date(); const a = answer(t, flights, now.getHours() * 60 + now.getMinutes());
     setMsgs(m => [...m, { who: "me", text: t }, { who: "bot", text: a.text, actions: a.actions }]); setQ("");
     if (speakOn && voiceSupported()) void speak(a.text);
   };
