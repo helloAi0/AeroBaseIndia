@@ -21,3 +21,13 @@ Models in the ops tools use documented planning assumptions (shown on each page)
 
 ## Demo vs production
 `scripts/seed_demo.py` creates real rows for DEL/BOM/BLR and one user per role for investor demos. Do not run it on production data.
+
+
+## Update: remaining sample pages now backed by real data
+Real (live mode, per-airport, role-restricted, audited): Analytics, KPI, Revenue (paid orders + accepted bids), Gates, Carbon (from fuel records), Baggage, Security, Cargo, Check-in, Staff, Feedback (passengers can submit), Emergency, Billing (real plan + plan change), Scheduler (adds flights via POST /api/flights), Tenants (SUPER_ADMIN), Airline / Pilot / Retailer / Passenger portals.
+
+Still simulated or unverified (be honest in demos):
+- Biometric check-in: simulation; real biometrics need hardware or WebAuthn.
+- Map: static floor plan.
+- Ops tools (autopilot, what-if, heatmap): planning assumptions, not trained models, until real telemetry exists.
+- Not verifiable in the build sandbox: live SMS, WhatsApp, email delivery, Docker image build, GPU 3D, Open-Meteo.

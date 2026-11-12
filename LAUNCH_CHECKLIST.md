@@ -44,3 +44,6 @@ Migration 039 adds `partner_api_keys` and the flight-sync columns/unique index. 
 API Marketplace > Partner API keys (or `POST /api/partner-keys`). Airlines call `POST /api/partner/flights/sync`
 with `X-API-Key` + `X-Partner-Id`; the call is an idempotent upsert per airport/flight number/departure.
 Run `scripts/migrate.sh` on the server so 039 is applied.
+
+- Run `scripts/migrate.sh` to apply migrations 039-041 before deploying this version.
+- Run the Docker build on your own machine (not verifiable in the sandbox).

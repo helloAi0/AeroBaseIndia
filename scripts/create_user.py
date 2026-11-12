@@ -7,7 +7,7 @@ Password is prompted for if not given. Uses psql with the DB_* env vars.
 """
 import argparse, getpass, hashlib, os, secrets, subprocess, sys
 
-ROLES = ["SUPER_ADMIN", "AIRPORT_ADMIN", "GROUND_STAFF", "SECURITY_OFFICER", "AIRLINE_OPS", "PILOT", "RETAILER"]
+ROLES = ["SUPER_ADMIN", "AIRPORT_ADMIN", "GROUND_STAFF", "SECURITY_OFFICER", "AIRLINE_OPS", "PILOT", "RETAILER", "PASSENGER"]
 ITER = int(os.environ.get("PASSWORD_PBKDF2_ITERATIONS", "600000"))
 
 

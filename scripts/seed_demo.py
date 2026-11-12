@@ -50,7 +50,7 @@ def main():
         print(f"{code}: {len(rows)} flights for {today}")
     users = [("Arjun Sharma", "admin@{a}.aerobase.in", "AIRPORT_ADMIN", ""), ("Ravi Kumar", "staff@{a}.aerobase.in", "GROUND_STAFF", ""),
              ("Neha Singh", "security@{a}.aerobase.in", "SECURITY_OFFICER", ""), ("Vistara Ops", "ops@vistara.{a}.aerobase.in", "AIRLINE_OPS", "UK"),
-             ("Capt. Sharma", "captain@airindia.{a}.aerobase.in", "PILOT", "AI"), ("Starbucks", "shop@{a}.aerobase.in", "RETAILER", "starbucks")]
+             ("Capt. Sharma", "captain@airindia.{a}.aerobase.in", "PILOT", "AI"), ("Starbucks", "shop@{a}.aerobase.in", "RETAILER", "starbucks"), ("Demo Passenger", "passenger@{a}.aerobase.in", "PASSENGER", ""), ("Platform Owner", "owner@aerobase.in", "SUPER_ADMIN", "")]
     ph = hash_pw(pw)
     for a in AIRPORTS:
         for n, e, role, org in users:

@@ -7,29 +7,16 @@ const Dashboard = lazy(() => import("./pages/admin/Dashboard").then(m => ({ defa
 const PaymentsPage = lazy(() => import("./pages/admin/PaymentsPage").then(m => ({ default: m.PaymentsPage })));
 const MetricsPage = lazy(() => import("./pages/admin/MetricsPage").then(m => ({ default: m.MetricsPage })));
 const PartnerPortal = lazy(() => import("./pages/partner/PartnerPortal").then(m => ({ default: m.PartnerPortal })));
-const BillingPortal = lazy(() => import("./pages/billing/BillingPortal").then(m => ({ default: m.BillingPortal })));
-const AnalyticsDashboard = lazy(() => import("./pages/analytics/AnalyticsDashboard").then(m => ({ default: m.AnalyticsDashboard })));
-const PassengerPortal = lazy(() => import("./pages/passenger/PassengerPortal").then(m => ({ default: m.PassengerPortal })));
 const FlightsPage = lazy(() => import("./pages/admin/FlightsPage").then(m => ({ default: m.FlightsPage })));
-const GatesPage = lazy(() => import("./pages/admin/GatesPage").then(m => ({ default: m.GatesPage })));
-const BaggagePage = lazy(() => import("./pages/admin/BaggagePage").then(m => ({ default: m.BaggagePage })));
-const SecurityPage = lazy(() => import("./pages/admin/SecurityPage").then(m => ({ default: m.SecurityPage })));
 const SettingsPage = lazy(() => import("./pages/admin/SettingsPage").then(m => ({ default: m.SettingsPage })));
 const GraphQLExplorer = lazy(() => import("./pages/graphql/GraphQLExplorer").then(m => ({ default: m.GraphQLExplorer })));
 const DigitalTwin = lazy(() => import("./pages/twin/DigitalTwin").then(m => ({ default: m.DigitalTwin })));
 const AIPredictions = lazy(() => import("./pages/ai/AIPredictions").then(m => ({ default: m.AIPredictions })));
 const NotificationCenter = lazy(() => import("./pages/notifications/NotificationCenter").then(m => ({ default: m.NotificationCenter })));
-const StaffManagement = lazy(() => import("./pages/staff/StaffManagement").then(m => ({ default: m.StaffManagement })));
-const RevenueDashboard = lazy(() => import("./pages/revenue/RevenueDashboard").then(m => ({ default: m.RevenueDashboard })));
 const ReportsPage = lazy(() => import("./pages/reports/ReportsPage").then(m => ({ default: m.ReportsPage })));
-const CargoPage = lazy(() => import("./pages/cargo/CargoPage").then(m => ({ default: m.CargoPage })));
 const AirportMap = lazy(() => import("./pages/wayfinding/AirportMap").then(m => ({ default: m.AirportMap })));
-const FlightScheduler = lazy(() => import("./pages/scheduler/FlightScheduler").then(m => ({ default: m.FlightScheduler })));
-const CheckInSystem = lazy(() => import("./pages/checkin/CheckInSystem").then(m => ({ default: m.CheckInSystem })));
 const AnnouncementsPage = lazy(() => import("./pages/announcements/AnnouncementsPage").then(m => ({ default: m.AnnouncementsPage })));
-const KPIDashboard = lazy(() => import("./pages/kpi/KPIDashboard").then(m => ({ default: m.KPIDashboard })));
 const IntegrationsHub = lazy(() => import("./pages/integrations/IntegrationsHub").then(m => ({ default: m.IntegrationsHub })));
-const CarbonDashboard = lazy(() => import("./pages/carbon/CarbonDashboard").then(m => ({ default: m.CarbonDashboard })));
 const BaggageClaimPredictor = lazy(() => import("./pages/baggage_predict/BaggageClaimPredictor").then(m => ({ default: m.BaggageClaimPredictor })));
 const BiometricCheckIn = lazy(() => import("./pages/biometric/BiometricCheckIn").then(m => ({ default: m.BiometricCheckIn })));
 const ApiMarketplace = lazy(() => import("./pages/marketplace/ApiMarketplace").then(m => ({ default: m.ApiMarketplace })));
@@ -46,27 +33,28 @@ const AccessibilityConcierge = lazy(() => import("./pages/ops2/Accessibility").t
 const LostFound = lazy(() => import("./pages/ops2/LostFound").then(m => ({ default: m.LostFound })));
 const MyJourney = lazy(() => import("./pages/ops2/MyJourney").then(m => ({ default: m.MyJourney })));
 const RetailBids = lazy(() => import("./pages/ops2/RetailBids").then(m => ({ default: m.RetailBids })));
+const lv = (file: string, k: string) => lazy(() => import(`./pages/live/${file}.tsx`).then(m => ({ default: (m as any)[k] })));
 const rec = (k: string) => lazy(() => import("./pages/records/configs").then(m => ({ default: (m as any)[k] })));
-const IncidentsPage = rec("IncidentsPage"), FuelManagement = rec("FuelPage"), MaintenancePage = rec("MaintenancePage"), ContractsPage = rec("ContractsPage"), ParkingPage = rec("ParkingPage");
+const IncidentsPage = rec("IncidentsPage"), FuelManagement = rec("FuelPage"), MaintenancePage = rec("MaintenancePage"), ContractsPage = rec("ContractsPage"), ParkingPage = rec("ParkingPage"),
+  BillingPortal = lv("Billing", "BillingPortal"), AnalyticsDashboard = lv("Analytics", "AnalyticsDashboard"), KPIDashboard = lv("Analytics", "KPIDashboard"),
+  PassengerPortal = lv("Portals", "PassengerPortal"), AirlinePortal = lv("Portals", "AirlinePortal"), PilotDashboard = lv("Portals", "PilotDashboard"), RetailerDashboard = lv("Portals", "RetailerDashboard"),
+  GatesPage = lv("Gates", "GatesPage"), RevenueDashboard = lv("Revenue", "RevenueDashboard"), CarbonDashboard = lv("Carbon", "CarbonDashboard"), FlightScheduler = lv("Scheduler", "FlightScheduler"),
+  TenantManager = lazy(() => import("./pages/tenants/TenantManager").then(m => ({ default: m.TenantManager }))),
+  BaggagePage = rec("BaggagePage"), SecurityPage = rec("SecurityPage"), SecurityOpsPage = rec("SecurityPage"), StaffManagement = rec("StaffPage"), CargoPage = rec("CargoPage"), CheckInSystem = rec("CheckInPage"), FeedbackPage = rec("FeedbackPage"), EmergencyCenter = rec("EmergencyPage");
 /** Pages whose numbers come from the server when signed in to the live backend. Everything else shows built-in sample data. */
 const LIVE_PAGES = new Set(["dashboard", "flights", "autopilot", "whatif", "copilot", "heatmap", "gateopt", "carbonops", "playbooks", "turnaround", "accessibility",
-  "lostfound", "journey", "bids", "announcements", "incidents", "maintenance", "contracts", "parking", "fuel", "weather", "ai", "marketplace"]);
+  "lostfound", "journey", "bids", "announcements", "incidents", "maintenance", "contracts", "parking", "fuel", "weather", "ai", "marketplace",
+  "analytics", "kpi", "revenue", "gates", "carbon", "airline", "pilot", "retailer", "passenger", "tenants", "baggage", "security", "security_ops", "cargo", "checkin", "staff", "feedback", "emergency", "billing", "scheduler"]);
 const LandingPage = lazy(() => import("./pages/landing/LandingPage").then(m => ({ default: m.LandingPage })));
 const WeatherMonitor = lazy(() => import("./pages/weather/WeatherMonitor").then(m => ({ default: m.WeatherMonitor })));
 const RetailPage = lazy(() => import("./pages/retail/RetailPage").then(m => ({ default: m.RetailPage })));
-const FeedbackPage = lazy(() => import("./pages/feedback/FeedbackPage").then(m => ({ default: m.FeedbackPage })));
 const APITester = lazy(() => import("./pages/api_tester/APITester").then(m => ({ default: m.APITester })));
 const WebSocketFeed = lazy(() => import("./pages/websocket/WebSocketFeed").then(m => ({ default: m.WebSocketFeed })));
-const TenantManager = lazy(() => import("./pages/tenants/TenantManager").then(m => ({ default: m.TenantManager })));
 const BrandingPage = lazy(() => import("./pages/branding/BrandingPage").then(m => ({ default: m.BrandingPage })));
 const DeploymentPage = lazy(() => import("./pages/deployment/DeploymentPage").then(m => ({ default: m.DeploymentPage })));
 import { ErrorBoundary }    from "./components/ui/ErrorBoundary";
 import { PageSkeleton }     from "./components/ui/Skeleton";
 const SubscriptionPage = lazy(() => import("./pages/passenger/SubscriptionPage").then(m => ({ default: m.SubscriptionPage })));
-const AirlinePortal = lazy(() => import("./pages/airline/AirlinePortal").then(m => ({ default: m.AirlinePortal })));
-const PilotDashboard = lazy(() => import("./pages/airline/PilotDashboard").then(m => ({ default: m.PilotDashboard })));
-const RetailerDashboard = lazy(() => import("./pages/retailer/RetailerDashboard").then(m => ({ default: m.RetailerDashboard })));
-const SecurityOpsPage = lazy(() => import("./pages/security_ops/SecurityOpsPage").then(m => ({ default: m.SecurityOpsPage })));
 import { useAppStore }        from "./store/appStore";
 import { useAuthStore }        from "./store/authStore";
 import { LoginPage } from "./pages/auth/LoginPage";
@@ -91,6 +79,7 @@ const PAGES: Record<string, React.ReactNode> = {
   staff:         <StaffManagement />,
   revenue:       <RevenueDashboard />,
   incidents:     <IncidentsPage />,
+  emergency:     <EmergencyCenter />,
   reports:       <ReportsPage />,
   cargo:         <CargoPage />,
   map:           <AirportMap />,

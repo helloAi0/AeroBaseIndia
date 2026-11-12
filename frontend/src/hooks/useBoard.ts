@@ -22,7 +22,7 @@ export function rowToBoard(r: Row, i: number): DemoFlight & { backendId?: string
     id: i + 1, backendId: r.id, flight: num, airline: r.airline || num.split("-")[0], airCode: r.airline_code || num.split("-")[0],
     from: r.origin || "—", to: r.destination || "—", dep: hhmm(r.departure_time), arr: hhmm(r.arrival_time),
     gate: r.gate || "—", terminal: r.terminal || "—", status: status as DemoFlight["status"], pax: r.passengers ?? 0,
-    aircraft: r.aircraft || "TBD", issue: r.issue || undefined, delay: r.delay_minutes ?? 0,
+    aircraft: r.aircraft || "TBD", date: (r.departure_time ?? "").slice(0, 10), issue: r.issue || undefined, delay: r.delay_minutes ?? 0,
     captain: "", fuel: "",
   } as unknown as DemoFlight & { backendId?: string; delay?: number };
 }

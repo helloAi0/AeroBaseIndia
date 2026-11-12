@@ -19,8 +19,8 @@ inline Level levelFor(const std::string& p) {
     if (starts(p, "/notify/")) return Level::Public;                // handlers use adminauth::require
     if (p == "/metrics" || starts(p, "/audit") || starts(p, "/payments/order") ||
         starts(p, "/api/compliance") || starts(p, "/api/billing") || starts(p, "/traces") ||
-        starts(p, "/api/internal") || starts(p, "/api/partner-keys") || p == "/predict/cascade") return Level::Admin;
-    if (starts(p, "/api/twin") || starts(p, "/api/records/") || starts(p, "/api/revenue") || starts(p, "/api/passenger/") ||
+        starts(p, "/api/internal") || starts(p, "/api/tenants") || starts(p, "/api/partner-keys") || p == "/predict/cascade") return Level::Admin;
+    if (starts(p, "/api/twin") || starts(p, "/api/flights") || starts(p, "/api/records/") || starts(p, "/api/revenue") || starts(p, "/api/passenger/") ||
         starts(p, "/predict/") || starts(p, "/graphql") || (starts(p, "/flights") && p.size() > 8)) return Level::AnyUser;
     return Level::Public;
 }

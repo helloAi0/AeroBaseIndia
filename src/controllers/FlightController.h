@@ -8,7 +8,6 @@ class FlightController : public HttpController<FlightController> {
 public:
     METHOD_LIST_BEGIN
         ADD_METHOD_TO(FlightController::getFlights,   "/flights",                  Get);
-        ADD_METHOD_TO(FlightController::addFlight,    "/flights",                  Post);
         ADD_METHOD_TO(FlightController::getLiveStatus,"/flights/{1}/live",         Get);
     METHOD_LIST_END
 

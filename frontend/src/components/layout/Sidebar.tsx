@@ -7,7 +7,7 @@ import {
   Gauge, Wrench, CloudSun, ParkingSquare, Store,
   MessageSquare, TestTube, Radio, Building2, Palette,
   Shield, Settings, Flame, Target, Volume2, Link,
-  Globe, Crown, Leaf, ScanFace, Plug, MessageCircle, Timer, Siren, FlaskConical, Bot, Flame as FlameIcon, Route, LayoutGrid, CloudLightning, PlaneTakeoff, Accessibility as AccIcon, SearchCheck, Handshake
+  Globe, Crown, Leaf, ScanFace, Plug, MessageCircle, Timer, Siren, FlaskConical, Bot, Flame as FlameIcon, Route, LayoutGrid, CloudLightning, PlaneTakeoff, Accessibility as AccIcon, SearchCheck, Handshake, ShieldAlert
 } from "lucide-react";
 import { Icon3D } from "../ui/Icon3D";
 import { useAppStore } from "../../store/appStore";
@@ -32,6 +32,7 @@ const ALL_NAV = [
     {id:"playbooks",   label:"Weather Playbooks",icon:CloudLightning},
     {id:"turnaround",  label:"Turnaround Timer",icon:PlaneTakeoff},
     {id:"accessibility",label:"Accessibility",  icon:AccIcon},
+    {id:"emergency",   label:"Emergency Center",icon:ShieldAlert},
   ]},
   { group:"Business", roles:["superadmin","airport_admin"], items:[
     {id:"analytics",     label:"Analytics",    icon:BarChart3},

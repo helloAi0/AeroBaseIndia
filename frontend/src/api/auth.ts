@@ -37,6 +37,7 @@ const ROLE_MAP: Record<string, { role: UserRole; staffLevel?: string }> = {
   AIRPORT_ADMIN:    { role: "airport_admin" },
   GROUND_STAFF:     { role: "staff", staffLevel: "staff_ops" },
   SECURITY_OFFICER: { role: "staff", staffLevel: "staff_security" },
+  PASSENGER:        { role: "passenger" },
 };
 
 const titleCase = (s: string) => s.replace(/[._-]+/g, " ").replace(/\b\w/g, c => c.toUpperCase());
