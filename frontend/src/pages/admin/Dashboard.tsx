@@ -1,15 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { Plane, TrendingUp, AlertTriangle, Activity,
          Clock, CheckCircle, ArrowUpRight } from "lucide-react";
-import { AreaChart, Area, XAxis, YAxis, Tooltip,
+import { BarChart, Bar, XAxis, YAxis, Tooltip,
          ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
-import { fetchFlights, fetchHealth, fetchOrders } from "../../api/client";
-
-const revenueData = [
-  {m:"Jan",v:420},{m:"Feb",v:380},{m:"Mar",v:550},{m:"Apr",v:490},
-  {m:"May",v:620},{m:"Jun",v:710},{m:"Jul",v:680},{m:"Aug",v:750},
-  {m:"Sep",v:820},{m:"Oct",v:890},{m:"Nov",v:960},{m:"Dec",v:1100},
-];
+import { fetchHealth, fetchOrders } from "../../api/client";
+import { useBoard } from "../../hooks/useBoard";
+import { useAirport } from "../../hooks/useAirport";
+import { API_ENABLED } from "../../config";
 
 const STATUS_COLOR: Record<string,string> = {
   Scheduled:"#38bdf8", Boarding:"#2dd4bf", Departed:"#22c55e",
@@ -49,14 +46,19 @@ function StatCard({label,value,sub,icon,trend,color="sky"}:{
 }
 
 export function Dashboard() {
-  const {data:flights=[]} = useQuery({queryKey:["flights"],queryFn:fetchFlights,refetchInterval:8000});
+  const board = useBoard(); const ap = useAirport();
   const {data:health}     = useQuery({queryKey:["health"], queryFn:fetchHealth, refetchInterval:8000});
-  const {data:ordersData} = useQuery({queryKey:["orders"], queryFn:fetchOrders});
+  const {data:ordersData} = useQuery({queryKey:["orders"], queryFn:fetchOrders, enabled:API_ENABLED && board.live, retry:false});
 
-  const fl = flights as any[];
+  const fl = board.flights.map((f:any)=>({...f, flight_number:f.flight, origin:f.from, destination:f.to, predictedDelay:f.delay ?? 0}));
   const active   = fl.filter(f=>f.status==="Boarding"||f.status==="Departed").length;
   const delayed  = fl.filter(f=>f.status==="Delayed").length;
-  const revenue  = (ordersData as any)?.orders?.reduce((s:number,o:any)=>s+o.amount,0)??149999;
+  const orders   = ((ordersData as any)?.orders ?? []) as any[];
+  const revenue  = orders.reduce((s:number,o:any)=>s+(Number(o.amount)||0),0);
+  const pax      = fl.reduce((s:number,f:any)=>s+(f.pax||0),0);
+  const resolved = fl.filter((f:any)=>f.status!=="Scheduled"&&f.status!=="Boarding");
+  const onTime   = resolved.length ? Math.round(100*resolved.filter((f:any)=>f.status!=="Delayed"&&f.status!=="Cancelled").length/resolved.length) : null;
+  const byHour   = Array.from({length:24},(_,h)=>({h:`${String(h).padStart(2,"0")}h`,n:fl.filter((f:any)=>parseInt(String(f.dep).slice(0,2))===h).length})).filter(x=>x.n>0);
 
   const pieData = Object.entries(
     fl.reduce((acc:any,f:any)=>({...acc,[f.status]:(acc[f.status]||0)+1}),{})
@@ -68,56 +70,43 @@ export function Dashboard() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-white">Airport Operations</h1>
-          <p className="text-slate-400 text-sm mt-0.5">Delhi International Airport • Live data</p>
+          <p className="text-slate-400 text-sm mt-0.5">{ap.name} • {board.live ? "Live data" : "Demo data"}</p>
         </div>
         <div className="flex items-center gap-2 bg-navy-700 rounded-xl px-4 py-2">
           <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse"/>
           <span className="text-xs text-green-400 font-medium">LIVE</span>
-          <span className="text-xs text-slate-500 ml-1">Auto-refresh 8s</span>
+          <span className="text-xs text-slate-500 ml-1">{board.live ? "Auto-refresh 15s" : "Demo"}</span>
         </div>
       </div>
 
       {/* KPI row */}
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
         <StatCard label="Total Flights" value={fl.length} icon={<Plane className="w-5 h-5"/>}
-          color="sky" trend={12} sub="Today's schedule"/>
+          color="sky" sub={`${pax.toLocaleString("en-IN")} passengers`}/>
         <StatCard label="Active Now" value={active} icon={<Activity className="w-5 h-5"/>}
           color="teal" sub="Boarding + Airborne"/>
         <StatCard label="Delayed" value={delayed} icon={<AlertTriangle className="w-5 h-5"/>}
           color={delayed>0?"yellow":"green"} sub={delayed>0?"Needs attention":"All on time"}/>
-        <StatCard label="Revenue" value={`₹${(revenue/1000).toFixed(0)}K`}
-          icon={<TrendingUp className="w-5 h-5"/>} color="green" trend={8} sub="This month"/>
+        <StatCard label="On-time" value={onTime===null?"—":`${onTime}%`}
+          icon={<TrendingUp className="w-5 h-5"/>} color="green" sub={onTime===null?"No completed flights yet":`${resolved.length} flights completed`}/>
       </div>
 
       {/* Charts row */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
-        {/* Revenue trend */}
+        {/* Departures by hour (from the real flight board) */}
         <div className="xl:col-span-2 bg-navy-800 rounded-2xl p-5 border border-navy-600">
-          <div className="flex items-center justify-between mb-5">
-            <div>
-              <h2 className="font-semibold text-white">Revenue Trend</h2>
-              <p className="text-xs text-slate-400">Monthly in ₹ thousands</p>
-            </div>
-            <span className="text-xs bg-green-500/15 text-green-400 px-3 py-1 rounded-full border border-green-500/20">
-              ▲ 18% YoY
-            </span>
+          <div className="mb-5">
+            <h2 className="font-semibold text-white">Departures by Hour</h2>
+            <p className="text-xs text-slate-400">Scheduled departures today{orders.length>0?` · payments received ₹${revenue.toLocaleString("en-IN")} (${orders.length})`:""}</p>
           </div>
           <ResponsiveContainer width="100%" height={180}>
-            <AreaChart data={revenueData} margin={{left:-20,right:0}}>
-              <defs>
-                <linearGradient id="rg" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#38bdf8" stopOpacity={0.25}/>
-                  <stop offset="95%" stopColor="#38bdf8" stopOpacity={0}/>
-                </linearGradient>
-              </defs>
-              <XAxis dataKey="m" tick={{fill:"#475569",fontSize:11}} axisLine={false} tickLine={false}/>
-              <YAxis tick={{fill:"#475569",fontSize:11}} axisLine={false} tickLine={false} tickFormatter={v=>`₹${v}K`}/>
-              <Tooltip
-                contentStyle={{background:"#0f1629",border:"1px solid #1e2d4d",borderRadius:12,fontSize:12}}
-                labelStyle={{color:"#94a3b8"}} itemStyle={{color:"#38bdf8"}}
-                formatter={(v:any)=>[`₹${v}K`,"Revenue"]}/>
-              <Area type="monotone" dataKey="v" stroke="#38bdf8" strokeWidth={2} fill="url(#rg)"/>
-            </AreaChart>
+            <BarChart data={byHour} margin={{left:-20,right:0}}>
+              <XAxis dataKey="h" tick={{fill:"#475569",fontSize:11}} axisLine={false} tickLine={false}/>
+              <YAxis allowDecimals={false} tick={{fill:"#475569",fontSize:11}} axisLine={false} tickLine={false}/>
+              <Tooltip contentStyle={{background:"#0f1629",border:"1px solid #1e2d4d",borderRadius:12,fontSize:12}}
+                labelStyle={{color:"#94a3b8"}} itemStyle={{color:"#38bdf8"}} formatter={(v:any)=>[v,"Departures"]}/>
+              <Bar dataKey="n" fill="#38bdf8" radius={[4,4,0,0]}/>
+            </BarChart>
           </ResponsiveContainer>
         </div>
 
@@ -146,13 +135,8 @@ export function Dashboard() {
               );
             })}
           </div>
-          <div className="mt-4 pt-4 border-t border-navy-600">
-            <div className="flex justify-between text-xs text-slate-400 mb-2">
-              <span>Uptime SLA</span><span className="text-green-400">99.9%</span>
-            </div>
-            <div className="h-1.5 bg-navy-700 rounded-full">
-              <div className="h-full bg-gradient-to-r from-teal-500 to-sky-500 rounded-full" style={{width:"99.9%"}}/>
-            </div>
+          <div className="mt-4 pt-4 border-t border-navy-600 text-xs text-slate-400">
+            Services up: <span className="text-green-400">{["database","redis","ai_engine","status"].filter(k=>{const v=(health as any)?.[k];return v==="UP"||v==="healthy";}).length}/4</span>
           </div>
         </div>
       </div>

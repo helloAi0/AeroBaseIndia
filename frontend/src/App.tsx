@@ -1,3 +1,4 @@
+import { API_ENABLED } from "./config";
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Sidebar }            from "./components/layout/Sidebar";
@@ -20,16 +21,12 @@ const AIPredictions = lazy(() => import("./pages/ai/AIPredictions").then(m => ({
 const NotificationCenter = lazy(() => import("./pages/notifications/NotificationCenter").then(m => ({ default: m.NotificationCenter })));
 const StaffManagement = lazy(() => import("./pages/staff/StaffManagement").then(m => ({ default: m.StaffManagement })));
 const RevenueDashboard = lazy(() => import("./pages/revenue/RevenueDashboard").then(m => ({ default: m.RevenueDashboard })));
-const IncidentsPage = lazy(() => import("./pages/incidents/IncidentsPage").then(m => ({ default: m.IncidentsPage })));
 const ReportsPage = lazy(() => import("./pages/reports/ReportsPage").then(m => ({ default: m.ReportsPage })));
 const CargoPage = lazy(() => import("./pages/cargo/CargoPage").then(m => ({ default: m.CargoPage })));
 const AirportMap = lazy(() => import("./pages/wayfinding/AirportMap").then(m => ({ default: m.AirportMap })));
 const FlightScheduler = lazy(() => import("./pages/scheduler/FlightScheduler").then(m => ({ default: m.FlightScheduler })));
 const CheckInSystem = lazy(() => import("./pages/checkin/CheckInSystem").then(m => ({ default: m.CheckInSystem })));
-const FuelManagement = lazy(() => import("./pages/fuel/FuelManagement").then(m => ({ default: m.FuelManagement })));
-const MaintenancePage = lazy(() => import("./pages/maintenance/MaintenancePage").then(m => ({ default: m.MaintenancePage })));
 const AnnouncementsPage = lazy(() => import("./pages/announcements/AnnouncementsPage").then(m => ({ default: m.AnnouncementsPage })));
-const ContractsPage = lazy(() => import("./pages/contracts/ContractsPage").then(m => ({ default: m.ContractsPage })));
 const KPIDashboard = lazy(() => import("./pages/kpi/KPIDashboard").then(m => ({ default: m.KPIDashboard })));
 const IntegrationsHub = lazy(() => import("./pages/integrations/IntegrationsHub").then(m => ({ default: m.IntegrationsHub })));
 const CarbonDashboard = lazy(() => import("./pages/carbon/CarbonDashboard").then(m => ({ default: m.CarbonDashboard })));
@@ -49,9 +46,13 @@ const AccessibilityConcierge = lazy(() => import("./pages/ops2/Accessibility").t
 const LostFound = lazy(() => import("./pages/ops2/LostFound").then(m => ({ default: m.LostFound })));
 const MyJourney = lazy(() => import("./pages/ops2/MyJourney").then(m => ({ default: m.MyJourney })));
 const RetailBids = lazy(() => import("./pages/ops2/RetailBids").then(m => ({ default: m.RetailBids })));
+const rec = (k: string) => lazy(() => import("./pages/records/configs").then(m => ({ default: (m as any)[k] })));
+const IncidentsPage = rec("IncidentsPage"), FuelManagement = rec("FuelPage"), MaintenancePage = rec("MaintenancePage"), ContractsPage = rec("ContractsPage"), ParkingPage = rec("ParkingPage");
+/** Pages whose numbers come from the server when signed in to the live backend. Everything else shows built-in sample data. */
+const LIVE_PAGES = new Set(["dashboard", "flights", "autopilot", "whatif", "copilot", "heatmap", "gateopt", "carbonops", "playbooks", "turnaround", "accessibility",
+  "lostfound", "journey", "bids", "announcements", "incidents", "maintenance", "contracts", "parking", "fuel", "weather", "ai", "marketplace"]);
 const LandingPage = lazy(() => import("./pages/landing/LandingPage").then(m => ({ default: m.LandingPage })));
 const WeatherMonitor = lazy(() => import("./pages/weather/WeatherMonitor").then(m => ({ default: m.WeatherMonitor })));
-const ParkingPage = lazy(() => import("./pages/parking/ParkingPage").then(m => ({ default: m.ParkingPage })));
 const RetailPage = lazy(() => import("./pages/retail/RetailPage").then(m => ({ default: m.RetailPage })));
 const FeedbackPage = lazy(() => import("./pages/feedback/FeedbackPage").then(m => ({ default: m.FeedbackPage })));
 const APITester = lazy(() => import("./pages/api_tester/APITester").then(m => ({ default: m.APITester })));
@@ -188,6 +189,7 @@ function AppContent() {
 
   // Auto-route by role
   const sl = user?.staffLevel||"";
+  const liveMode = API_ENABLED && useAuthStore.getState().source === "backend";
   const effectivePage =
     user?.role==="retailer" && !["retailer","map","flights","payments","passenger","checkin","bids"].includes(activePage)
       ? "retailer"
@@ -222,6 +224,11 @@ function AppContent() {
         <main className="flex-1 overflow-auto p-4 lg:p-6">
           <ErrorBoundary resetKey={effectivePage}>
           <Suspense fallback={<PageSkeleton />}>
+          {liveMode && PAGES[effectivePage] && !LIVE_PAGES.has(effectivePage) && (
+            <div role="note" className="mb-4 text-xs text-yellow-300 bg-yellow-500/10 border border-yellow-500/30 rounded-xl px-4 py-2">
+              Sample data: this view is not yet connected to your airport&apos;s live data.
+            </div>
+          )}
           {PAGES[effectivePage] ?? (
             <div className="flex items-center justify-center h-64 text-slate-500">
               <div className="text-center">
