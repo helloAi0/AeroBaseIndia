@@ -35,7 +35,7 @@ def login(email):
 
 ADMIN, BOM_ADMIN = "admin@del.aerobase.in", "admin@bom.aerobase.in"
 STAFF, SEC = "staff@del.aerobase.in", "security@del.aerobase.in"
-OPS, PILOT = "ops@vistara.del.aerobase.in", "captain@airindia.del.aerobase.in"
+OPS, PILOT = "ops@indigo.del.aerobase.in", "captain@airindia.del.aerobase.in"
 SHOP, PAX, OWNER = "shop@del.aerobase.in", "passenger@del.aerobase.in", "owner@aerobase.in"
 ROLES = {ADMIN: "AIRPORT_ADMIN", BOM_ADMIN: "AIRPORT_ADMIN", STAFF: "GROUND_STAFF", SEC: "SECURITY_OFFICER", OPS: "AIRLINE_OPS",
          PILOT: "PILOT", SHOP: "RETAILER", PAX: "PASSENGER", OWNER: "SUPER_ADMIN"}
@@ -65,7 +65,7 @@ class Auth(unittest.TestCase):
         for email, role in ROLES.items():
             c = claims(login(email)); self.assertEqual(c["role"], role, email)
             self.assertTrue(c.get("tenant_id") and c.get("user_id"), email); self.assertGreater(c["exp"], time.time())
-        self.assertEqual(claims(login(OPS)).get("org"), "UK"); self.assertEqual(claims(login(PILOT)).get("org"), "AI")
+        self.assertEqual(claims(login(OPS)).get("org"), "6E"); self.assertEqual(claims(login(PILOT)).get("org"), "AI")
 
     def test_bad_credentials_rejected(self):
         for body in ({"email": ADMIN, "password": "wrong-password"}, {"email": "nobody@x.in", "password": PW}, {"email": ADMIN}, {}):
@@ -123,7 +123,7 @@ class TenantIsolation(unittest.TestCase):
 
 class OrgScoping(unittest.TestCase):
     def test_airline_ops_and_pilot_only_see_own_airline(self):
-        for who, code in ((OPS, "UK"), (PILOT, "AI")):
+        for who, code in ((OPS, "6E"), (PILOT, "AI")):
             fl = flights(who); self.assertTrue(fl, who)
             self.assertTrue(all(str(f.get("airline_code", "")).upper() == code or str(f["flight_number"]).upper().startswith(code) for f in fl), who)
         self.assertLess(len(flights(OPS)), len(flights(ADMIN)))
@@ -327,6 +327,18 @@ class CorsReferenceBiometric(unittest.TestCase):
         self.assertEqual(call("GET", "/api/reference/airlines", token=t)[0], 200)
         self.assertEqual(call("GET", "/api/reference/secrets", token=t)[0], 404)
         self.assertEqual(call("GET", "/api/reference/airports")[0], 401)
+
+    def test_real_routes_and_airport_facts(self):
+        t = login(ADMIN)
+        code, js = call("GET", "/api/reference/routes?from=DEL", token=t); self.assertEqual(code, 200)
+        dests = {r["to"] for r in js["routes"]}; self.assertTrue({"BOM", "BLR"} <= dests); self.assertGreater(len(js["routes"]), 100)
+        self.assertEqual(call("GET", "/api/reference/routes", token=t)[0], 400)
+        code, js = call("GET", "/api/reference/airports", token=t); delhi = next(a for a in js["airports"] if a["iata"] == "DEL")
+        self.assertGreaterEqual(delhi["runways"], 3); self.assertGreater(delhi["longest_runway_m"], 3000)
+
+    def test_no_defunct_airlines_in_schedule(self):
+        code, js = call("GET", "/flights", token=login(ADMIN)); rows = js if isinstance(js, list) else js.get("flights", [])
+        self.assertFalse([r for r in rows if r.get("flight_number", "").split("-")[0] in ("UK", "I5", "9W", "G8")])
 
     def test_generated_schedule_is_realistic(self):
         code, js = call("GET", "/flights", token=login(ADMIN)); rows = js if isinstance(js, list) else js.get("flights", [])

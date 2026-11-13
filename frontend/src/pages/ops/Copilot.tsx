@@ -6,7 +6,7 @@ import { useAppStore } from "../../store/appStore";
 import { speak, voiceSupported } from "../../lib/voice";
 
 interface Msg { who: "me" | "bot"; text: string; actions?: CopilotAnswer["actions"] }
-const SUGGEST = ["Why is UK-925 late?", "Which gates are free in 30 min?", "How many flights are delayed?", "Flights to Mumbai", "Which terminal is busiest?"];
+const SUGGEST = ["Why is 6E-925 late?", "Which gates are free in 30 min?", "How many flights are delayed?", "Flights to Mumbai", "Which terminal is busiest?"];
 
 export function Copilot() {
   const { flights } = useBoard();

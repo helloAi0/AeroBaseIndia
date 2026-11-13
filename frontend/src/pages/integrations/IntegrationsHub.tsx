@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Send } from "lucide-react";
 import { CheckCircle2, CircleDashed, RefreshCw } from "lucide-react";
 import { api } from "../../api/client";
 import { API_ENABLED } from "../../config";
@@ -16,6 +17,25 @@ const ITEMS: { id: keyof Status; name: string; what: string; env: string; hook?:
   { id: "ml", name: "ML prediction service", what: "Delay and cascade predictions", env: "ML_SERVICE_URL" },
 ];
 
+function TestSender() {
+  const [ch, setCh] = useState<"sms" | "email" | "telegram">("email"); const [to, setTo] = useState(""); const [msg, setMsg] = useState("Test message from AeroBase India"); const [res, setRes] = useState<{ ok: boolean; t: string } | null>(null); const [busy, setBusy] = useState(false);
+  const send = async (e: React.FormEvent) => {
+    e.preventDefault(); setBusy(true); setRes(null);
+    try {
+      if (ch === "email") { const r = await api.post("/notify/email", { to: to.trim(), subject: "AeroBase test", body: msg, type: "TEST" }); setRes({ ok: true, t: `Email ${r.data.status}. If Brevo is not configured it is only logged.` }); }
+      else { const r = await api.post(ch === "sms" ? "/notify/sms" : "/notify/telegram", { to: [to.trim()], message: msg }); const x = r.data.results?.[0]; setRes({ ok: !!x?.ok, t: x?.ok ? `Sent via ${r.data.provider ?? ch}.` : x?.error ?? "Not sent" }); }
+    } catch (x: any) { setRes({ ok: false, t: x?.response?.data?.error ?? "Request failed" }); } finally { setBusy(false); }
+  };
+  const inp = "bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-white text-sm w-full";
+  return <Card><div className="text-sm font-semibold text-white mb-3">Send a test message</div>
+    <form onSubmit={send} className="grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
+      <label className="text-xs text-slate-400">Channel<select className={inp} value={ch} onChange={e => setCh(e.target.value as any)}><option value="email">Email</option><option value="sms">SMS</option><option value="telegram">Telegram</option></select></label>
+      <label className="text-xs text-slate-400 md:col-span-1">{ch === "email" ? "Email address" : ch === "sms" ? "Phone (+91…)" : "Chat id"}<input className={inp} value={to} onChange={e => setTo(e.target.value)} required /></label>
+      <label className="text-xs text-slate-400">Message<input className={inp} value={msg} maxLength={300} onChange={e => setMsg(e.target.value)} required /></label>
+      <button disabled={busy} className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-sky-500 disabled:opacity-50 text-white text-sm font-semibold"><Send className="w-4 h-4" />Send test</button></form>
+    {res && <div className={`mt-3 text-xs ${res.ok ? "text-green-400" : "text-red-400"}`}>{res.t}</div>}</Card>;
+}
+
 /** What is actually connected on this server (reported by the backend from its own configuration; no secrets are shown). */
 export function IntegrationsHub() {
   const live = API_ENABLED && useAuthStore(s => s.source) === "backend";
@@ -27,6 +47,7 @@ export function IntegrationsHub() {
     <div className="space-y-6">
       <PageHead title="Integrations" sub="Connections configured on this server" />
       <div className="flex items-center gap-3"><button onClick={load} className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs border border-navy-600 text-slate-300"><RefreshCw className="w-3 h-3" />Refresh</button>{err && <span className="text-xs text-red-400">{err}</span>}</div>
+      <TestSender />
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">{ITEMS.map(i => { const on = st?.[i.id]; return (
         <Card key={i.id}><div className="flex items-start justify-between gap-3"><div><div className="text-white font-semibold">{i.name}</div><div className="text-xs text-slate-400">{i.what}</div></div>
           <span className={`flex items-center gap-1 text-xs ${on ? "text-green-400" : "text-yellow-400"}`}>{on ? <CheckCircle2 className="w-4 h-4" /> : <CircleDashed className="w-4 h-4" />}{st == null ? "…" : on ? "Connected" : "Not configured"}</span></div>

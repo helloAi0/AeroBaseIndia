@@ -13,7 +13,6 @@ export const MOCK_USERS: (any & { password: string; staffLevel?: string })[] = !
   {id:"u007",name:"Meera Singh",      email:"cleaning@del.aerobase.in",password:"Clean@2024",   role:"staff",        airport:"DEL",airportName:"Delhi Indira Gandhi Intl",lastLogin:"2024-04-26 06:00",verified:true,staffLevel:"staff_cleaning"},
   {id:"u008",name:"Dr. Anita Roy",    email:"medical@del.aerobase.in", password:"Med@2024",     role:"staff",        airport:"DEL",airportName:"Delhi Indira Gandhi Intl",lastLogin:"2024-04-26 08:00",verified:true,staffLevel:"staff_medical"},
   // ── Additional Airline users ──
-  {id:"u027",name:"Vistara Ops DEL",   email:"ops@vistara.aerobase.in",   password:"UK@Ops2024",     role:"staff",airport:"DEL",airportName:"Delhi Indira Gandhi Intl",lastLogin:"2024-04-26 07:00",verified:true,staffLevel:"airline_UK"},
   {id:"u028",name:"SpiceJet Ops DEL",  email:"ops@spicejet.aerobase.in",   password:"SG@Ops2024",     role:"staff",airport:"DEL",airportName:"Delhi Indira Gandhi Intl",lastLogin:"2024-04-26 07:00",verified:true,staffLevel:"airline_SG"},
   {id:"u029",name:"Akasa Ops DEL",     email:"ops@akasa.aerobase.in",       password:"QP@Ops2024",     role:"staff",airport:"DEL",airportName:"Delhi Indira Gandhi Intl",lastLogin:"2024-04-26 07:00",verified:true,staffLevel:"airline_QP"},
   // ── Airline / Pilot users ──
@@ -63,7 +62,7 @@ export const AIRPORTS = [
 export const DEMO_FLIGHTS = [
   {flight_number:"AI-101",  origin:"DEL", destination:"BOM", gate:"A1",  status:"Boarding",   airline:"Air India",    dep:"10:30",arr:"12:40",aircraft:"Boeing 787",terminal:"T3"},
   {flight_number:"6E-2341", origin:"DEL", destination:"BLR", gate:"B3",  status:"Scheduled",  airline:"IndiGo",       dep:"11:00",arr:"13:15",aircraft:"A320neo",   terminal:"T2"},
-  {flight_number:"UK-925",  origin:"DEL", destination:"HYD", gate:"C2",  status:"Delayed",    airline:"Vistara",      dep:"09:45",arr:"11:55",aircraft:"A320",      terminal:"T3"},
+  {flight_number:"6E-925",  origin:"DEL", destination:"HYD", gate:"C2",  status:"Delayed",    airline:"IndiGo",        dep:"09:45",arr:"11:55",aircraft:"A320",      terminal:"T3"},
   {flight_number:"SG-3405", origin:"DEL", destination:"CCU", gate:"A4",  status:"Departed",   airline:"SpiceJet",     dep:"08:30",arr:"10:45",aircraft:"B737",      terminal:"T1"},
   {flight_number:"IX-611",  origin:"DEL", destination:"COK", gate:"D1",  status:"Scheduled",  airline:"Air India Express",     dep:"14:00",arr:"17:00",aircraft:"A320",      terminal:"T2"},
   {flight_number:"AI-2811", origin:"BOM", destination:"DEL", gate:"A2",  status:"Landed",     airline:"Air India",    dep:"07:00",arr:"09:05",aircraft:"A321",      terminal:"T3"},
@@ -72,5 +71,5 @@ export const DEMO_FLIGHTS = [
   {flight_number:"AI-819",  origin:"DEL", destination:"LHR", gate:"E1",  status:"Boarding",   airline:"Air India",    dep:"13:45",arr:"19:15",aircraft:"Boeing 777",terminal:"T3"},
   {flight_number:"EK-511",  origin:"DEL", destination:"DXB", gate:"E2",  status:"Scheduled",  airline:"Emirates",     dep:"16:00",arr:"18:30",aircraft:"A380",      terminal:"T3"},
   {flight_number:"SG-2801", origin:"DEL", destination:"MAA", gate:"C4",  status:"Scheduled",  airline:"SpiceJet",     dep:"17:00",arr:"19:30",aircraft:"B737",      terminal:"T1"},
-  {flight_number:"UK-202",  origin:"DEL", destination:"GOI", gate:"B2",  status:"Scheduled",  airline:"Vistara",      dep:"18:30",arr:"20:15",aircraft:"A320",      terminal:"T2"},
+  {flight_number:"6E-2202",  origin:"DEL", destination:"GOI", gate:"B2",  status:"Scheduled",  airline:"IndiGo",        dep:"18:30",arr:"20:15",aircraft:"A320",      terminal:"T2"},
 ];

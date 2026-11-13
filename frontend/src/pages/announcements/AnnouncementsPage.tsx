@@ -19,7 +19,7 @@ type LogRec = {time:string;flight:string;type:string;gate:string;lang:string[];s
 const LOG: (LogRec&{id:string})[] = [
   {id:"s1",time:"14:32",flight:"AI-101",type:"Boarding",   gate:"A1",lang:["EN","HI"],status:"Played"},
   {id:"s2",time:"14:15",flight:"6E-202",type:"Boarding",   gate:"B3",lang:["EN","HI"],status:"Played"},
-  {id:"s3",time:"13:58",flight:"UK-303",type:"Delay",       gate:"C2",lang:["EN","HI","GU"],status:"Played"},
+  {id:"s3",time:"13:58",flight:"6E-303",type:"Delay",       gate:"C2",lang:["EN","HI","GU"],status:"Played"},
   {id:"s4",time:"13:42",flight:"SG-404",type:"Gate Change", gate:"D4",lang:["EN","HI"],status:"Played"},
   {id:"s5",time:"13:20",flight:"IX-505",type:"Final Call",  gate:"A2",lang:["EN"],status:"Played"},
 ];
@@ -116,7 +116,7 @@ export function AnnouncementsPage() {
                   className="w-full bg-navy-700 border border-navy-600 focus:border-sky-500 rounded-xl px-3 py-2.5 text-sm text-white outline-none">
                   {fl.length>0
                     ? fl.map((f:any)=><option key={f.id} value={f.flight_number}>{f.flight_number}</option>)
-                    : ["AI-101","6E-202","UK-303","SG-404","IX-505"].map(f=><option key={f} value={f}>{f}</option>)
+                    : ["AI-101","6E-202","6E-303","SG-404","IX-505"].map(f=><option key={f} value={f}>{f}</option>)
                   }
                 </select>
               </div>

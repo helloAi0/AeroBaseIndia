@@ -228,7 +228,7 @@ export function BrandingPage() {
                   style={{background:custom.accentColor+"08",borderColor:custom.accentColor+"20",
                           borderRadius:custom.borderRadius+"px"}}>
                   <div className="text-xs text-white/50 mb-3">Live Flights</div>
-                  {["AI-101 DEL→BOM Boarding","6E-202 DEL→BLR Scheduled","UK-303 BOM→DEL Delayed"].map(f=>(
+                  {["AI-101 DEL→BOM Boarding","6E-202 DEL→BLR Scheduled","6E-303 BOM→DEL Delayed"].map(f=>(
                     <div key={f} className="flex items-center justify-between py-2 border-b last:border-0"
                       style={{borderColor:"rgba(255,255,255,0.05)"}}>
                       <span className="text-xs text-white/80 font-mono">{f.split(" ")[0]}</span>

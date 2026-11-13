@@ -14,7 +14,7 @@ const DigitalTwin = lazy(() => import("./pages/twin/DigitalTwin").then(m => ({ d
 const AIPredictions = lazy(() => import("./pages/ai/AIPredictions").then(m => ({ default: m.AIPredictions })));
 const NotificationCenter = lazy(() => import("./pages/notifications/NotificationCenter").then(m => ({ default: m.NotificationCenter })));
 const ReportsPage = lazy(() => import("./pages/reports/ReportsPage").then(m => ({ default: m.ReportsPage })));
-const AirportMap = lazy(() => import("./pages/wayfinding/AirportMap").then(m => ({ default: m.AirportMap })));
+const AirportMapPage = lazy(() => import("./pages/wayfinding/AirportMapPage").then(m => ({ default: m.AirportMapPage })));
 const AnnouncementsPage = lazy(() => import("./pages/announcements/AnnouncementsPage").then(m => ({ default: m.AnnouncementsPage })));
 const IntegrationsHub = lazy(() => import("./pages/integrations/IntegrationsHub").then(m => ({ default: m.IntegrationsHub })));
 const BaggageClaimPredictor = lazy(() => import("./pages/baggage_predict/BaggageClaimPredictor").then(m => ({ default: m.BaggageClaimPredictor })));
@@ -81,7 +81,7 @@ const PAGES: Record<string, React.ReactNode> = {
   emergency:     <EmergencyCenter />,
   reports:       <ReportsPage />,
   cargo:         <CargoPage />,
-  map:           <AirportMap />,
+  map:           <AirportMapPage />,
   scheduler:     <FlightScheduler />,
   checkin:       <CheckInSystem />,
   fuel:          <FuelManagement />,

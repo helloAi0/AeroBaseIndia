@@ -30,9 +30,9 @@
   "issue": ""
  },
  {
-  "flight": "UK-925",
-  "airline": "Vistara",
-  "code": "UK",
+  "flight": "6E-925",
+  "airline": "IndiGo",
+  "code": "6E",
   "from": "DEL",
   "to": "HYD",
   "dep": "09:45",
@@ -165,9 +165,9 @@
   "issue": ""
  },
  {
-  "flight": "UK-202",
-  "airline": "Vistara",
-  "code": "UK",
+  "flight": "6E-2202",
+  "airline": "IndiGo",
+  "code": "6E",
   "from": "DEL",
   "to": "GOI",
   "dep": "18:30",
@@ -240,9 +240,9 @@
   "issue": ""
  },
  {
-  "flight": "UK-555",
-  "airline": "Vistara",
-  "code": "UK",
+  "flight": "6E-555",
+  "airline": "IndiGo",
+  "code": "6E",
   "from": "BOM",
   "to": "DEL",
   "dep": "08:00",

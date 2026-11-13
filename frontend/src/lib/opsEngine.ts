@@ -111,5 +111,5 @@ export function answer(q: string, flights: DemoFlight[], nowMin: number): Copilo
   }
   if (/(what.?if|simulat|runway)/.test(s)) return { text: "Use the What-if Simulator to close a runway or cut capacity and see the knock-on delays.", actions: [{ label: "Open What-if", page: "whatif" }] };
   if (/(weather|rain|fog|storm)/.test(s)) return { text: "Check live conditions on the Weather page.", actions: [{ label: "Open Weather", page: "weather" }] };
-  return { text: "I can answer things like “why is UK-925 late?”, “which gates are free in 30 min?”, “how many flights are delayed?”, “flights to Mumbai”, or “which terminal is busiest?”." };
+  return { text: "I can answer things like “why is 6E-925 late?”, “which gates are free in 30 min?”, “how many flights are delayed?”, “flights to Mumbai”, or “which terminal is busiest?”." };
 }

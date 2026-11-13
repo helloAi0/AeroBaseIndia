@@ -10,18 +10,18 @@ import { Plane, Search, AlertTriangle, Clock,
 import { ALL_AIRPORT_FLIGHTS } from "../../data/airportFlights";
 
 const AIRLINE_CODE_MAP: Record<string,string> = {
-  airline_AI:"AI", airline_6E:"6E", airline_UK:"UK", airline_EK:"EK",
+  airline_AI:"AI", airline_6E:"6E", airline_EK:"EK",
   airline_SG:"SG", airline_QP:"QP", airline_IX:"IX",
-  pilot_captain_AI:"AI", pilot_captain_6E:"6E", pilot_captain_UK:"UK",
+  pilot_captain_AI:"AI", pilot_captain_6E:"6E",
   pilot_fo_AI:"AI", pilot_fo_6E:"6E",
 };
 
 const AIRLINE_COLORS: Record<string,string> = {
-  AI:"#ef4444","6E":"#0ea5e9",UK:"#8b5cf6",EK:"#f59e0b",
+  AI:"#ef4444","6E":"#0ea5e9",EK:"#f59e0b",
   SG:"#f97316",QP:"#22c55e",IX:"#dc2626",
 };
 const AIRLINE_NAMES: Record<string,string> = {
-  AI:"Air India","6E":"IndiGo",UK:"Vistara",EK:"Emirates",
+  AI:"Air India","6E":"IndiGo",EK:"Emirates",
   SG:"SpiceJet",QP:"Akasa Air",IX:"Air India Express",
 };
 

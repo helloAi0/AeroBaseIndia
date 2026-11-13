@@ -14,7 +14,7 @@ const STATUS_WORDS: Record<string, string> = {
   landed: "Landed", arrived: "Landed", scheduled: "Scheduled", upcoming: "Scheduled",
 };
 const AIRLINE_WORDS: Record<string, string> = {
-  "air india express": "IX", "air india": "AI", indigo: "6E", vistara: "UK", emirates: "EK",
+  "air india express": "IX", "air india": "AI", indigo: "6E", emirates: "EK",
   spicejet: "SG", akasa: "QP", "akasa air": "QP",
 };
 const CITY_CODES: Record<string, string[]> = {

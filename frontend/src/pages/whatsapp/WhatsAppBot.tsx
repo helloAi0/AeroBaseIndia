@@ -12,7 +12,7 @@ import type { Flight } from "../../types";
 const DEMO: Flight[] = [
   { id: "1", flightNumber: "6E-202", origin: "DEL", destination: "BOM", status: "Delayed", gate: "B3", predictedDelay: 35 },
   { id: "2", flightNumber: "AI-101", origin: "DEL", destination: "BLR", status: "Boarding", gate: "A1" },
-  { id: "3", flightNumber: "UK-303", origin: "DEL", destination: "HYD", status: "Scheduled", gate: "C2" },
+  { id: "3", flightNumber: "6E-303", origin: "DEL", destination: "HYD", status: "Scheduled", gate: "C2" },
   { id: "4", flightNumber: "SG-404", origin: "BOM", destination: "DEL", status: "Cancelled", gate: "—" },
 ];
 const asRow = (f: Flight) => ({ flight: f.flightNumber, airline: "", airCode: f.flightNumber.split("-")[0], from: f.origin, to: f.destination, gate: f.gate, status: f.status });

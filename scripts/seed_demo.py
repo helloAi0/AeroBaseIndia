@@ -32,39 +32,42 @@ def psql(sql, **v):
     if r.returncode: sys.exit(r.stderr.strip())
     return r.stdout
 
-STORES = {   # well-known concession brands operating in Indian airports (names/categories only; no financial figures)
-    "DEL": [("Starbucks","F&B","T3","Post-security"),("McDonald's","F&B","T3","Food court"),("WHSmith","Books/News","T3","Departures"),("Titan","Retail","T3","Departures"),("Forest Essentials","Beauty","T3","Post-security"),("Crossword","Books/News","T1","Departures"),("Burger King","F&B","T1","Food court")],
-    "BOM": [("Starbucks","F&B","T2","Post-security"),("Hamleys","Retail","T2","Departures"),("WHSmith","Books/News","T2","Departures"),("Lifestyle Duty Free","Duty Free","T2","International departures"),("Costa Coffee","F&B","T1","Food court")],
-    "BLR": [("Starbucks","F&B","T1","Post-security"),("Burger King","F&B","T1","Food court"),("Crossword","Books/News","T1","Departures"),("Forest Essentials","Beauty","T2","Post-security"),("Duty Free","Duty Free","T2","International departures")],
+STORES = {   # Brands confirmed from public sources (airport operators, Avolta, Croma, trade press); names/categories only, no financial figures.
+    "DEL": [("Delhi Duty Free","Duty Free","T3","Departures & arrivals"),("Shoppers Stop","Retail","T3",""),("Croma","Retail","T3","Electronics")],
+    "BOM": [("Costa Coffee","F&B","T2",""),("Street Foods by Punjab Grill","F&B","T2",""),("McDonald's","F&B","T2",""),("The Irish House","F&B","T2",""),("Caffe Ritazza","F&B","T2",""),("The Beer Cafe","F&B","T2","Departures"),
+            ("Starbucks","F&B","T1","Arrivals"),("Nourish","F&B","T1",""),("Shawarma Shack","F&B","T1",""),("Madras Coffee House","F&B","T1",""),("Naturals","F&B","T1",""),("Coffee Bean & Tea Leaf","F&B","T1","T1C"),("Cafe Coffee Day","F&B","T1","T1C"),("Black Dog","F&B","T1","T1B"),
+            ("Haldiram's","F&B","",""),("Theobroma","F&B","",""),("Subway","F&B","",""),("KFC","F&B","","")],
+    "BLR": [("Avolta Duty Free (Departures)","Duty Free","T2",""),("Avolta Duty Free (Arrivals)","Duty Free","T2",""),("Johnny Rockets","F&B","T2",""),("Wolfgang Puck","F&B","T2",""),("Giraffe","F&B","T2",""),("Carluccio's","F&B","T2",""),("Madeleine's","F&B","T2",""),("P.F. Chang's","F&B","T2",""),
+            ("Avolta Duty Free","Duty Free","T1","")],
 }
 def seed_stores(code):
     psql("DELETE FROM app_records WHERE collection='stores' AND created_by IS NULL AND tenant_id=(SELECT id FROM tenants WHERE airport_code=:'c');", c=code)
     for name, cat, term, loc in STORES.get(code, []):
-        d = json.dumps({"name": name, "category": cat, "terminal": term, "location": loc, "status": "Open"})
+        d = json.dumps({k: v for k, v in {"name": name, "category": cat, "terminal": term, "location": loc, "status": "Open"}.items() if v})
         psql("INSERT INTO app_records (tenant_id, collection, data) SELECT id, 'stores', :'d'::jsonb FROM tenants WHERE airport_code=:'c';", c=code, d=d)
 
 def generated_schedule(code, today):
-    """A full realistic day of departures from the airport's real airline network; status follows the clock."""
+    """A full day of departures from the airport's real route network (OpenFlights); status follows the clock."""
     import random, reference_data as R
     rnd = random.Random(f"{code}-{today}"); now = datetime.now(); rows = []; used = set()
     ac = {a[0]: a for a in R.AIRCRAFT}; names = {a[0]: a[2] for a in R.AIRLINES}
-    for air, term, dests, types in R.NETWORK[code]:
-        intl = lambda d: R.airport(d)[4] != "IN"
-        for d in dests:
-            for k in range(1 if intl(d) else rnd.choice([1, 2, 3])):
-                t = rnd.choice(types); minute = rnd.choice([0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55])
-                dep = datetime.combine(today, datetime.min.time()) + timedelta(hours=rnd.randint(5, 23), minutes=minute)
-                num = f"{air}-{rnd.randint(100, 999) if intl(d) else rnd.randint(200, 899)}"
-                if num in used: continue
-                used.add(num); arr = dep + timedelta(minutes=R.block_minutes(code, d, ac[t][5]))
-                mins = (dep - now).total_seconds() / 60
-                st = "Departed" if mins < -20 else "Boarding" if mins < 25 and mins >= -20 else "Scheduled"
-                delay = rnd.choice([0, 0, 0, 0, 15, 20, 35, 50]) if st == "Scheduled" else 0
-                if delay: st = "Delayed"
-                issue = ("Late inbound aircraft" if delay <= 20 else "Air traffic congestion") if delay else ""
-                gate = f"{rnd.choice('ABCD')}{rnd.randint(1, 12)}"
-                pax = int(ac[t][2] * rnd.uniform(0.62, 0.97))
-                rows.append((num, code, d, dep, arr, gate, st, names[air], air, t, term, pax, issue, delay))
+    for dst, air, types, on_route in R.ROUTES.get(code, []):
+        if dst not in {a[0] for a in R.AIRPORTS}: continue
+        intl = R.airport(dst)[4] != "IN"; km = R.distance_km(code, dst)
+        if not types: types = ["A320neo"] if km < 2500 else ["B787-8"] if km < 9000 else ["B777-300ER"]
+        for k in range(1 if intl or air not in R.LOW_COST else rnd.choice([1, 2, 2, 3])):
+            t = rnd.choice(types); minute = rnd.choice(range(0, 60, 5))
+            dep = datetime.combine(today, datetime.min.time()) + timedelta(hours=rnd.randint(5, 23), minutes=minute)
+            num = f"{air}-{rnd.randint(100, 999) if intl else rnd.randint(200, 899)}"
+            if num in used: continue
+            used.add(num); arr = dep + timedelta(minutes=R.block_minutes(code, dst, ac[t][5]))
+            mins = (dep - now).total_seconds() / 60
+            st = "Departed" if mins < -20 else "Boarding" if mins < 25 else "Scheduled"
+            delay = rnd.choice([0, 0, 0, 0, 15, 20, 35, 50]) if st == "Scheduled" else 0
+            if delay: st = "Delayed"
+            issue = ("Late inbound aircraft" if delay <= 20 else "Air traffic congestion") if delay else ""
+            term = R.terminal(code, air, intl); gate = f"{rnd.choice('ABCD')}{rnd.randint(1, 12)}"
+            rows.append((num, code, dst, dep, arr, gate, st, names.get(air, air), air, t, term, int(ac[t][2] * rnd.uniform(0.62, 0.97)), issue, delay))
     return rows
 
 def swap(code, home):   # re-home the Delhi board onto another airport
@@ -78,6 +81,7 @@ def main():
     today = date.today()
     for code, name in AIRPORTS.items():
         psql("INSERT INTO tenants (id, airport_name, airport_code, subscription_plan) SELECT gen_random_uuid(), :'n', :'c', 'STANDARD' WHERE NOT EXISTS (SELECT 1 FROM tenants WHERE airport_code = :'c');", n=name, c=code)
+        psql("DELETE FROM users WHERE email LIKE 'ops@vistara.%';")
         psql("DELETE FROM flights WHERE tenant_id = (SELECT id FROM tenants WHERE airport_code = :'c') AND airline_partner_id IS NULL;", c=code)
         rows = []
         for f in flights:
@@ -94,7 +98,7 @@ def main():
         psql("INSERT INTO flights (id,tenant_id,flight_number,origin,destination,departure_time,arrival_time,gate,status,airline,airline_code,aircraft,terminal,passengers,issue,delay_minutes) VALUES " + vals + " ON CONFLICT (tenant_id, flight_number, departure_time) DO NOTHING;")
         print(f"{code}: {len(rows)} flights for {today}")
     users = [("Arjun Sharma", "admin@{a}.aerobase.in", "AIRPORT_ADMIN", ""), ("Ravi Kumar", "staff@{a}.aerobase.in", "GROUND_STAFF", ""),
-             ("Neha Singh", "security@{a}.aerobase.in", "SECURITY_OFFICER", ""), ("Vistara Ops", "ops@vistara.{a}.aerobase.in", "AIRLINE_OPS", "UK"),
+             ("Neha Singh", "security@{a}.aerobase.in", "SECURITY_OFFICER", ""), ("IndiGo Ops", "ops@indigo.{a}.aerobase.in", "AIRLINE_OPS", "6E"),
              ("Capt. Sharma", "captain@airindia.{a}.aerobase.in", "PILOT", "AI"), ("Starbucks", "shop@{a}.aerobase.in", "RETAILER", "starbucks"), ("Demo Passenger", "passenger@{a}.aerobase.in", "PASSENGER", ""), ("Platform Owner", "owner@aerobase.in", "SUPER_ADMIN", "")]
     ph = hash_pw(pw)
     for a in AIRPORTS:
@@ -102,6 +106,6 @@ def main():
             psql("INSERT INTO users (id,tenant_id,full_name,email,password_hash,role,org_code) SELECT gen_random_uuid(),id,:'n',:'e',:'h',:'r',NULLIF(:'o','') FROM tenants WHERE airport_code=:'a' "
                  "ON CONFLICT (email) DO UPDATE SET password_hash=EXCLUDED.password_hash, role=EXCLUDED.role, org_code=EXCLUDED.org_code;", n=n, e=e.format(a=a.lower()), h=ph, r=role, o=org, a=a)
     print("\nDemo users (same password for all):", pw)
-    print("  e.g. admin@del.aerobase.in, staff@bom.aerobase.in, ops@vistara.del.aerobase.in, shop@blr.aerobase.in")
+    print("  e.g. admin@del.aerobase.in, staff@bom.aerobase.in, ops@indigo.del.aerobase.in, shop@blr.aerobase.in")
 
 if __name__ == "__main__": main()

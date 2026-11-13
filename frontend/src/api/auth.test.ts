@@ -22,7 +22,7 @@ describe("loginWithBackend role mapping", () => {
     ["SUPER_ADMIN", {}, "superadmin", undefined], ["AIRPORT_ADMIN", {}, "airport_admin", undefined],
     ["GROUND_STAFF", {}, "staff", "staff_ops"], ["SECURITY_OFFICER", {}, "staff", "staff_security"],
     ["PASSENGER", {}, "passenger", undefined], ["RETAILER", {}, "retailer", undefined],
-    ["AIRLINE_OPS", { org: "UK" }, "staff", "airline_UK"], ["PILOT", { org: "AI" }, "staff", "pilot_captain_AI"],
+    ["AIRLINE_OPS", { org: "6E" }, "staff", "airline_6E"], ["PILOT", { org: "AI" }, "staff", "pilot_captain_AI"],
   ])("%s → %s", async (role, extra, expRole, level) => {
     const s = await login({ role, ...extra });
     expect(s.user.role).toBe(expRole); expect(s.user.staffLevel).toBe(level);

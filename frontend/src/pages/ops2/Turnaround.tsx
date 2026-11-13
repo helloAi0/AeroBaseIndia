@@ -7,8 +7,8 @@ import { Card, PageHead } from "../../components/ui/PageHead";
 export function Turnaround() {
   const { flights } = useBoard();
   const list = flights.filter(f => f.status === "Scheduled" || f.status === "Boarding" || f.status === "Delayed");
-  const [id, setId] = useState(list[0]?.id ?? 0);
-  const f = list.find(x => x.id === id) ?? list[0];
+  const [id, setId] = useState<string | number>(list[0]?.id ?? 0);
+  const f = list.find(x => String(x.id) === String(id)) ?? list[0];
   const wide = f ? capacityOf(f) >= 300 : false;
   const tasks = useMemo(() => tasksFor(wide), [wide]);
   const [slip, setSlip] = useState<Record<string, number>>({});
@@ -21,7 +21,7 @@ export function Turnaround() {
     <div className="space-y-6">
       <PageHead title="Turnaround Timer" sub="Predicts when each aircraft will be ready and warns before it misses departure."
         note={`Standard times for a ${wide ? "wide" : "narrow"}-body turnaround (${plan} min planned). Enter any slip you see on the ramp; the critical path updates. Fuelling must finish before boarding completes.`} />
-      <select value={f.id} onChange={e => { setId(+e.target.value); setSlip({}); }} className="bg-navy-800 border border-navy-600 rounded-lg px-3 py-2 text-white text-sm">
+      <select value={f.id} onChange={e => { setId(e.target.value); setSlip({}); }} className="bg-navy-800 border border-navy-600 rounded-lg px-3 py-2 text-white text-sm">
         {list.map(x => <option key={x.id} value={x.id}>{x.flight} · {x.dep} · gate {x.gate}</option>)}</select>
       <Card className={late > 0 ? "border-red-500/50" : "border-green-500/40"}>
         <div className="text-3xl font-bold text-white">{fmt(readyAt)} <span className="text-base text-slate-400 font-normal">ready · departure {f.dep}</span></div>

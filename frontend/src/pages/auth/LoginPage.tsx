@@ -11,7 +11,6 @@ type LoginMode = "all" | "retailer" | "airline";
 const AIRLINES = [
   {code:"AI",  name:"Air India",        color:"#ef4444",icon:"🔴"},
   {code:"6E",  name:"IndiGo",           color:"#0ea5e9",icon:"🔵"},
-  {code:"UK",  name:"Vistara",          color:"#8b5cf6",icon:"🟣"},
   {code:"EK",  name:"Emirates",         color:"#f59e0b",icon:"🟡"},
   {code:"SG",  name:"SpiceJet",         color:"#f97316",icon:"🟠"},
   {code:"QP",  name:"Akasa Air",        color:"#22c55e",icon:"🟢"},
@@ -35,9 +34,6 @@ const AIRLINE_DEMOS: Record<string,Demo[]> = !DEMO_LOGIN_ENABLED ? {} : {
   ],
   SG:[
     {l:"SpiceJet Operations Head",  e:"ops@spicejet.aerobase.in",      p:"SG@Ops2024",      badge:"Ops Head",  c:"#f97316"},
-  ],
-  UK:[
-    {l:"Vistara Operations Head",   e:"ops@vistara.aerobase.in",       p:"UK@Ops2024",      badge:"Ops Head",  c:"#8b5cf6"},
   ],
   QP:[
     {l:"Akasa Operations Head",     e:"ops@akasa.aerobase.in",         p:"QP@Ops2024",      badge:"Ops Head",  c:"#22c55e"},
