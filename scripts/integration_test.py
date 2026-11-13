@@ -540,6 +540,13 @@ class Accounts(unittest.TestCase):
         self.assertEqual(call("POST", "/login", {"email": em, "password": "Sup3rsecret99"})[0], 401)
         self.assertEqual(call("POST", "/login", {"email": em, "password": "NewPass12345"})[0], 200)
 
+    def test_passenger_and_shop_owner_do_not_get_passenger_counts(self):
+        for who in (PAX, SHOP):
+            code, fl = call("GET", "/flights", token=login(who)); rows = fl if isinstance(fl, list) else fl.get("flights", [])
+            self.assertTrue(rows); self.assertTrue(all("passengers" not in r for r in rows))
+        code, fl = call("GET", "/flights", token=login(ADMIN)); rows = fl if isinstance(fl, list) else fl.get("flights", [])
+        self.assertTrue(any(r.get("passengers", 0) > 0 for r in rows))
+
     def test_owner_can_switch_airport_and_data_follows(self):
         self.assertEqual(call("POST", "/api/auth/switch-airport", {"airport": "BOM"}, token=login(ADMIN))[0], 403)
         self.assertEqual(call("POST", "/api/auth/switch-airport", {"airport": "BOM"})[0], 401)

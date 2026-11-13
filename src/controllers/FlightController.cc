@@ -49,13 +49,14 @@ void FlightController::getFlights(const HttpRequestPtr& req,
     try {
         // Authenticated; tenant comes from the token, not a client header.
         // Only SUPER_ADMIN may view another airport via X-Tenant-ID.
-        std::string tenantId, orgFilter;
+        std::string tenantId, orgFilter; bool hidePax = false;
         try {
             const std::string authHeader = req->getHeader("Authorization");
             if (authHeader.size() <= 7 || authHeader.rfind("Bearer ", 0) != 0) throw std::runtime_error("no token");
             auto decoded = JwtService::verifyToken(authHeader.substr(7));
             tenantId = decoded.has_payload_claim("airport") ? decoded.get_payload_claim("airport").as_string() : "";
             const std::string role = decoded.get_payload_claim("role").as_string();
+            hidePax = (role == "PASSENGER" || role == "RETAILER");   // load figures are for airport staff and the airline concerned
             if ((role == "AIRLINE_OPS" || role == "PILOT") && decoded.has_payload_claim("org"))
                 orgFilter = decoded.get_payload_claim("org").as_string();   // airline staff see only their airline
             const std::string hdr = req->getHeader("X-Tenant-ID");
@@ -97,7 +98,7 @@ void FlightController::getFlights(const HttpRequestPtr& req,
             f["airline_code"]  = row[9].c_str();
             f["aircraft"]      = row[10].c_str();
             f["terminal"]      = row[11].c_str();
-            f["passengers"]    = row[12].as<int>();
+            if (!hidePax) f["passengers"] = row[12].as<int>();
             f["issue"]         = row[13].c_str();
             f["delay_minutes"] = row[14].as<int>();
             flights.append(f);
