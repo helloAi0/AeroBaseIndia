@@ -15,12 +15,13 @@ inline Level levelFor(const std::string& p) {
     if (p == "/health" || p == "/login" || p == "/docs" || p == "/api-docs" || p == "/redoc") return Level::Public;
     if (p == "/api/passenger/register" || p == "/api/passenger/login") return Level::Public;
     if (starts(p, "/payments/webhook/")) return Level::Public;      // verified by signature in handler
+    if (starts(p, "/webhooks/whatsapp")) return Level::Public;      // Meta handshake + X-Hub-Signature-256 verified in handler
     if (starts(p, "/api/partner/")) return Level::Public;           // PartnerAuthFilter / API key
     if (starts(p, "/notify/")) return Level::Public;                // handlers use adminauth::require
     if (p == "/metrics" || starts(p, "/audit") || starts(p, "/payments/order") ||
         starts(p, "/api/compliance") || starts(p, "/api/billing") || starts(p, "/traces") ||
-        starts(p, "/api/internal") || starts(p, "/api/tenants") || starts(p, "/api/partner-keys") || p == "/predict/cascade") return Level::Admin;
-    if (starts(p, "/api/twin") || starts(p, "/api/flights") || starts(p, "/api/records/") || starts(p, "/api/revenue") || starts(p, "/api/passenger/") ||
+        starts(p, "/api/internal") || starts(p, "/api/integrations") || starts(p, "/payments/config") || starts(p, "/api/tenants") || starts(p, "/api/partner-keys") || p == "/predict/cascade") return Level::Admin;
+    if (starts(p, "/api/twin") || starts(p, "/api/reference/") || starts(p, "/api/biometric") || starts(p, "/api/flights") || starts(p, "/api/records/") || starts(p, "/api/revenue") || starts(p, "/api/passenger/") ||
         starts(p, "/predict/") || starts(p, "/graphql") || (starts(p, "/flights") && p.size() > 8)) return Level::AnyUser;
     return Level::Public;
 }

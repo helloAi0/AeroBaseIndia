@@ -1,3 +1,4 @@
+import { api } from "../../api/client";
 import { useEffect, useRef, useState } from "react";
 import { MessageCircle, Send } from "lucide-react";
 import { useLiveFlights } from "../../hooks/useLiveFlights";
@@ -40,6 +41,8 @@ export function WhatsAppBot() {
   const [msgs, setMsgs] = useState<Msg[]>([{ me: false, text: replyTo("hi", flights) }]);
   const [input, setInput] = useState("");
   const end = useRef<HTMLDivElement>(null);
+  const [wa, setWa] = useState<boolean | null>(null);
+  useEffect(() => { api.get("/api/integrations/status").then(r => setWa(!!r.data.whatsapp)).catch(() => setWa(null)); }, []);
   useEffect(() => { end.current?.scrollIntoView({ block: "nearest" }); }, [msgs]);
 
   const send = (t = input) => {
@@ -61,14 +64,13 @@ export function WhatsAppBot() {
             <button onClick={() => send()} aria-label="Send" className="p-2.5 rounded-xl bg-green-600 text-white"><Send className="w-4 h-4" /></button></div>
         </div>
         <div className="bg-navy-800 border border-navy-600 rounded-2xl p-5 text-sm text-slate-300 space-y-3">
-          <h2 className="font-semibold text-white">Connect to real WhatsApp</h2>
-          <ol className="list-decimal pl-5 space-y-1.5">
-            <li>Create a Meta developer app and add the <b>WhatsApp</b> product (Cloud API). Meta provides a free test number.</li>
-            <li>Expose a webhook endpoint (HTTPS) on your backend and subscribe to <code className="text-sky-300">messages</code>.</li>
-            <li>Feed each incoming text to the same reply logic used by this simulator and send the answer back with the Cloud API.</li>
-            <li>Replying within 24 hours of a user’s message is free-form; business-started messages need approved templates (Meta may charge).</li>
-          </ol>
-          <p className="text-xs text-slate-500">The webhook is not part of this repository yet; this page shows the conversation logic you would reuse.</p>
+          <h2 className="font-semibold text-white">WhatsApp connection</h2>
+          <p>Status: {wa === null ? "checking…" : wa ? <span className="text-green-400">Connected — passengers' WhatsApp messages are answered from the live flight board.</span> : <span className="text-yellow-400">Not configured on this server.</span>}</p>
+          {wa === false && <ol className="list-decimal pl-5 space-y-1.5 text-xs">
+            <li>Create a Meta developer app with the WhatsApp Cloud API product (Meta gives a free test number).</li>
+            <li>Set <code className="text-sky-300">WHATSAPP_VERIFY_TOKEN</code>, <code className="text-sky-300">WHATSAPP_APP_SECRET</code>, <code className="text-sky-300">WHATSAPP_TOKEN</code>, <code className="text-sky-300">WHATSAPP_PHONE_NUMBER_ID</code> on the server.</li>
+            <li>Point the webhook to <code className="text-sky-300">https://YOUR-API/webhooks/whatsapp</code> and subscribe to <code className="text-sky-300">messages</code>.</li></ol>}
+          <p className="text-xs text-slate-500">The chat on the left uses the same reply rules as the live webhook, so you can try questions here first.</p>
           <div className="flex flex-wrap gap-2 pt-1">{["status 6E-202", "delayed flights", "flights to Mumbai", "gate AI-101"].map(q => (
             <button key={q} onClick={() => send(q)} className="px-3 py-1.5 rounded-full bg-navy-700 text-xs text-slate-200 hover:bg-navy-600">{q}</button>))}</div>
         </div>

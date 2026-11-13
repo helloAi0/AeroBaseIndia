@@ -19,3 +19,4 @@ certs/
 deploy/.env.prod
 deploy/.env.prod.*
 !deploy/.env.prod.example
+deploy/.env.local

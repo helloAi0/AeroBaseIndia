@@ -168,3 +168,30 @@ export const CheckInPage = () => <RecordsPage cfg={CHECKIN} />;
 export const StaffPage = () => <RecordsPage cfg={STAFF} />;
 export const FeedbackPage = () => <RecordsPage cfg={FEEDBACK} />;
 export const EmergencyPage = () => <RecordsPage cfg={EMERGENCY} />;
+
+const STORES: RecordsConfig = {
+  collection: "stores", title: "Retail & Concessions", subtitle: "Shops, restaurants and duty free units in the terminals", noun: "unit", prefix: "UNT", titleKey: "name", statusKey: "status", canDelete: true,
+  validate: d => Number(d.area_sqm) < 0 ? "Area cannot be negative" : null,
+  fields: [
+    { key: "name", label: "Business name", required: true, placeholder: "Duty Free World" },
+    { key: "category", label: "Category", type: "select", options: ["Duty Free", "F&B", "Retail", "Beauty", "Books/News", "Services"], table: true },
+    { key: "terminal", label: "Terminal", type: "select", options: ["T1", "T2", "T3"] }, { key: "location", label: "Location", placeholder: "Post-security, level 3" },
+    { key: "area_sqm", label: "Area (sq m)", type: "number", min: 1, max: 100000 }, { key: "monthly_rent", label: "Monthly rent (₹)", type: "number", min: 0, max: 1000000000 },
+    { key: "status", label: "Status", type: "select", options: ["Open", "Closed", "Under fit-out", "Vacant"] }, { key: "contact", label: "Contact", table: false },
+  ],
+  kpis: [{ label: "Units", value: r => r.length }, { label: "Open", value: r => n(r, x => x.status === "Open"), tone: "green" }, { label: "Vacant", value: r => n(r, x => x.status === "Vacant"), tone: "yellow" },
+         { label: "Monthly rent roll", value: r => "₹" + r.filter(x => x.status === "Open").reduce((s, x) => s + (Number(x.monthly_rent) || 0), 0).toLocaleString("en-IN") }],
+  seed: [],
+};
+const PASSES: RecordsConfig = {
+  collection: "passes", title: "Lounge & Fast-track Passes", subtitle: "Request a pass; the airport team approves it", noun: "pass request", prefix: "PAS", titleKey: "type", statusKey: "status",
+  fields: [
+    { key: "type", label: "Pass", required: true, type: "select", options: ["Lounge access", "Fast-track security", "Porter assistance", "Parking pre-booking"] },
+    { key: "flight", label: "Flight", placeholder: "AI-101" }, { key: "date", label: "Date", type: "date", required: true },
+    { key: "status", label: "Status", type: "select", options: ["Requested", "Approved", "Rejected", "Used"] }, { key: "notes", label: "Notes", type: "textarea", table: false },
+  ],
+  kpis: [{ label: "Requests", value: r => r.length }, { label: "Approved", value: r => n(r, x => x.status === "Approved"), tone: "green" }, { label: "Pending", value: r => n(r, x => x.status === "Requested"), tone: "yellow" }],
+  seed: [],
+};
+export const RetailPage = () => <RecordsPage cfg={STORES} />;
+export const SubscriptionPage = () => <RecordsPage cfg={PASSES} />;

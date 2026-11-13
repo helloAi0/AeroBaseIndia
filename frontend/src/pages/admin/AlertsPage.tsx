@@ -1,15 +1,15 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useBoard } from "../../hooks/useBoard";
+import { useCollection } from "../../hooks/useCollection";
+import { api } from "../../api/client";
+import { API_ENABLED } from "../../config";
+import { useAuthStore } from "../../store/authStore";
 import { Bell, AlertTriangle, Plane, Clock, Zap, X } from "lucide-react";
 
-const ALERTS = [
-  {id:1, type:"DELAY",    title:"Flight UK-303 delayed 45min",    msg:"Gate C2 — Weather conditions at BOM", time:"2 min ago",  sev:"HIGH",    read:false},
-  {id:2, type:"SECURITY", title:"Unusual login attempt detected", msg:"IP 45.33.32.156 blocked by gateway",  time:"15 min ago", sev:"HIGH",    read:false},
-  {id:3, type:"SYSTEM",   title:"Redis memory at 78%",            msg:"Consider scaling Redis cluster",       time:"32 min ago", sev:"MED",     read:false},
-  {id:4, type:"BILLING",  title:"Invoice INV-2024-006 due soon",  msg:"₹49,999 due in 3 days",               time:"1 hr ago",   sev:"LOW",     read:true},
-  {id:5, type:"DELAY",    title:"AI-101 boarding started",        msg:"Gate A1 — All passengers notified",   time:"1 hr ago",   sev:"INFO",    read:true},
-  {id:6, type:"SYSTEM",   title:"ML service prediction complete", msg:"156 delay predictions processed",     time:"2 hr ago",   sev:"INFO",    read:true},
-  {id:7, type:"BILLING",  title:"Payment received",               msg:"₹1,49,999 from DEL airport",          time:"3 hr ago",   sev:"SUCCESS", read:true},
-];
+type Alert = { id: string; type: string; title: string; msg: string; time: string; sev: string; read: boolean };
+const READ_KEY = "aerobase.alerts.read";
+const loadRead = (): string[] => { try { return JSON.parse(localStorage.getItem(READ_KEY) || "[]"); } catch { return []; } };
+const saveRead = (ids: string[]) => { try { localStorage.setItem(READ_KEY, JSON.stringify(ids.slice(-500))); } catch { /* storage unavailable */ } };
 
 const TYPE_ICON: Record<string, React.ReactNode> = {
   DELAY:    <Plane className="w-4 h-4"/>,
@@ -33,20 +33,39 @@ const SEV_ICON_COLOR: Record<string,string> = {
 
 export function AlertsPage() {
   const [filter, setFilter] = useState("ALL");
-  const [alerts, setAlerts] = useState(ALERTS);
+  const { flights } = useBoard(); const live = API_ENABLED && useAuthStore(x => x.source) === "backend";
+  const incidents = useCollection<any>("incidents", []).items ?? []; const maint = useCollection<any>("maintenance", []).items ?? [];
+  const [health, setHealth] = useState<any>(null); const [failed, setFailed] = useState<any[]>([]); const [readIds, setReadIds] = useState<string[]>(loadRead);
+  useEffect(() => {
+    if (!live) return; const load = () => { api.get("/health").then(r => setHealth(r.data)).catch(() => setHealth({ status: "UNREACHABLE" })); api.get("/audit/logs", { params: { action: "LOGIN_FAILED", limit: 10 } }).then(r => setFailed(r.data.logs ?? r.data ?? [])).catch(() => setFailed([])); };
+    load(); const t = setInterval(load, 30000); return () => clearInterval(t);
+  }, [live]);
+
+  const alerts: Alert[] = useMemo(() => {
+    const out: Omit<Alert, "read">[] = [];
+    for (const f of flights as any[]) {
+      if (f.status === "Delayed" || f.status === "Cancelled") out.push({ id: `fl-${f.id}-${f.status}`, type: "DELAY", title: `${f.flight} ${f.status.toLowerCase()}${f.delay ? ` by ${f.delay} min` : ""}`, msg: `${f.from}→${f.to}, gate ${f.gate || "TBA"}${f.issue ? ` · ${f.issue}` : ""}`, time: f.dep, sev: f.status === "Cancelled" || (f.delay ?? 0) >= 45 ? "HIGH" : "MED" });
+      else if (f.status === "Boarding") out.push({ id: `fl-${f.id}-boarding`, type: "DELAY", title: `${f.flight} boarding`, msg: `Gate ${f.gate || "TBA"} · ${f.to}`, time: f.dep, sev: "INFO" });
+    }
+    for (const i of incidents) if (i.status !== "Resolved" && (i.severity === "CRIT" || i.severity === "HIGH")) out.push({ id: `inc-${i.id}`, type: "SECURITY", title: i.title ?? "Incident", msg: `${i.location ?? ""} · ${i.status}`, time: (i.created_at ?? "").slice(0, 16).replace("T", " "), sev: "HIGH" });
+    for (const m of maint) if (m.status !== "Completed" && m.type === "AOG") out.push({ id: `mx-${m.id}`, type: "SYSTEM", title: `AOG: ${m.aircraft ?? "aircraft"}`, msg: m.desc ?? "", time: (m.created_at ?? "").slice(0, 16).replace("T", " "), sev: "HIGH" });
+    if (health) for (const k of ["database", "redis", "ai_engine"]) if (health[k] === "DOWN") out.push({ id: `sys-${k}`, type: "SYSTEM", title: `${k.replace("_", " ")} is down`, msg: k === "database" ? "The API cannot serve data" : "Dependent features run in degraded mode", time: "now", sev: k === "database" ? "HIGH" : "MED" });
+    for (const l of failed) out.push({ id: `sec-${l.id ?? l.created_at}`, type: "SECURITY", title: "Failed login attempt", msg: `${l.ip_address ?? l.ip ?? "unknown IP"}`, time: String(l.created_at ?? "").slice(0, 16).replace("T", " "), sev: "LOW" });
+    const seen = new Set<string>(); return out.filter(a => !seen.has(a.id) && seen.add(a.id)).map(a => ({ ...a, read: readIds.includes(a.id) }));
+  }, [flights, incidents, maint, health, failed, readIds]);
 
   const filtered = filter==="ALL" ? alerts : alerts.filter(a=>a.type===filter);
   const unread   = alerts.filter(a=>!a.read).length;
 
-  const markRead = (id:number) => setAlerts(prev=>prev.map(a=>a.id===id?{...a,read:true}:a));
-  const markAllRead = () => setAlerts(prev=>prev.map(a=>({...a,read:true})));
+  const markRead = (id:string) => setReadIds(prev => { const n = [...prev, id]; saveRead(n); return n; });
+  const markAllRead = () => setReadIds(prev => { const n = [...prev, ...alerts.map(a => a.id)]; saveRead(n); return n; });
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-white">Alerts & Notifications</h1>
-          <p className="text-slate-400 text-sm mt-0.5">Real-time system alerts</p>
+          <p className="text-slate-400 text-sm mt-0.5">Live alerts from flights, incidents, maintenance and system health</p>
         </div>
         <div className="flex items-center gap-3">
           {unread>0 && (
@@ -63,7 +82,7 @@ export function AlertsPage() {
 
       {/* Filter */}
       <div className="flex gap-2 flex-wrap">
-        {["ALL","DELAY","SECURITY","SYSTEM","BILLING"].map(f=>(
+        {["ALL","DELAY","SECURITY","SYSTEM"].map(f=>(
           <button key={f} onClick={()=>setFilter(f)}
             className={`px-4 py-2 rounded-xl text-xs font-medium transition-all border ${
               filter===f

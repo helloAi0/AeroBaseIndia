@@ -1,6 +1,7 @@
 #include "NotificationController.h"
 #include "../notifications/EmailService.h"
 #include "../middleware/AdminAuth.h"
+#include "../middleware/JwtIdentity.h"
 #include <json/json.h>
 
 using namespace drogon;
@@ -22,7 +23,7 @@ void NotificationController::sendEmail(
     p.subject  = (*json).get("subject",  "AeroBase Notification").asString();
     p.body     = (*json).get("body",     "").asString();
     p.type     = (*json).get("type",     "GENERAL").asString();
-    p.tenantId = req->getHeader("X-Tenant-ID");
+    { jwtid::Identity id; jwtid::identify(req, id); p.tenantId = id.tenant; }
 
     if (p.to.empty()) {
         Json::Value e; e["error"] = "Missing 'to' field";
@@ -70,7 +71,7 @@ void NotificationController::testDelay(
     std::string to     = json ? (*json).get("to","test@aerobase.in").asString() : "test@aerobase.in";
     std::string flight = json ? (*json).get("flight","AI-202").asString() : "AI-202";
     int         delay  = json ? (*json).get("delay_mins",45).asInt() : 45;
-    std::string tenant = req->getHeader("X-Tenant-ID");
+    std::string tenant; { jwtid::Identity id; jwtid::identify(req, id); tenant = id.tenant; }
 
     EmailService::sendDelayAlert(to, flight, delay, tenant);
 
@@ -92,7 +93,7 @@ void NotificationController::testBilling(
                           : "billing@aerobase.in";
     std::string id = json ? (*json).get("invoice_id","INV-001").asString() : "INV-001";
     double    amt  = json ? (*json).get("amount",49999.0).asDouble() : 49999.0;
-    std::string tenant = req->getHeader("X-Tenant-ID");
+    std::string tenant; { jwtid::Identity id; jwtid::identify(req, id); tenant = id.tenant; }
 
     EmailService::sendBillingInvoice(to, id, amt, tenant);
 

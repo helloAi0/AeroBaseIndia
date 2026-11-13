@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Plus } from "lucide-react";
 import { useBoard } from "../../hooks/useBoard";
 import { useAirport } from "../../hooks/useAirport";
@@ -15,11 +15,15 @@ export function FlightScheduler() {
   const [date, setDate] = useState(today());
   const [f, setF] = useState({ flight_number: "", origin: ap.code, destination: "", dep_time: "09:00", gate: "", terminal: "T3", aircraft: "A320neo", passengers: "150" });
   const [msg, setMsg] = useState<{ ok: boolean; t: string } | null>(null); const [busy, setBusy] = useState(false);
+  const [airports, setAirports] = useState<{ iata: string; city: string }[]>([]); const [types, setTypes] = useState<{ type: string; seats: number }[]>([]);
+  useEffect(() => { if (!sourceLive) return; api.get("/api/reference/airports").then(r => setAirports(r.data.airports ?? [])).catch(() => {}); api.get("/api/reference/aircraft").then(r => setTypes(r.data.aircraft ?? [])).catch(() => {}); }, [sourceLive]);
   const days = useMemo(() => Array.from({ length: 7 }, (_, i) => new Date(Date.now() + i * 864e5).toISOString().slice(0, 10)), []);
   const rows = flights.filter(x => ((x as any).date || today()) === date).sort((a, b) => a.dep.localeCompare(b.dep));
 
   const add = async (e: React.FormEvent) => {
     e.preventDefault(); setMsg(null);
+    const known = new Set(airports.map(a => a.iata));
+    if (known.size && (!known.has(f.origin.toUpperCase()) || !known.has(f.destination.toUpperCase()))) return setMsg({ ok: false, t: "Pick origin and destination from the airport list (3-letter IATA codes)." });
     if (!sourceLive) return setMsg({ ok: false, t: "Adding flights needs the live backend." });
     setBusy(true);
     try {
@@ -33,14 +37,15 @@ export function FlightScheduler() {
     <div className="space-y-6">
       <PageHead title="Flight Scheduler" sub={`${ap.name} · ${live ? "live schedule" : "demo schedule"}`} />
       <div className="flex gap-2 flex-wrap">{days.map(d => <button key={d} onClick={() => setDate(d)} className={`px-3 py-2 rounded-xl text-xs border ${date === d ? "bg-sky-500 text-white border-sky-500" : "bg-navy-800 text-slate-300 border-navy-600"}`}>{new Date(d + "T00:00").toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short" })}</button>)}</div>
-      <Card><form onSubmit={add} className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-8 gap-3">
+      <Card><datalist id="ap-list">{airports.map(a => <option key={a.iata} value={a.iata}>{a.city}</option>)}</datalist><datalist id="ac-list">{types.map(t => <option key={t.type} value={t.type}>{t.seats} seats</option>)}</datalist>
+      <form onSubmit={add} className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-8 gap-3">
         <input className={inp} placeholder="Flight AI-101" value={f.flight_number} onChange={e => setF({ ...f, flight_number: e.target.value })} aria-label="Flight number" required />
-        <input className={inp} placeholder="From" value={f.origin} onChange={e => setF({ ...f, origin: e.target.value })} aria-label="Origin" required maxLength={4} />
-        <input className={inp} placeholder="To" value={f.destination} onChange={e => setF({ ...f, destination: e.target.value })} aria-label="Destination" required maxLength={4} />
+        <input className={inp} placeholder="From" value={f.origin} onChange={e => setF({ ...f, origin: e.target.value })} aria-label="Origin" list="ap-list" required maxLength={4} />
+        <input className={inp} placeholder="To" value={f.destination} onChange={e => setF({ ...f, destination: e.target.value })} aria-label="Destination" list="ap-list" required maxLength={4} />
         <input className={inp} type="time" value={f.dep_time} onChange={e => setF({ ...f, dep_time: e.target.value })} aria-label="Departure time" required />
         <input className={inp} placeholder="Gate" value={f.gate} onChange={e => setF({ ...f, gate: e.target.value })} aria-label="Gate" maxLength={10} />
         <select className={inp} value={f.terminal} onChange={e => setF({ ...f, terminal: e.target.value })} aria-label="Terminal">{["T1", "T2", "T3"].map(t => <option key={t}>{t}</option>)}</select>
-        <input className={inp} placeholder="Aircraft" value={f.aircraft} onChange={e => setF({ ...f, aircraft: e.target.value })} aria-label="Aircraft" />
+        <input className={inp} placeholder="Aircraft" value={f.aircraft} onChange={e => setF({ ...f, aircraft: e.target.value })} aria-label="Aircraft" list="ac-list" />
         <button disabled={busy} className="flex items-center justify-center gap-1 px-3 py-2 rounded-lg bg-sky-500 disabled:opacity-50 text-white text-sm font-semibold"><Plus className="w-4 h-4" />Add</button>
       </form>{msg && <div className={`mt-3 text-xs ${msg.ok ? "text-green-400" : "text-red-400"}`}>{msg.t}</div>}</Card>
       {rows.length === 0 ? <Empty>No flights scheduled for this day.</Empty> :

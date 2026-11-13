@@ -1,27 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
+import { useSettings } from "../../hooks/useSettings";
+import { useAirport } from "../../hooks/useAirport";
 // FIXED: Re-added missing icon tokens to match potential menu configurations
 import { Bell, Database, Palette, Globe, Save, CheckCircle } from "lucide-react";
 
 export function SettingsPage() {
-  const [saved, setSaved] = useState(false);
-  const [form, setForm] = useState({
-    airportName:"Delhi International Airport",
-    airportCode:"DEL",
-    timezone:"Asia/Kolkata",
-    currency:"INR",
-    emailAlerts:true,
-    delayAlerts:true,
-    securityAlerts:true,
-    billingAlerts:false,
-    theme:"dark",
-    language:"en",
-    refreshInterval:"10",
+  const ap = useAirport();
+  const { values: form, setValues: setForm, save, saved, error, live } = useSettings("general", {
+    airportName: ap.name, airportCode: ap.code, timezone: "Asia/Kolkata", currency: "INR",
+    emailAlerts: true, delayAlerts: true, securityAlerts: true, billingAlerts: false, theme: "dark", language: "en", refreshInterval: "10",
   });
-
-  const save = () => {
-    setSaved(true);
-    setTimeout(()=>setSaved(false), 2000);
-  };
 
   const Section = ({title,icon,children}:{title:string;icon:React.ReactNode;children:React.ReactNode}) => (
     <div className="bg-navy-800 rounded-2xl p-6 border border-navy-600">
@@ -52,9 +40,9 @@ export function SettingsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-white">Settings</h1>
-          <p className="text-slate-400 text-sm mt-0.5">Airport configuration & preferences</p>
+          <p className="text-slate-400 text-sm mt-0.5">Airport configuration & preferences{live ? " · saved to the server" : " · demo mode (not saved)"}</p>{error && <p className="text-red-400 text-xs mt-1">{error}</p>}
         </div>
-        <button onClick={save}
+        <button onClick={() => void save()}
           className="flex items-center gap-2 bg-sky-500 hover:bg-sky-600 text-white px-5 py-2.5 rounded-xl text-sm font-medium transition-colors">
           {saved ? <CheckCircle className="w-4 h-4"/> : <Save className="w-4 h-4"/>}
           {saved ? "Saved!" : "Save Changes"}

@@ -10,6 +10,7 @@ public:
         ADD_METHOD_TO(PaymentController::webhookRazorpay,"/payments/webhook/razorpay",Post);
         ADD_METHOD_TO(PaymentController::webhookStripe, "/payments/webhook/stripe",  Post);
         ADD_METHOD_TO(PaymentController::listOrders,    "/payments/orders",          Get);
+        ADD_METHOD_TO(PaymentController::config,        "/payments/config",          Get);
     METHOD_LIST_END
 
     void createOrder(const HttpRequestPtr& req,
@@ -23,4 +24,6 @@ public:
                        std::function<void(const HttpResponsePtr&)>&& cb);
     void listOrders(const HttpRequestPtr& req,
                     std::function<void(const HttpResponsePtr&)>&& cb);
+    void config(const HttpRequestPtr& req,
+                std::function<void(const HttpResponsePtr&)>&& cb);
 };

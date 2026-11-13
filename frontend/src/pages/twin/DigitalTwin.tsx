@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useWeather } from "../../hooks/useWeather";
 import { useQuery } from "@tanstack/react-query";
 import { fetchFlights } from "../../api/client";
 import { lazy, Suspense } from "react";
@@ -12,20 +13,17 @@ const TERMINALS = [
   { id:"T3", x:540, y:80,  w:200, h:120, gates:["C1","C2","D1","D2"], color:"#8b5cf6" },
 ];
 
-const GATE_STATUS = [
-  {g:"A1",status:"occupied", flight:"AI-101"},
-  {g:"A2",status:"available"},
-  {g:"A3",status:"boarding",  flight:"6E-505"},
-  {g:"A4",status:"delayed",   flight:"UK-303"},
-  {g:"B1",status:"occupied",  flight:"SG-404"},
-  {g:"B2",status:"cleaning"},
-  {g:"B3",status:"occupied",  flight:"IX-202"},
-  {g:"B4",status:"available"},
-  {g:"C1",status:"boarding",  flight:"AI-707"},
-  {g:"C2",status:"delayed",   flight:"6E-888"},
-  {g:"D1",status:"available"},
-  {g:"D2",status:"occupied",  flight:"SG-101"},
-];
+type GateState = { g: string; status: string; flight?: string };
+// Gate states are derived from the live board: a flight boarding/delayed at the gate, or due within 90 minutes, occupies it.
+const GATE_STATUS: GateState[] = TERMINALS.flatMap(t => t.gates.map(g => ({ g, status: "available" } as GateState)));
+function refreshGates(flights: any[]) {
+  const nowMin = new Date().getHours() * 60 + new Date().getMinutes();
+  for (const gs of GATE_STATUS) {
+    gs.status = "available"; delete gs.flight;
+    const cand = flights.filter(f => f.gate === gs.g && f.status !== "Departed" && f.status !== "Cancelled").map(f => ({ f, d: (() => { const [h, m] = String(f.dep ?? "00:00").split(":").map(Number); return h * 60 + m - nowMin; })() })).filter(x => x.f.status === "Boarding" || x.f.status === "Delayed" || (x.d > -30 && x.d <= 90)).sort((a, b) => a.d - b.d)[0];
+    if (cand) { gs.flight = cand.f.flight; gs.status = cand.f.status === "Boarding" ? "boarding" : cand.f.status === "Delayed" ? "delayed" : "occupied"; }
+  }
+}
 
 const GATE_COLOR: Record<string,string> = {
   occupied:"#0ea5e9", available:"#22c55e",
@@ -158,21 +156,21 @@ function AirportMap({flights}:{flights:any[]}) {
 
 export function DigitalTwin() {
   const {data:flights=[]} = useQuery({queryKey:["flights"],queryFn:fetchFlights,refetchInterval:8000});
-  const fl = flights as any[];
+  const fl = flights as any[]; refreshGates(fl);
   const [view, setView] = useState<"2D"|"3D">("2D");
 
-  const [weather] = useState({temp:32, wind:14, visibility:8, humidity:65});
+  const wx = useWeather(); const weather = { temp: wx?.temp ?? "–", wind: wx?.wind ?? "–", visibility: wx?.visibility ?? "–", humidity: wx?.humidity ?? "–" };
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-white">Digital Twin</h1>
-          <p className="text-slate-400 text-sm mt-0.5">Live airport simulation — Delhi IGI</p>
+          <p className="text-slate-400 text-sm mt-0.5">Live gate and flight view for this airport</p>
         </div>
         <div className="flex items-center gap-2 bg-green-500/10 border border-green-500/20 px-4 py-2 rounded-xl">
           <Activity className="w-4 h-4 text-green-400"/>
-          <span className="text-sm text-green-400 font-medium">Simulation Active</span>
+          <span className="text-sm text-green-400 font-medium">Live</span>
         </div>
       </div>
 

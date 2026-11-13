@@ -55,6 +55,7 @@ const ALL_NAV = [
   { group:"Passenger", roles:["superadmin","airport_admin","staff","passenger"], items:[
     {id:"passenger",     label:"Passengers",   icon:Users},
     {id:"journey",       label:"My Journey",   icon:Route},
+    {id:"biometric",     label:"Biometric Check-in",icon:ScanFace},
     {id:"lostfound",     label:"Lost & Found", icon:SearchCheck},
     {id:"map",           label:"Airport Map",  icon:Map},
   ]},

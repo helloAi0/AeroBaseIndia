@@ -40,6 +40,9 @@ class RecordsController : public HttpController<RecordsController> {
             {"staff",         {OPS, ADMIN, ADMIN}},
             {"actions",       {OPS, OPS, ADMIN}},          // approved autopilot / playbook actions
             {"announcements", {OPS, OPS, ADMIN}},
+            {"settings",      {ADMIN, ADMIN, ADMIN}},
+            {"stores",        {[] { Roles r = OPS; r.insert("RETAILER"); r.insert("PASSENGER"); r.insert("AIRLINE_OPS"); return r; }(), ADMIN, ADMIN}},
+            {"passes",        {[] { Roles r = ADMIN; r.insert("PASSENGER"); return r; }(), {"PASSENGER", "AIRPORT_ADMIN", "SUPER_ADMIN"}, ADMIN, true}},
             {"bids",          {[] { Roles r = ADMIN; r.insert("RETAILER"); return r; }(), {"RETAILER"}, ADMIN, true}},
         };
         return P;
@@ -94,8 +97,10 @@ public:
             if (!it->second.create.count(w.role)) return fail(cb, "Forbidden", k403Forbidden);
             auto j = req->getJsonObject(); if (!j || !j->isObject()) return fail(cb, "JSON object required", k400BadRequest);
             Json::Value data = *j; data.removeMember("id"); data.removeMember("created_at");
+            if (coll == "passes" && !(w.role == "SUPER_ADMIN" || w.role == "AIRPORT_ADMIN")) data["status"] = "Requested";   // passengers cannot self-approve
             const std::string js = dump(data);
             if (js.size() > 8192 || js.size() < 3) return fail(cb, "Record too large or empty", k400BadRequest);
+            if (js.find("\\u0000") != std::string::npos) return fail(cb, "Text contains an invalid character", k400BadRequest);
             auto conn = DatabaseManager::getConnection(); pqxx::work t(*conn);
             auto r = t.exec_params("INSERT INTO app_records (tenant_id, collection, data, created_by) VALUES ($1::uuid, $2, $3::jsonb, $4::uuid) "
                                    "RETURNING id::text, data::text, to_char(created_at,'YYYY-MM-DD\"T\"HH24:MI:SS')", w.tenant, coll, js, w.user);
@@ -114,6 +119,7 @@ public:
             auto j = req->getJsonObject(); if (!j || !j->isObject()) return fail(cb, "JSON object required", k400BadRequest);
             Json::Value data = *j; data.removeMember("id"); data.removeMember("created_at");
             const std::string js = dump(data); if (js.size() > 8192) return fail(cb, "Record too large", k400BadRequest);
+            if (js.find("\\u0000") != std::string::npos) return fail(cb, "Text contains an invalid character", k400BadRequest);
             auto conn = DatabaseManager::getConnection(); pqxx::work t(*conn);
             auto r = t.exec_params("UPDATE app_records SET data = data || $4::jsonb, updated_at = CURRENT_TIMESTAMP WHERE id = $1::uuid AND tenant_id = $2::uuid AND collection = $3 "
                                    "RETURNING id::text, data::text, to_char(created_at,'YYYY-MM-DD\"T\"HH24:MI:SS')", id, w.tenant, coll, js);

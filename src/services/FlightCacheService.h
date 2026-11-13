@@ -10,6 +10,7 @@ public:
                                    const std::string& status,
                                    const std::string& gate) {
         auto redis = RedisManager::getConnection();
+        if (!redis) return;
 
         std::string key = "flight:" + flightId;
 
@@ -23,6 +24,7 @@ public:
     // New: Retrieve status with safety check
     static std::string getFlightStatus(const std::string& flightId) {
         auto redis = RedisManager::getConnection();
+        if (!redis) return "";
 
         std::string key = "flight:" + flightId;
 

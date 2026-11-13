@@ -31,3 +31,17 @@ Still simulated or unverified (be honest in demos):
 - Map: static floor plan.
 - Ops tools (autopilot, what-if, heatmap): planning assumptions, not trained models, until real telemetry exists.
 - Not verifiable in the build sandbox: live SMS, WhatsApp, email delivery, Docker image build, GPU 3D, Open-Meteo.
+
+## Update 3: everything runs on real data
+- Biometric check-in: real passkeys (WebAuthn). Fingerprint/face/PIN stays on the device; the server verifies a signed challenge (ES256/RS256) and records the check-in. Tested with a browser virtual authenticator.
+- Payments: real Razorpay / Stripe order creation, signed webhooks mark orders PAID. Needs your gateway keys in the environment (see below).
+- WhatsApp: real Meta Cloud API webhook (`/webhooks/whatsapp`), replies from the live flight board. Needs Meta app credentials.
+- Reference data: 56 airports, 19 airlines, 12 aircraft types; full-day schedules generated from real airline networks, flight times from great-circle distance.
+- Reports (CSV from live data), Settings & Branding (saved per airport), Retail units, Passes, Integrations status, Alerts, Event feed, GraphQL, Digital Twin (gates from live flights, weather from Open-Meteo) all use live data.
+- Redis connection now configurable (REDIS_HOST/PORT/PASSWORD); CORS allows PATCH.
+
+### Environment variables for external services
+RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET, RAZORPAY_WEBHOOK_SECRET · STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET ·
+WHATSAPP_VERIFY_TOKEN, WHATSAPP_APP_SECRET, WHATSAPP_TOKEN, WHATSAPP_PHONE_NUMBER_ID, WHATSAPP_AIRPORT_CODE ·
+WEBAUTHN_ORIGINS (your frontend origin(s), comma separated) · REDIS_HOST, REDIS_PORT, REDIS_PASSWORD.
+Add the ones you use to `deploy/.env.local` (local) or your hosting dashboard (Render/Vercel). Never commit them.

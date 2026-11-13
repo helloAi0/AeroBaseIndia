@@ -1,30 +1,30 @@
 #include "PaymentService.h"
 #include "../config/DatabaseManager.h"
-#include "../notifications/EmailService.h"
 #include "../core/Logger.h"
+#include "../core/HttpOut.h"
 #include <pqxx/pqxx>
 #include <openssl/hmac.h>
-#include <openssl/sha.h>
+#include <openssl/crypto.h>
 #include <sstream>
 #include <iomanip>
 #include <random>
 #include <cstdlib>
+#include <cmath>
 #include <chrono>
+#include <ctime>
 
-// ── Config from environment ───────────────────────────────────────────────────
-static std::string getEnv(const char* k, const std::string& fb) {
+// ── Config from environment (read at call time; no demo defaults) ─────────────
+static std::string env(const char* k, const std::string& fb = "") {
     const char* v = std::getenv(k);
-    return v ? std::string(v) : fb;
+    return (v && *v) ? std::string(v) : fb;
 }
+static std::string razorpaySecret()   { return env("RAZORPAY_KEY_SECRET", env("RAZORPAY_SECRET")); }
+static std::string razorpayWebhook()  { return env("RAZORPAY_WEBHOOK_SECRET", razorpaySecret()); }
+static std::string stripeKey()        { return env("STRIPE_SECRET_KEY"); }
 
-static const std::string RAZORPAY_KEY_ID =
-    getEnv("RAZORPAY_KEY_ID",    "rzp_test_DEMO_KEY");
-static const std::string RAZORPAY_SECRET =
-    getEnv("RAZORPAY_SECRET",    "razorpay_test_secret");
-static const std::string STRIPE_SECRET_KEY =
-    getEnv("STRIPE_SECRET_KEY",  "sk_test_DEMO_KEY");
-static const std::string STRIPE_WEBHOOK_SECRET =
-    getEnv("STRIPE_WEBHOOK_SECRET", "whsec_DEMO");
+std::string PaymentService::razorpayKeyId()     { return env("RAZORPAY_KEY_ID"); }
+bool        PaymentService::razorpayConfigured() { return !razorpayKeyId().empty() && !razorpaySecret().empty(); }
+bool        PaymentService::stripeConfigured()   { return !stripeKey().empty(); }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 std::string PaymentService::generateOrderId() {
@@ -35,26 +35,23 @@ std::string PaymentService::generateOrderId() {
     return ss.str().substr(0, 20);
 }
 
-std::string PaymentService::hmacSHA256(const std::string& key,
-                                        const std::string& data) {
+std::string PaymentService::hmacSHA256(const std::string& key, const std::string& data) {
     unsigned char digest[EVP_MAX_MD_SIZE];
     unsigned int  len = 0;
-    HMAC(EVP_sha256(),
-         key.c_str(),  (int)key.size(),
-         reinterpret_cast<const unsigned char*>(data.c_str()),
-         data.size(), digest, &len);
+    HMAC(EVP_sha256(), key.c_str(), (int)key.size(),
+         reinterpret_cast<const unsigned char*>(data.c_str()), data.size(), digest, &len);
     std::ostringstream ss;
-    for (unsigned int i = 0; i < len; i++)
-        ss << std::hex << std::setw(2) << std::setfill('0') << (int)digest[i];
+    for (unsigned int i = 0; i < len; i++) ss << std::hex << std::setw(2) << std::setfill('0') << (int)digest[i];
     return ss.str();
 }
 
+static bool constEq(const std::string& a, const std::string& b) {
+    return a.size() == b.size() && CRYPTO_memcmp(a.data(), b.data(), a.size()) == 0;
+}
+
 // ── Create Order ──────────────────────────────────────────────────────────────
-PaymentOrder PaymentService::createOrder(const std::string& tenantId,
-                                          const std::string& invoiceId,
-                                          double             amount,
-                                          const std::string& currency,
-                                          PaymentGateway     gateway) {
+PaymentOrder PaymentService::createOrder(const std::string& tenantId, const std::string& invoiceId, double amount,
+                                         const std::string& currency, PaymentGateway gateway) {
     PaymentOrder order;
     order.orderId   = generateOrderId();
     order.tenantId  = tenantId;
@@ -63,148 +60,157 @@ PaymentOrder PaymentService::createOrder(const std::string& tenantId,
     order.currency  = currency;
     order.gateway   = (gateway == PaymentGateway::RAZORPAY) ? "RAZORPAY" : "STRIPE";
 
-    // Simulate gateway API call
-    // In production: make HTTP call to Razorpay/Stripe API
-    if (gateway == PaymentGateway::RAZORPAY) {
-        order = createRazorpayOrder(order);
-    } else {
-        order = createStripeOrder(order);
-    }
+    order = (gateway == PaymentGateway::RAZORPAY) ? createRazorpayOrder(order) : createStripeOrder(order);
+    if (!order.error.empty()) return order;
 
-    // Persist to DB
     try {
         auto conn = DatabaseManager::getConnection();
         pqxx::work txn(*conn);
         txn.exec_params(
-            "INSERT INTO payment_orders(id, tenant_id, invoice_id, amount, "
-            "currency, status, gateway, gateway_ref, checkout_url) "
-            "VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9) "
-            "ON CONFLICT(id) DO NOTHING",
-            order.orderId, order.tenantId, order.invoiceId,
-            order.amount,  order.currency,  order.status,
+            "INSERT INTO payment_orders(id, tenant_id, invoice_id, amount, currency, status, gateway, gateway_ref, checkout_url) "
+            "VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9) ON CONFLICT(id) DO NOTHING",
+            order.orderId, order.tenantId, order.invoiceId, order.amount, order.currency, order.status,
             order.gateway, order.gatewayRef, order.checkoutUrl);
         txn.commit();
     } catch (const std::exception& e) {
         core::Logger::error("[Payment] DB error: " + std::string(e.what()));
+        order.error = "Could not store the order"; order.httpStatus = 500;
+        return order;
     }
-
-    core::Logger::info("[Payment] Order created: " + order.orderId +
-                       " amount=" + std::to_string(order.amount) +
-                       " gateway=" + order.gateway);
+    core::Logger::info("[Payment] Order created: " + order.orderId + " gateway=" + order.gateway);
     return order;
 }
 
-PaymentOrder PaymentService::createRazorpayOrder(const PaymentOrder& base_order) {
-    PaymentOrder order = base_order;
-    // Razorpay order simulation
-    // Production: POST https://api.razorpay.com/v1/orders
-    // with Basic Auth: RAZORPAY_KEY_ID:RAZORPAY_SECRET
-    order.gatewayRef  = "rzp_order_" + order.orderId;
-    order.checkoutUrl = "https://api.razorpay.com/v1/checkout/embedded"
-                        "?key=" + RAZORPAY_KEY_ID +
-                        "&order_id=" + order.gatewayRef +
-                        "&amount=" + std::to_string((long)(order.amount * 100)) +
-                        "&currency=" + order.currency +
-                        "&name=AeroBase+India"
-                        "&description=Invoice+" + order.invoiceId;
+// Real Razorpay Orders API: POST /v1/orders (Basic auth key_id:key_secret), amount in paise.
+PaymentOrder PaymentService::createRazorpayOrder(const PaymentOrder& base) {
+    PaymentOrder order = base;
+    if (!razorpayConfigured()) { order.error = "Payment gateway not configured"; order.httpStatus = 503; return order; }
+    Json::Value body;
+    body["amount"] = static_cast<Json::Int64>(std::llround(order.amount * 100.0));
+    body["currency"] = order.currency;
+    body["receipt"] = order.orderId;
+    Json::Value notes; notes["invoice_id"] = order.invoiceId; body["notes"] = notes;
+    Json::StreamWriterBuilder w; w["indentation"] = "";
+    auto r = httpout::post(env("RAZORPAY_API_BASE", "https://api.razorpay.com"), "/v1/orders", "application/json",
+                           Json::writeString(w, body),
+                           {{"Authorization", "Basic " + httpout::base64(razorpayKeyId() + ":" + razorpaySecret())}});
+    if (!r.ok) { order.error = "Payment gateway unreachable"; order.httpStatus = 502; return order; }
+    Json::Value j; Json::CharReaderBuilder rb; std::string err; std::unique_ptr<Json::CharReader> rd(rb.newCharReader());
+    if (r.status < 200 || r.status >= 300 || !rd->parse(r.body.data(), r.body.data() + r.body.size(), &j, &err) || !j.isMember("id")) {
+        core::Logger::warn("[Payment] Razorpay rejected order, status " + std::to_string(r.status));
+        order.error = "Payment gateway rejected the request"; order.httpStatus = 502; return order;
+    }
+    order.gatewayRef = j["id"].asString();
+    order.keyId = razorpayKeyId();
     order.status = "CREATED";
     return order;
 }
 
-PaymentOrder PaymentService::createStripeOrder(const PaymentOrder& base_order) {
-    PaymentOrder order = base_order;
-    // Stripe Payment Intent simulation
-    // Production: POST https://api.stripe.com/v1/payment_intents
-    // with Bearer: STRIPE_SECRET_KEY
-    order.gatewayRef  = "pi_" + order.orderId;
-    order.checkoutUrl = "https://checkout.stripe.com/pay/"
-                        + order.gatewayRef
-                        + "?amount=" + std::to_string((long)(order.amount * 100))
-                        + "&currency=" + order.currency;
+// Real Stripe PaymentIntents API: POST /v1/payment_intents (Bearer secret key, form-encoded, smallest currency unit).
+PaymentOrder PaymentService::createStripeOrder(const PaymentOrder& base) {
+    PaymentOrder order = base;
+    if (!stripeConfigured()) { order.error = "Payment gateway not configured"; order.httpStatus = 503; return order; }
+    std::string cur = order.currency; for (auto& c : cur) c = static_cast<char>(std::tolower(c));
+    const std::string form = "amount=" + std::to_string(std::llround(order.amount * 100.0)) + "&currency=" + httpout::urlEncode(cur) +
+                             "&metadata[order_id]=" + httpout::urlEncode(order.orderId) + "&metadata[invoice_id]=" + httpout::urlEncode(order.invoiceId) +
+                             "&automatic_payment_methods[enabled]=true";
+    auto r = httpout::post(env("STRIPE_API_BASE", "https://api.stripe.com"), "/v1/payment_intents", "application/x-www-form-urlencoded", form,
+                           {{"Authorization", "Bearer " + stripeKey()}, {"Idempotency-Key", order.orderId}});
+    if (!r.ok) { order.error = "Payment gateway unreachable"; order.httpStatus = 502; return order; }
+    Json::Value j; Json::CharReaderBuilder rb; std::string err; std::unique_ptr<Json::CharReader> rd(rb.newCharReader());
+    if (r.status < 200 || r.status >= 300 || !rd->parse(r.body.data(), r.body.data() + r.body.size(), &j, &err) || !j.isMember("id")) {
+        core::Logger::warn("[Payment] Stripe rejected order, status " + std::to_string(r.status));
+        order.error = "Payment gateway rejected the request"; order.httpStatus = 502; return order;
+    }
+    order.gatewayRef = j["id"].asString();
+    order.clientSecret = j.get("client_secret", "").asString();
     order.status = "CREATED";
     return order;
 }
 
-// ── Webhook Verification ──────────────────────────────────────────────────────
-PaymentResult PaymentService::verifyWebhook(const std::string& payload,
-                                             const std::string& signature,
-                                             PaymentGateway     gateway) {
+// ── Webhook verification ──────────────────────────────────────────────────────
+PaymentResult PaymentService::verifyWebhook(const std::string& payload, const std::string& signature, PaymentGateway gateway) {
     PaymentResult result;
-    bool valid = (gateway == PaymentGateway::RAZORPAY)
-        ? verifyRazorpaySignature(payload, signature)
-        : verifyStripeSignature(payload, signature);
+    const bool valid = (gateway == PaymentGateway::RAZORPAY) ? verifyRazorpaySignature(payload, signature) : verifyStripeSignature(payload, signature);
+    if (!valid) { result.error = "Invalid webhook signature"; core::Logger::warn("[Payment] Invalid webhook signature"); return result; }
 
-    if (!valid) {
-        result.success = false;
-        result.error   = "Invalid webhook signature";
-        core::Logger::warn("[Payment] Invalid webhook signature");
-        return result;
+    Json::Value j; Json::CharReaderBuilder rb; std::string err; std::unique_ptr<Json::CharReader> rd(rb.newCharReader());
+    if (!rd->parse(payload.data(), payload.data() + payload.size(), &j, &err) || !j.isObject()) { result.error = "Invalid payload"; return result; }
+    result.success = true;
+    if (gateway == PaymentGateway::RAZORPAY) {
+        const std::string ev = j.get("event", "").asString();
+        const auto& ent = j["payload"]["payment"]["entity"];
+        result.paid = (ev == "payment.captured" || ev == "order.paid");
+        result.gatewayPaymentId = ent.get("id", "").asString();
+        result.gatewayRef = ent.get("order_id", j["payload"]["order"]["entity"].get("id", "").asString()).asString();
+    } else {
+        const std::string ev = j.get("type", "").asString();
+        const auto& obj = j["data"]["object"];
+        result.paid = (ev == "payment_intent.succeeded");
+        result.gatewayPaymentId = obj.get("latest_charge", obj.get("id", "").asString()).asString();
+        result.gatewayRef = obj.get("id", "").asString();
     }
-
-    // Parse payment ID from payload (simplified)
-    result.success         = true;
-    result.status          = "PAID";
-    result.gatewayPaymentId = "pay_" + std::to_string(
-        std::chrono::system_clock::now().time_since_epoch().count());
-
-    core::Logger::info("[Payment] Webhook verified: " + result.gatewayPaymentId);
+    result.status = result.paid ? "PAID" : "IGNORED";
+    if (result.paid && !result.gatewayRef.empty()) markPaidByGatewayRef(result.gatewayRef);
     return result;
 }
 
-bool PaymentService::verifyRazorpaySignature(const std::string& payload,
-                                              const std::string& signature) {
-    // Razorpay: HMAC-SHA256(orderId + "|" + paymentId, RAZORPAY_SECRET)
-    std::string expected = hmacSHA256(RAZORPAY_SECRET, payload);
-    return expected == signature;
+// Razorpay webhook: hex HMAC-SHA256 of the raw body with the webhook secret. Rejected when no secret is configured.
+bool PaymentService::verifyRazorpaySignature(const std::string& payload, const std::string& signature) {
+    const std::string secret = razorpayWebhook();
+    if (secret.empty() || signature.empty()) return false;
+    return constEq(hmacSHA256(secret, payload), signature);
 }
 
-bool PaymentService::verifyStripeSignature(const std::string& payload,
-                                            const std::string& signature) {
-    // Stripe: HMAC-SHA256(timestamp + "." + payload, STRIPE_WEBHOOK_SECRET)
-    std::string expected = hmacSHA256(STRIPE_WEBHOOK_SECRET, payload);
-    return expected == signature;
+// Stripe webhook: header "t=<unix>,v1=<hex>"; v1 = HMAC-SHA256(secret, t + "." + payload); 5 minute tolerance.
+bool PaymentService::verifyStripeSignature(const std::string& payload, const std::string& header) {
+    const std::string secret = env("STRIPE_WEBHOOK_SECRET");
+    if (secret.empty() || header.empty()) return false;
+    std::string t; std::vector<std::string> v1; size_t s = 0;
+    while (s <= header.size()) {
+        size_t e = header.find(',', s); if (e == std::string::npos) e = header.size();
+        std::string part = header.substr(s, e - s); auto eq = part.find('=');
+        if (eq != std::string::npos) { auto k = part.substr(0, eq), v = part.substr(eq + 1); if (k == "t") t = v; else if (k == "v1") v1.push_back(v); }
+        s = e + 1;
+    }
+    if (t.empty() || v1.empty()) return false;
+    long long ts = 0; try { ts = std::stoll(t); } catch (...) { return false; }
+    if (std::llabs(static_cast<long long>(std::time(nullptr)) - ts) > 300) return false;
+    const std::string expected = hmacSHA256(secret, t + "." + payload);
+    for (const auto& v : v1) if (constEq(expected, v)) return true;
+    return false;
 }
 
-// ── Order Status ──────────────────────────────────────────────────────────────
-Json::Value PaymentService::getOrderStatus(const std::string& orderId) {
+// ── Order status (tenant scoped) ──────────────────────────────────────────────
+Json::Value PaymentService::getOrderStatus(const std::string& orderId, const std::string& tenantId) {
     Json::Value result;
     try {
         auto conn = DatabaseManager::getConnection();
         pqxx::read_transaction txn(*conn);
         auto r = txn.exec_params(
-            "SELECT id, tenant_id, invoice_id, amount, currency, "
-            "status, gateway, gateway_ref, checkout_url "
-            "FROM payment_orders WHERE id=$1", orderId);
+            "SELECT id, invoice_id, amount, currency, status, gateway, gateway_ref FROM payment_orders WHERE id=$1 AND tenant_id=$2", orderId, tenantId);
         if (!r.empty()) {
             result["order_id"]    = r[0][0].c_str();
-            result["tenant_id"]   = r[0][1].c_str();
-            result["invoice_id"]  = r[0][2].c_str();
-            result["amount"]      = r[0][3].as<double>();
-            result["currency"]    = r[0][4].c_str();
-            result["status"]      = r[0][5].c_str();
-            result["gateway"]     = r[0][6].c_str();
-            result["gateway_ref"] = r[0][7].c_str();
-            result["checkout_url"]= r[0][8].c_str();
+            result["invoice_id"]  = r[0][1].c_str();
+            result["amount"]      = r[0][2].as<double>();
+            result["currency"]    = r[0][3].c_str();
+            result["status"]      = r[0][4].c_str();
+            result["gateway"]     = r[0][5].c_str();
+            result["gateway_ref"] = r[0][6].c_str();
         } else {
             result["error"] = "Order not found";
         }
-    } catch (const std::exception& e) {
-        result["error"] = "Internal server error";
-    }
+    } catch (const std::exception&) { result["error"] = "Internal server error"; }
     return result;
 }
 
-bool PaymentService::markPaid(const std::string& orderId,
-                               const std::string& gatewayPaymentId) {
+bool PaymentService::markPaidByGatewayRef(const std::string& gatewayRef) {
     try {
         auto conn = DatabaseManager::getConnection();
         pqxx::work txn(*conn);
-        txn.exec_params(
-            "UPDATE payment_orders SET status='PAID', "
-            "gateway_ref=$2, paid_at=NOW() WHERE id=$1",
-            orderId, gatewayPaymentId);
+        txn.exec_params("UPDATE payment_orders SET status='PAID', paid_at=NOW() WHERE gateway_ref=$1 AND status<>'PAID'", gatewayRef);
         txn.commit();
-        core::Logger::info("[Payment] Marked PAID: " + orderId);
+        core::Logger::info("[Payment] Marked PAID: " + gatewayRef);
         return true;
     } catch (const std::exception& e) {
         core::Logger::error("[Payment] markPaid error: " + std::string(e.what()));

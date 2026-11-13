@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useBoard } from "../../hooks/useBoard";
+import { useAirport } from "../../hooks/useAirport";
 import { Search, ChevronRight, Navigation,
          ArrowRight, ArrowUp, RotateCcw } from "lucide-react";
 
@@ -191,6 +193,12 @@ export function AirportMap() {
   const [directions,setDirections] = useState<typeof DESTINATIONS[0]|null>(null);
   const [selectedZ, setSelectedZ] = useState<string|null>(null);
 
+  const { flights, live } = useBoard(); const ap = useAirport();
+  const [fq, setFq] = useState("");
+  const hits = fq.trim().length >= 2 ? flights.filter(f => f.flight.toLowerCase().includes(fq.trim().toLowerCase()) || f.to.toLowerCase().includes(fq.trim().toLowerCase())).slice(0, 5) : [];
+  const gateNow = flights.filter(f => f.gate && ["Boarding", "Scheduled", "Delayed"].includes(f.status)).sort((a, b) => a.dep.localeCompare(b.dep)).slice(0, 8);
+  const showFlight = (t: string) => { if (t === "T1" || t === "T2" || t === "T3") { setActiveT(t); setActiveF(t === "T3" ? 4 : 1); } };
+
   const terminal = FLOOR_LAYOUTS[activeT];
   const floor    = terminal[activeF] || terminal[0];
 
@@ -215,7 +223,15 @@ export function AirportMap() {
     <div className="space-y-4">
       <div>
         <h1 className="text-2xl font-bold text-white">Airport Wayfinding Map</h1>
-        <p className="text-slate-400 text-sm">Delhi Indira Gandhi International Airport (IATA: DEL) — Step-by-step directions</p>
+        <p className="text-slate-400 text-sm">{ap.name} ({ap.code}) — live gate finder and step-by-step directions. Floor plans below are the Delhi (DEL) terminals.</p>
+      </div>
+
+      <div className="bg-navy-800 border border-navy-600 rounded-2xl p-4">
+        <div className="flex items-center justify-between mb-2"><div className="text-sm font-semibold text-white">Find your flight</div><div className="text-[11px] text-slate-500">{live ? "Live board" : "Demo board"}</div></div>
+        <input value={fq} onChange={e => setFq(e.target.value)} placeholder="Flight number or destination, e.g. AI-101 or BOM" aria-label="Find your flight" className="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-sm text-white" />
+        {hits.length > 0 && <ul className="mt-2 space-y-1">{hits.map(f => <li key={f.id}><button onClick={() => showFlight(f.terminal)} className="w-full text-left text-sm bg-navy-900 hover:bg-navy-700 rounded-lg px-3 py-2 text-slate-200"><span className="font-mono text-white">{f.flight}</span> → {f.to} · departs {f.dep} · <span className="text-sky-300">Gate {f.gate || "TBA"}, {f.terminal}</span> · {f.status}</button></li>)}</ul>}
+        {fq.trim().length >= 2 && hits.length === 0 && <div className="mt-2 text-xs text-slate-500">No matching flight today.</div>}
+        {gateNow.length > 0 && <div className="mt-3 flex gap-2 overflow-x-auto pb-1">{gateNow.map(f => <div key={f.id} className="shrink-0 text-xs bg-navy-900 border border-navy-600 rounded-lg px-3 py-2"><div className="text-sky-300 font-semibold">Gate {f.gate}</div><div className="text-slate-300">{f.flight} · {f.dep}</div><div className="text-slate-500">{f.status}</div></div>)}</div>}
       </div>
 
       {/* Search */}

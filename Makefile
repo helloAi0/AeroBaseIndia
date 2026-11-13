@@ -1,4 +1,4 @@
-.PHONY: build run test clean migrate logs
+.PHONY: build run test smoke clean migrate logs
 
 build:
 	cd build && cmake .. && make -j$(nproc)
@@ -10,6 +10,9 @@ run:
 	cd ml_service && python3 app.py &
 
 test:
+	bash scripts/run-tests.sh
+
+smoke:
 	curl -s http://localhost:8080/health | python3 -m json.tool
 	curl -s http://localhost:8080/metrics | grep -v "^#"
 	curl -s http://localhost:8080/traces | python3 -m json.tool

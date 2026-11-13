@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSettings } from "../../hooks/useSettings";
 import { Palette, Upload, Eye, Save,
          CheckCircle, Globe, Smartphone } from "lucide-react";
 
@@ -12,10 +13,9 @@ const PRESETS = [
 ];
 
 export function BrandingPage() {
-  const [saved,     setSaved]   = useState(false);
   const [preview,   setPreview] = useState<"desktop"|"mobile">("desktop");
   const [activePreset, setPreset] = useState(PRESETS[0]);
-  const [custom, setCustom] = useState({
+  const { values: custom, setValues: setCustom, save: saveRemote, saved } = useSettings("branding", {
     airportName: "Delhi International Airport",
     tagline:     "Gateway to India",
     logoText:    "DEL",
@@ -29,11 +29,11 @@ export function BrandingPage() {
 
   const applyPreset = (p: typeof PRESETS[0]) => {
     setPreset(p);
-    setCustom(prev=>({...prev, primaryColor:p.primary, secondaryColor:p.secondary,
+    setCustom((prev: any)=>({...prev, primaryColor:p.primary, secondaryColor:p.secondary,
                                bgColor:p.bg, accentColor:p.accent}));
   };
 
-  const save = () => { setSaved(true); setTimeout(()=>setSaved(false),2000); };
+  const save = () => { void saveRemote(); };
 
   return (
     <div className="space-y-6">
