@@ -15,6 +15,13 @@ interface FlightRow {
   gate?: string | null;
   departure_time?: string;
   arrival_time?: string;
+  terminal?: string | null;
+  passengers?: number | null;
+  aircraft?: string | null;
+  airline?: string | null;
+  airline_code?: string | null;
+  delay_minutes?: number | null;
+  issue?: string | null;
 }
 
 const STATUSES: Flight["status"][] = ["Scheduled", "Boarding", "Departed", "Landed", "Delayed", "Cancelled"];
@@ -30,6 +37,8 @@ export function normaliseFlight(r: FlightRow, i: number): Flight {
     gate: r.gate || "—",
     departureTime: r.departure_time,
     arrivalTime: r.arrival_time,
+    terminal: r.terminal || undefined, passengers: r.passengers ?? undefined, aircraft: r.aircraft || undefined,
+    airline: r.airline || undefined, airlineCode: r.airline_code || undefined, delayMinutes: r.delay_minutes ?? undefined, issue: r.issue || undefined,
   };
 }
 

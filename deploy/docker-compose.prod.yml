@@ -50,6 +50,8 @@ services:
       REDIS_PORT: "6379"
       REDIS_PASSWORD: ${REDIS_PASSWORD}
       WEBAUTHN_ORIGINS: ${WEBAUTHN_ORIGINS:-}
+      AUTH_DEV_RETURN_RESET_LINK: ${AUTH_DEV_RETURN_RESET_LINK:-}   # local only: show the reset link when no email provider is set
+      PUBLIC_APP_URL: ${PUBLIC_APP_URL:-}
       RAZORPAY_KEY_ID: ${RAZORPAY_KEY_ID:-}
       RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET:-}
       RAZORPAY_WEBHOOK_SECRET: ${RAZORPAY_WEBHOOK_SECRET:-}
@@ -81,6 +83,8 @@ services:
       dockerfile: Dockerfile.frontend
       args:
         VITE_API_URL: ${PUBLIC_API_URL:?set PUBLIC_API_URL, e.g. https://api.example.com}
+        VITE_SHOW_DEMO_ACCOUNTS: ${SHOW_DEMO_ACCOUNTS:-false}
+        VITE_DEMO_PASSWORD: ${DEMO_PASSWORD:-}
     ports:
       - "3000:80"
     restart: unless-stopped

@@ -12,7 +12,9 @@ from datetime import date, datetime, timedelta
 
 ITER = int(os.environ.get("PASSWORD_PBKDF2_ITERATIONS", "600000"))
 HERE = os.path.dirname(os.path.abspath(__file__))
-AIRPORTS = {"DEL": "Indira Gandhi Intl", "BOM": "Mumbai CSMIA", "BLR": "Kempegowda Intl"}
+AIRPORTS = {"DEL": "Indira Gandhi Intl", "BOM": "Mumbai CSMIA", "BLR": "Kempegowda Intl", "HYD": "Rajiv Gandhi Intl", "CCU": "Netaji Subhas Chandra Bose Intl",
+            "MAA": "Chennai Intl", "COK": "Cochin Intl", "GOI": "Manohar Intl (Mopa)", "AMD": "Sardar Vallabhbhai Patel Intl", "PNQ": "Pune Intl",
+            "JAI": "Jaipur Intl", "GAU": "Lokpriya Gopinath Bordoloi Intl", "SXR": "Sheikh ul-Alam Intl (Srinagar)", "LKO": "Chaudhary Charan Singh Intl", "TRV": "Trivandrum Intl"}
 
 def hash_pw(pw):
     salt = secrets.token_bytes(16)
@@ -84,7 +86,7 @@ def main():
         psql("DELETE FROM users WHERE email LIKE 'ops@vistara.%';")
         psql("DELETE FROM flights WHERE tenant_id = (SELECT id FROM tenants WHERE airport_code = :'c') AND airline_partner_id IS NULL;", c=code)
         rows = []
-        for f in flights:
+        for f in (flights if code in ("DEL", "BOM", "BLR") else []):
             o, d = (swap(f["from"], code), swap(f["to"], code)) if code != "DEL" else (f["from"], f["to"])
             if code != "DEL" and "DEL" not in (f["from"], f["to"]): continue
             dep = datetime.combine(today, datetime.strptime(f["dep"], "%H:%M").time())
@@ -102,9 +104,9 @@ def main():
              ("Capt. Sharma", "captain@airindia.{a}.aerobase.in", "PILOT", "AI"), ("Starbucks", "shop@{a}.aerobase.in", "RETAILER", "starbucks"), ("Demo Passenger", "passenger@{a}.aerobase.in", "PASSENGER", ""), ("Platform Owner", "owner@aerobase.in", "SUPER_ADMIN", "")]
     ph = hash_pw(pw)
     for a in AIRPORTS:
-        for n, e, role, org in users:
-            psql("INSERT INTO users (id,tenant_id,full_name,email,password_hash,role,org_code) SELECT gen_random_uuid(),id,:'n',:'e',:'h',:'r',NULLIF(:'o','') FROM tenants WHERE airport_code=:'a' "
-                 "ON CONFLICT (email) DO UPDATE SET password_hash=EXCLUDED.password_hash, role=EXCLUDED.role, org_code=EXCLUDED.org_code;", n=n, e=e.format(a=a.lower()), h=ph, r=role, o=org, a=a)
+        vals = ",".join("(gen_random_uuid(),t.id,'%s','%s','%s','%s',%s)" % (n.replace("'", "''"), e.format(a=a.lower()), ph, role, "'%s'" % org if org else "NULL") for n, e, role, org in users if "{a}" in e or a == "DEL")
+        psql("INSERT INTO users (id,tenant_id,full_name,email,password_hash,role,org_code) SELECT v.* FROM tenants t, LATERAL (VALUES " + vals + ") AS v(id,tid,n,e,h,r,o) WHERE t.airport_code=:'a' "
+             "ON CONFLICT (email) DO UPDATE SET password_hash=EXCLUDED.password_hash, role=EXCLUDED.role, org_code=EXCLUDED.org_code;", a=a)
     print("\nDemo users (same password for all):", pw)
     print("  e.g. admin@del.aerobase.in, staff@bom.aerobase.in, ops@indigo.del.aerobase.in, shop@blr.aerobase.in")
 

@@ -33,6 +33,9 @@ EOT
   echo "Created $ENVF with fresh random secrets (local only; git-ignored)."
 fi
 
+grep -q '^SHOW_DEMO_ACCOUNTS=' "$ENVF" || printf 'SHOW_DEMO_ACCOUNTS=true\nDEMO_PASSWORD=%s\n' "$DEMO_PASSWORD" >> "$ENVF"
+grep -q '^AUTH_DEV_RETURN_RESET_LINK=' "$ENVF" || printf 'AUTH_DEV_RETURN_RESET_LINK=true\nPUBLIC_APP_URL=http://localhost:3000\n' >> "$ENVF"   # local-only: forgot-password shows the link on screen
+
 echo "== Building and starting backend, database, Redis, ML service, frontend (first build takes ~10-15 min) =="
 "${COMPOSE[@]}" up -d --build
 

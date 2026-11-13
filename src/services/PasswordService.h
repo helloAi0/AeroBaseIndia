@@ -67,6 +67,7 @@ private:
         return out;
     }
 
+public:
     static std::string sha256Hex(const std::string& s) {
         unsigned char h[SHA256_DIGEST_LENGTH];
         SHA256(reinterpret_cast<const unsigned char*>(s.data()), s.size(), h);
@@ -79,6 +80,7 @@ private:
         return ss.str();
     }
 
+private:
     static bool fromHex(const std::string& s, std::vector<unsigned char>& out) {
         if (s.empty() || s.size() % 2) return false;
         out.clear();

@@ -503,6 +503,68 @@ class WhatsAppAndIntegrations(unittest.TestCase):
         self.assertEqual(call("GET", "/notify/queue")[0], 401)
 
 
+class Accounts(unittest.TestCase):
+    def test_airport_list_is_public_and_wide(self):
+        code, js = call("GET", "/api/public/airports")
+        self.assertEqual(code, 200); codes = {a["code"] for a in js["airports"]}
+        self.assertTrue({"DEL", "BOM", "BLR", "HYD", "CCU", "MAA", "SXR"} <= codes, codes)
+
+    def test_signup_login_and_validation(self):
+        em = f"su{RUN.lower()}@example.com"
+        self.assertEqual(call("POST", "/api/auth/register", {"name": "A", "email": em, "password": "Sup3rsecret99", "airport": "DEL"})[0], 400)
+        self.assertEqual(call("POST", "/api/auth/register", {"name": "Asha Rao", "email": "nope", "password": "Sup3rsecret99", "airport": "DEL"})[0], 400)
+        self.assertEqual(call("POST", "/api/auth/register", {"name": "Asha Rao", "email": em, "password": "short", "airport": "DEL"})[0], 400)
+        self.assertEqual(call("POST", "/api/auth/register", {"name": "Asha Rao", "email": em, "password": "Sup3rsecret99", "airport": "ZZZ"})[0], 400)
+        self.assertEqual(call("POST", "/api/auth/register", {"name": "Asha Rao", "email": em, "password": "Sup3rsecret99", "airport": "SXR"})[0], 201)
+        self.assertEqual(call("POST", "/api/auth/register", {"name": "Asha Rao", "email": em, "password": "Sup3rsecret99", "airport": "SXR"})[0], 409)
+        code, js = call("POST", "/login", {"email": em, "password": "Sup3rsecret99"})
+        self.assertEqual(code, 200); c = claims(js["token"]); self.assertEqual((c["role"], c["airport"]), ("PASSENGER", "SXR"))
+        # a signup can never pick a privileged role
+        e2 = f"sx{RUN.lower()}@example.com"
+        call("POST", "/api/auth/register", {"name": "Evil Admin", "email": e2, "password": "Sup3rsecret99", "airport": "DEL", "account_type": "AIRPORT_ADMIN", "role": "SUPER_ADMIN"})
+        self.assertEqual(claims(call("POST", "/login", {"email": e2, "password": "Sup3rsecret99"})[1]["token"])["role"], "PASSENGER")
+
+    def test_forgot_and_reset_flow(self):
+        em = f"fr{RUN.lower()}@example.com"
+        call("POST", "/api/auth/register", {"name": "Reset Me", "email": em, "password": "Sup3rsecret99", "airport": "BOM"})
+        code, js = call("POST", "/api/auth/forgot", {"email": em}); self.assertEqual(code, 200)
+        code2, js2 = call("POST", "/api/auth/forgot", {"email": f"nobody{RUN.lower()}@example.com"})
+        self.assertEqual((code2, js2["message"]), (200, js["message"]))          # no account enumeration
+        self.assertEqual(call("POST", "/api/auth/reset", {"token": "x" * 64, "password": "NewPass12345"})[0], 400)
+        link = js.get("reset_link")
+        if not link: self.skipTest("set AUTH_DEV_RETURN_RESET_LINK=true to read the link without email")
+        tok = link.split("token=")[1]
+        self.assertEqual(call("POST", "/api/auth/reset", {"token": tok, "password": "weak"})[0], 400)
+        self.assertEqual(call("POST", "/api/auth/reset", {"token": tok, "password": "NewPass12345"})[0], 200)
+        self.assertEqual(call("POST", "/api/auth/reset", {"token": tok, "password": "NewPass12345"})[0], 400)   # single use
+        self.assertEqual(call("POST", "/login", {"email": em, "password": "Sup3rsecret99"})[0], 401)
+        self.assertEqual(call("POST", "/login", {"email": em, "password": "NewPass12345"})[0], 200)
+
+    def test_owner_can_switch_airport_and_data_follows(self):
+        self.assertEqual(call("POST", "/api/auth/switch-airport", {"airport": "BOM"}, token=login(ADMIN))[0], 403)
+        self.assertEqual(call("POST", "/api/auth/switch-airport", {"airport": "BOM"})[0], 401)
+        t = login(OWNER)
+        self.assertEqual(call("POST", "/api/auth/switch-airport", {"airport": "ZZZ"}, token=t)[0], 404)
+        code, js = call("POST", "/api/auth/switch-airport", {"airport": "SXR"}, token=t)
+        self.assertEqual(code, 200); c = claims(js["token"]); self.assertEqual((c["airport"], c["role"]), ("SXR", "SUPER_ADMIN"))
+        code, fl = call("GET", "/flights", token=js["token"]); rows = fl if isinstance(fl, list) else fl.get("flights", [])
+        self.assertTrue(rows and all(r.get("origin") == "SXR" or r.get("destination") == "SXR" for r in rows[:20]), rows[:2])
+
+    def test_team_management_is_admin_only_and_tenant_scoped(self):
+        self.assertEqual(call("GET", "/api/team")[0], 401)
+        self.assertEqual(call("GET", "/api/team", token=login(PAX))[0], 403)
+        self.assertEqual(call("POST", "/api/team", {"name": "Nope Nope", "email": f"n{RUN}@example.com", "password": "Sup3rsecret99", "role": "PILOT", "org": "AI"}, token=login(STAFF))[0], 403)
+        em = f"cap{RUN.lower()}@example.com"; t = login(ADMIN)
+        self.assertEqual(call("POST", "/api/team", {"name": "Capt Test", "email": em, "password": "Sup3rsecret99", "role": "SUPER_ADMIN"}, token=t)[0], 400)   # cannot mint admins
+        self.assertEqual(call("POST", "/api/team", {"name": "Capt Test", "email": em, "password": "Sup3rsecret99", "role": "PILOT"}, token=t)[0], 400)         # needs airline
+        self.assertEqual(call("POST", "/api/team", {"name": "Capt Test", "email": em, "password": "Sup3rsecret99", "role": "PILOT", "org": "AI"}, token=t)[0], 201)
+        code, js = call("GET", "/api/team", token=t); mine = [m for m in js["team"] if m["email"] == em]
+        self.assertEqual(len(mine), 1)
+        self.assertNotIn(em, [m["email"] for m in call("GET", "/api/team", token=login(BOM_ADMIN))[1]["team"]])
+        self.assertEqual(call("DELETE", "/api/team/" + mine[0]["id"], token=login(BOM_ADMIN))[0], 404)       # other airport cannot remove
+        self.assertEqual(call("DELETE", "/api/team/" + mine[0]["id"], token=t)[0], 200)
+
+
 if __name__ == "__main__":
     try: call("GET", "/health")
     except Exception as e: sys.exit(f"Backend not reachable at {BASE}: {e}")

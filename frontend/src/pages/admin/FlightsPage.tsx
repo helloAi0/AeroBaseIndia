@@ -2,6 +2,7 @@ import { useState } from "react";
 import { parseQuery, matchFlight, describeQuery } from "../../lib/nlSearch";
 import { useAuthStore } from "../../store/authStore";
 import { useLiveFlights } from "../../hooks/useLiveFlights";
+import { useAirport } from "../../hooks/useAirport";
 import type { Flight as LiveFlight } from "../../types";
 import { Plane, Search, AlertTriangle, Clock,
          CheckCircle, Users, Fuel, Wrench,
@@ -42,14 +43,14 @@ const fmtTime = (iso?: string) => {
   return isNaN(d.getTime()) ? "—" : d.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", hour12: false });
 };
 
-/** Server rows only carry number/route/gate/status/times — everything else is honestly "—". */
+/** Fields the server doesn't hold (crew, fuel, bag counts) stay "—". */
 function fromServer(r: LiveFlight, i: number): Flight {
   const code = r.flightNumber.split("-")[0];
   return {
-    id: 10_000 + i, flight: r.flightNumber, airline: AIRLINE_NAMES[code] ?? code, airCode: code,
+    id: 10_000 + i, flight: r.flightNumber, airline: r.airline || AIRLINE_NAMES[code] || code, airCode: r.airlineCode || code,
     from: r.origin, to: r.destination, dep: fmtTime(r.departureTime), arr: fmtTime(r.arrivalTime),
-    gate: r.gate, terminal: "—", status: r.status, pax: 0, aircraft: "—", captain: "—",
-    fuel: "—", bags: 0, gc: 0, issue: null,
+    gate: r.gate, terminal: r.terminal ?? "—", status: r.status, pax: r.passengers ?? 0, aircraft: r.aircraft ?? "—", captain: "—",
+    fuel: "—", bags: 0, gc: 0, issue: r.issue ?? null,
   };
 }
 
@@ -67,7 +68,7 @@ export function FlightsPage() {
   const airlineName  = isAirlineUser ? (AIRLINE_NAMES[airlineCode!]||"") : "";
 
   // Filter flights
-  const live = useLiveFlights();
+  const live = useLiveFlights(); const ap = useAirport();
   const source: Flight[] = live.mode === "live" ? live.flights.map(fromServer) : ALL_AIRPORT_FLIGHTS;
   const flights = isAirlineUser ? source.filter(f=>f.airCode===airlineCode) : source;
 
@@ -88,12 +89,12 @@ export function FlightsPage() {
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h1 className="text-2xl font-bold text-white">
-            {isAirlineUser ? `${airlineName} Flights — DEL` : "Flight Operations Dashboard"}
+            {isAirlineUser ? `${airlineName} Flights — ${ap.code}` : "Flight Operations Dashboard"}
           </h1>
           <p className="text-slate-400 text-sm">
             {isAirlineUser
-              ? `${airlineCode} · Only your airline's flights · Delhi IGI Airport`
-              : "Delhi IGI Airport · All airlines"}
+              ? `${airlineCode} · Only your airline's flights · ${ap.name}`
+              : `${ap.name} · All airlines`}
           </p>
           <div className="mt-1.5 inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full border"
             style={live.mode==="live"

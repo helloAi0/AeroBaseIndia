@@ -42,4 +42,7 @@ def terminal(code, airline, intl):
     """Terminal each airline uses at our three airports (public airport terminal allocations)."""
     if code == "DEL": return "T1" if airline in {"6E", "SG", "QP", "S5", "9I"} else "T3"
     if code == "BOM": return "T1" if airline in {"6E", "SG", "QP", "9I", "S5"} and not intl else "T2"
-    return "T1" if airline in {"6E", "SG", "QP", "S5", "9I", "IX"} and not intl else "T2"
+    if code == "BLR": return "T1" if airline in {"6E", "SG", "QP", "S5", "9I", "IX"} and not intl else "T2"
+    if code == "MAA": return "T4" if intl else "T1"
+    if code == "CCU": return "T2"
+    return "T1"   # single-terminal airports (HYD, SXR, GOI, ...) and others: one passenger terminal

@@ -136,7 +136,7 @@ function AppContent() {
   useFlightAlerts();
   const { activePage, sidebarOpen, setSidebar, setActivePage } = useAppStore();
   const { isLoggedIn, user } = useAuthStore();
-  const [showLogin, setShowLogin] = useState(() => { try { return sessionStorage.getItem("aerobase.login") === "1" || location.hash === "#login"; } catch { return false; } });
+  const [showLogin, setShowLogin] = useState(() => { try { return sessionStorage.getItem("aerobase.login") === "1" || location.hash === "#login" || location.hash.startsWith("#/reset"); } catch { return false; } });
 
   // Sign out when a server-issued JWT expires (checked on load and every 30s).
   useEffect(() => {

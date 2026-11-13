@@ -7,6 +7,12 @@ export interface Flight {
   gate: string;
   predictedDelay?: number;
   airline?: string;
+  terminal?: string;
+  passengers?: number;
+  aircraft?: string;
+  airlineCode?: string;
+  delayMinutes?: number;
+  issue?: string;
   departureTime?: string;
   arrivalTime?: string;
 }

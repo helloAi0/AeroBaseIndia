@@ -5,7 +5,9 @@ RUN npm ci
 COPY . .
 # Backend base URL baked in at build time, e.g. https://api.example.com  (demo logins stay OFF in production)
 ARG VITE_API_URL
-ENV VITE_API_URL=$VITE_API_URL VITE_ENABLE_DEMO_LOGIN=false
+ARG VITE_SHOW_DEMO_ACCOUNTS=false
+ARG VITE_DEMO_PASSWORD=
+ENV VITE_API_URL=$VITE_API_URL VITE_ENABLE_DEMO_LOGIN=false VITE_SHOW_DEMO_ACCOUNTS=$VITE_SHOW_DEMO_ACCOUNTS VITE_DEMO_PASSWORD=$VITE_DEMO_PASSWORD
 RUN npm run build
 
 FROM nginx:1.27-alpine
