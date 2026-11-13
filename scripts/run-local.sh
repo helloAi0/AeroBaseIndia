@@ -10,13 +10,13 @@ COMPOSE=(docker compose --env-file "$ENVF" -f deploy/docker-compose.prod.yml)
 DEMO_PASSWORD="${DEMO_PASSWORD:-Demo-Pass-2026x}"
 
 need() { command -v "$1" >/dev/null 2>&1 || { echo "Missing '$1'. $2"; exit 1; }; }
-need docker "Install: sudo apt-get update && sudo apt-get install -y docker.io docker-compose-v2 && sudo usermod -aG docker \$USER (then log out/in)"
+need docker "Install Docker: https://docs.docker.com/engine/install/ubuntu/ (if you already have docker-ce, do NOT also install docker.io), then: sudo usermod -aG docker \$USER and log out/in"
 need python3 "Install: sudo apt-get install -y python3"
-docker compose version >/dev/null 2>&1 || { echo "Docker Compose v2 missing: sudo apt-get install -y docker-compose-v2"; exit 1; }
+docker compose version >/dev/null 2>&1 || { echo "Docker Compose v2 missing: sudo apt-get install -y docker-compose-plugin (docker-ce) or docker-compose-v2 (Ubuntu docker.io)"; exit 1; }
 
 case "${1:-up}" in
   stop) "${COMPOSE[@]}" down; pkill -f "vite.*5173" 2>/dev/null || true; echo "Stopped."; exit 0;;
-  test) need node "Install Node 20+: https://nodejs.org or sudo apt-get install -y nodejs npm"
+  test) need node "Install Node 20+ (NodeSource nodejs already includes npm; do not apt install npm separately)"
         DEMO_PASSWORD="$DEMO_PASSWORD" bash scripts/run-tests.sh; exit 0;;
 esac
 
