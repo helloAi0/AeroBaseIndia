@@ -8,7 +8,7 @@ BASE_URL="${BASE_URL:-http://localhost:8080}"; export BASE_URL
 fail=0
 
 echo "== Frontend unit tests =="
-( cd frontend && { [ -d node_modules ] || npm ci; } && npm test --silent ) || fail=1
+( cd frontend && { [ -x node_modules/.bin/vitest ] || npm ci; } && npm test --silent ) || fail=1
 
 echo; echo "== API integration tests ($BASE_URL) =="
 if curl -fsS -m 5 "$BASE_URL/health" >/dev/null 2>&1; then
