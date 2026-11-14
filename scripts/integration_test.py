@@ -632,6 +632,35 @@ class Accounts(unittest.TestCase):
         self.assertEqual(call("PUT", "/api/records/dispatch/" + d["id"], {"status": "Resolved"}, token=login("priya.security@del.aerobase.in"))[0], 404)   # someone else's instruction
         call("DELETE", "/api/records/dispatch/" + d["id"], token=ta)
 
+    def test_bookings_family_links_seats_fares_and_stages(self):
+        tp, ta, ts, tai = login(PAX), login(ADMIN), login(STAFF), login("ops.6e@del.aerobase.in")
+        flights = call("GET", "/flights", token=tp)[1]; flights = flights if isinstance(flights, list) else flights.get("flights", [])
+        f = [x for x in flights if x.get("origin") == "DEL" and x.get("status") in ("Scheduled", "On Time", "Boarding") and x.get("flight_number", "").startswith("6E")][0]
+        trav = [{"name": "Asha Verma", "email": "passenger@del.aerobase.in"}, {"name": "Mohit Verma", "email": "mohit.%s@example.com" % RUN.lower()}, {"name": "Child Verma"}]
+        code, q = call("POST", "/api/records/bookings", {"flightId": f["id"], "travellers": trav, "quote": True}, token=tp); self.assertEqual(code, 200); self.assertTrue(q["total"] > 0 and q["travellers"] == 3)
+        self.assertEqual(call("POST", "/api/records/bookings", {"flightId": f["id"], "travellers": []}, token=tp)[0], 400)
+        code, b = call("POST", "/api/records/bookings", {"flightId": f["id"], "travellers": trav, "fare": {"total": 1}, "status": "Paid"}, token=tp); self.assertEqual(code, 201)
+        self.assertEqual((b["status"], b["payment"], len(b["pnr"])), ("Confirmed", "Unpaid", 6)); self.assertEqual(len({x["seat"] for x in b["travellers"]}), 3)   # fare/status come from the server
+        self.assertEqual(b["fare"]["total"], q["total"])
+        # a second passenger only sees it once named: register Mohit, then he sees the booking
+        email = "mohit.%s@example.com" % RUN.lower(); self.assertEqual(call("POST", "/api/auth/register", {"name": "Mohit Verma", "email": email, "password": PW, "airport": "DEL", "account_type": "PASSENGER"})[0], 201)
+        tm = login(email); self.assertTrue(any(x["id"] == b["id"] for x in call("GET", "/api/records/bookings", token=tm)[1]["records"]))   # linked by email
+        self.assertFalse(any(x["id"] == b["id"] for x in call("GET", "/api/records/bookings", token=login(STAFF))[1]["records"]) is False)   # staff can see (desk work)
+        # the airline sees it, and only the airline/desk can mark it paid
+        self.assertTrue(any(x["id"] == b["id"] for x in call("GET", "/api/records/bookings", token=tai)[1]["records"]))
+        self.assertEqual(call("PUT", "/api/records/bookings/" + b["id"], {"action": "payment", "payment": "Paid"}, token=tp)[0], 403)
+        # stages are ordered; the passenger can only do web check-in; boarding needs payment
+        self.assertEqual(call("PUT", "/api/records/bookings/" + b["id"], {"action": "stage", "index": 0, "stage": "Security cleared"}, token=ts)[0], 409)
+        self.assertEqual(call("PUT", "/api/records/bookings/" + b["id"], {"action": "stage", "index": 0, "stage": "Checked in"}, token=tp)[0], 200)
+        self.assertEqual(call("PUT", "/api/records/bookings/" + b["id"], {"action": "stage", "index": 0, "stage": "Bag dropped"}, token=tp)[0], 403)
+        for st in ("Bag dropped", "Security cleared"): self.assertEqual(call("PUT", "/api/records/bookings/" + b["id"], {"action": "stage", "index": 0, "stage": st}, token=ts)[0], 200)
+        self.assertEqual(call("PUT", "/api/records/bookings/" + b["id"], {"action": "stage", "index": 0, "stage": "Boarded"}, token=ts)[0], 409)   # unpaid
+        self.assertEqual(call("PUT", "/api/records/bookings/" + b["id"], {"action": "payment", "payment": "Paid"}, token=tai)[0], 200)
+        self.assertEqual(call("PUT", "/api/records/bookings/" + b["id"], {"action": "stage", "index": 0, "stage": "Boarded"}, token=ts)[0], 200)
+        self.assertEqual(call("PUT", "/api/records/bookings/" + b["id"], {"action": "cancel"}, token=tp)[0], 409)   # someone already checked in
+        self.assertEqual(call("DELETE", "/api/records/bookings/" + b["id"], token=tp)[0], 403)
+        self.assertEqual(call("DELETE", "/api/records/bookings/" + b["id"], token=ta)[0], 200)
+
     def test_owner_can_switch_airport_and_data_follows(self):
         self.assertEqual(call("POST", "/api/auth/switch-airport", {"airport": "BOM"}, token=login(ADMIN))[0], 403)
         self.assertEqual(call("POST", "/api/auth/switch-airport", {"airport": "BOM"})[0], 401)

@@ -45,6 +45,7 @@ const ALL_NAV = [
     {id:"feedback",      label:"Feedback",     icon:MessageSquare},
   ]},
   { group:"Operations Ext", roles:["superadmin","airport_admin","staff"], items:[
+    {id:"desk",          label:"Passenger Desk", icon:Users},
     {id:"shoporders",    label:"Shop Orders",  icon:ShoppingBag},
     {id:"cargo",         label:"Cargo",        icon:Package},
     {id:"fuel",          label:"Fuel",         icon:Gauge},
@@ -85,12 +86,14 @@ const ALL_NAV = [
   { group:"Airline", roles:["airline"], items:[
       {id:"airline",      label:"Airline Operations",icon:Plane},
       {id:"crew",         label:"Crew & IDs",        icon:KeyRound},
+      {id:"desk",         label:"Bookings",          icon:Users},
       {id:"flights",      label:"Flight Info",       icon:Plane},
       {id:"baggage",      label:"Baggage",           icon:Briefcase},
       {id:"weather",      label:"Weather",           icon:CloudSun},
       {id:"map",          label:"Airport Map",       icon:Map},
   ]},
   { group:"My Account", roles:["passenger"], items:[
+      {id:"trips",         label:"My Trips",        icon:Plane},
       {id:"shops",         label:"Shops & Food",    icon:ShoppingBag},
       {id:"baggage",       label:"My Bags",         icon:Briefcase},
       {id:"accessibility", label:"Assistance",      icon:AccIcon},
