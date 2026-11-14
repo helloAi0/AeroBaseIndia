@@ -551,11 +551,23 @@ class Accounts(unittest.TestCase):
         tp, ta = login(PAX), login(ADMIN)
         code, r = call("POST", "/api/records/accessibility", {"pax": "Pax " + RUN, "flight": "AI-101", "need": "Wheelchair", "where": "T3 check-in", "status": "Done", "staff": "Me", "eta": 1}, token=tp)
         self.assertEqual(code, 201); self.assertEqual((r["status"], "staff" in r), ("Open", False))
+        other = call("POST", "/api/records/accessibility", {"pax": "Desk " + RUN, "flight": "AI-102", "need": "Wheelchair", "where": "T3", "status": "Open"}, token=ta)[1]
         mine = call("GET", "/api/records/accessibility", token=tp)[1]["records"]
-        self.assertTrue(mine and all(x["id"] == r["id"] or x.get("pax", "").startswith("Pax ") for x in mine))
+        self.assertTrue(any(x["id"] == r["id"] for x in mine)); self.assertFalse(any(x["id"] == other["id"] for x in mine))   # own only
+        call("DELETE", "/api/records/accessibility/" + other["id"], token=ta)
         self.assertTrue(any(x["id"] == r["id"] for x in call("GET", "/api/records/accessibility", token=ta)[1]["records"]))
         self.assertEqual(call("PUT", "/api/records/accessibility/" + r["id"], {"status": "Done"}, token=tp)[0], 403)
         call("DELETE", "/api/records/accessibility/" + r["id"], token=ta)
+
+    def test_passenger_bags_are_own_only_and_start_checked_in(self):
+        tp, ta = login(PAX), login(ADMIN)
+        code, b = call("POST", "/api/records/baggage", {"tag": "99" + RUN[-6:].replace("-", "0"), "flight": "AI-101", "passenger": "Me", "status": "Delivered", "belt": "9"}, token=tp)
+        self.assertEqual(code, 201); self.assertEqual((b["status"], "belt" in b), ("Checked in", False))
+        admin_bag = call("POST", "/api/records/baggage", {"tag": "1", "flight": "AI-102", "passenger": "X", "status": "Loaded"}, token=ta)[1]
+        mine = call("GET", "/api/records/baggage", token=tp)[1]["records"]
+        self.assertTrue(any(x["id"] == b["id"] for x in mine)); self.assertFalse(any(x["id"] == admin_bag["id"] for x in mine))
+        self.assertEqual(call("PUT", "/api/records/baggage/" + b["id"], {"status": "Delivered"}, token=tp)[0], 403)
+        for x in (b, admin_bag): call("DELETE", "/api/records/baggage/" + x["id"], token=ta)
 
     def test_owner_can_switch_airport_and_data_follows(self):
         self.assertEqual(call("POST", "/api/auth/switch-airport", {"airport": "BOM"}, token=login(ADMIN))[0], 403)

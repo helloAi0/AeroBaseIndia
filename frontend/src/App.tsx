@@ -45,7 +45,8 @@ const IncidentsPage = rec("IncidentsPage"), FuelManagement = rec("FuelPage"), Ma
 /** Pages whose numbers come from the server when signed in to the live backend. Everything else shows built-in sample data. */
 const LIVE_PAGES = new Set(["dashboard", "flights", "autopilot", "whatif", "copilot", "heatmap", "gateopt", "carbonops", "playbooks", "turnaround", "accessibility",
   "lostfound", "journey", "bids", "announcements", "incidents", "maintenance", "contracts", "parking", "fuel", "weather", "ai", "marketplace",
-  "analytics", "kpi", "revenue", "gates", "carbon", "airline", "pilot", "retailer", "passenger", "tenants", "baggage", "security", "security_ops", "cargo", "checkin", "staff", "feedback", "emergency", "billing", "scheduler", "biometric", "retail", "subscription", "partner", "twin", "map", "settings", "branding", "integrations", "payments", "whatsapp", "reports", "notifications", "websocket"]);
+  "analytics", "kpi", "revenue", "gates", "carbon", "airline", "pilot", "retailer", "passenger", "tenants", "baggage", "security", "security_ops", "cargo", "checkin", "staff", "team", "feedback", "emergency", "billing", "scheduler", "biometric", "retail", "subscription", "partner", "twin", "map", "settings", "branding", "integrations", "payments", "whatsapp", "reports", "notifications", "websocket"]);
+const TeamAccess = lazy(() => import("./pages/team/TeamAccess").then(m => ({ default: m.TeamAccess })));
 const LandingPage = lazy(() => import("./pages/landing/LandingPage").then(m => ({ default: m.LandingPage })));
 const WeatherMonitor = lazy(() => import("./pages/weather/WeatherMonitor").then(m => ({ default: m.WeatherMonitor })));
 const APITester = lazy(() => import("./pages/api_tester/APITester").then(m => ({ default: m.APITester })));
@@ -57,7 +58,7 @@ import { PageSkeleton }     from "./components/ui/Skeleton";
 import { useAppStore }        from "./store/appStore";
 import { useAuthStore }        from "./store/authStore";
 import { LoginPage } from "./pages/auth/LoginPage";
-import { allowedPagesFor } from "./components/layout/Sidebar";
+import { allowedPagesFor, navRole } from "./components/layout/Sidebar";
 import { OfflineBanner } from "./components/ui/OfflineBanner";
 import { useRealtime }        from "./hooks/useRealtime";
 import { useFlightAlerts }    from "./hooks/useFlightAlerts";
@@ -96,6 +97,7 @@ const PAGES: Record<string, React.ReactNode> = {
   heatmap: <CrowdHeatmap />,
   gateopt: <GateOptimizer />,
   carbonops: <CarbonOps />,
+  team: <TeamAccess />,
   playbooks: <Playbooks />,
   turnaround: <Turnaround />,
   accessibility: <AccessibilityConcierge />,
@@ -154,7 +156,7 @@ function AppContent() {
   const pendingHash = useRef<string | null>(null);
   useEffect(() => {
     if (!isLoggedIn || !role) return;
-    const allowed = allowedPagesFor(role);
+    const allowed = allowedPagesFor(navRole(role, user?.staffLevel));
     const fromHash = () => { const p = location.hash.replace(/^#\/?/, ""); return p && allowed.has(p) ? p : null; };
     const initial = fromHash();
     if (initial && initial !== useAppStore.getState().activePage) { pendingHash.current = initial; setActivePage(initial); }

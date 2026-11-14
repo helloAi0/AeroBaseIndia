@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useBoard } from "../../hooks/useBoard";
 import { useAuthStore } from "../../store/authStore";
 import { useAppStore } from "../../store/appStore";
 import { useAirport } from "../../hooks/useAirport";
+import { useWeather } from "../../hooks/useWeather";
 import { useCollection } from "../../hooks/useCollection";
 import { api } from "../../api/client";
 import { API_ENABLED } from "../../config";
@@ -10,7 +11,6 @@ import { delayMinutes } from "../../lib/opsEngine";
 import { Card, PageHead, Stat, Empty } from "../../components/ui/PageHead";
 
 const badge = (s: string) => s === "Delayed" ? "text-yellow-300 border-yellow-500/30" : s === "Cancelled" ? "text-red-300 border-red-500/30" : s === "Boarding" ? "text-teal-300 border-teal-500/30" : "text-sky-300 border-sky-500/30";
-const COORDS: Record<string, [number, number]> = { DEL: [28.5562, 77.1], BOM: [19.0896, 72.8656], BLR: [13.1986, 77.7066] };
 
 /** Airline operations: the airline's own flights (the server already limits the list to its airline). */
 export function AirlinePortal() {
@@ -30,21 +30,27 @@ export function AirlinePortal() {
   );
 }
 
-/** Flight-crew briefing: next departures for the airline plus live weather at the airport. */
+/** Flight-crew briefing: next departures for the airline, live weather and a pre-departure checklist. */
 export function PilotDashboard() {
-  const { flights } = useBoard(); const ap = useAirport(); const [wx, setWx] = useState("Loading weather…");
-  useEffect(() => { const [la, lo] = COORDS[ap.code] ?? COORDS.DEL; const ac = new AbortController(); const t = setTimeout(() => ac.abort(), 6000);
-    fetch(`https://api.open-meteo.com/v1/forecast?latitude=${la}&longitude=${lo}&current=temperature_2m,wind_speed_10m,visibility,weather_code`, { signal: ac.signal }).then(r => r.json())
-      .then(j => setWx(`${j.current.temperature_2m}°C · wind ${j.current.wind_speed_10m} km/h · visibility ${Math.round((j.current.visibility ?? 0) / 100) / 10} km`)).catch(() => setWx("Weather unavailable")).finally(() => clearTimeout(t)); return () => { ac.abort(); clearTimeout(t); }; }, [ap.code]);
+  const { flights } = useBoard(); const ap = useAirport(); const wx = useWeather(); const [done, setDone] = useState<Record<string, boolean>>({});
   const up = flights.filter(f => f.status !== "Departed" && f.status !== "Landed" && f.status !== "Cancelled").sort((a, b) => a.dep.localeCompare(b.dep));
-  if (!up.length) return <Empty>No upcoming departures for your airline.</Empty>;
-  const n = up[0];
+  if (!up.length) return <Empty>No upcoming departures for your airline at {ap.name}.</Empty>;
+  const n = up[0]; const flags = wx ? [wx.visibility < 1 && "Low visibility — expect LVP and longer taxi", wx.visibility >= 1 && wx.visibility < 3 && "Reduced visibility", wx.wind >= 40 && "Strong surface wind — check crosswind limits", wx.temp >= 40 && "High temperature — check take-off performance"].filter(Boolean) as string[] : [];
+  const list = ["Weather and NOTAMs reviewed", "Fuel and load sheet signed", "Gate and stand confirmed", "Crew briefing complete"];
+  const mins = (() => { const [h, m] = n.dep.split(":").map(Number); const d = new Date(); d.setHours(h, m, 0, 0); return Math.round((d.getTime() - Date.now()) / 60000); })();
   return (
     <div className="space-y-6">
-      <PageHead title="Crew briefing" sub={`${ap.name} · ${wx}`} />
-      <Card><div className="text-xs text-slate-400">Next departure</div><div className="text-3xl font-bold font-mono text-white">{n.flight} <span className="text-lg text-slate-300">{n.from}→{n.to}</span></div>
-        <div className="text-sm text-slate-300 mt-1">Dep {n.dep} · gate {n.gate} ({n.terminal}) · {n.aircraft} · {n.pax} passengers · {n.status}{n.issue ? ` · ${n.issue}` : ""}</div></Card>
-      <Card className="overflow-x-auto"><table className="w-full text-sm min-w-[480px]"><tbody>{up.map(f => <tr key={f.id} className="border-b border-navy-700 text-slate-200"><td className="p-2 font-mono">{f.flight}</td><td className="p-2">{f.from}→{f.to}</td><td className="p-2">{f.dep}</td><td className="p-2">Gate {f.gate}</td><td className="p-2"><span className={`text-xs px-2 py-0.5 rounded-full border ${badge(f.status)}`}>{f.status}</span></td></tr>)}</tbody></table></Card>
+      <PageHead title="Crew briefing" sub={ap.name} />
+      <div className="grid xl:grid-cols-3 gap-5">
+        <Card className="xl:col-span-2"><div className="text-xs text-slate-400">Next departure</div><div className="text-3xl font-bold font-mono text-white">{n.flight} <span className="text-lg text-slate-300">{n.from}→{n.to}</span></div>
+          <div className="text-sm text-slate-300 mt-1">Dep {n.dep}{Number.isFinite(mins) ? ` (${mins >= 0 ? `in ${mins} min` : `${-mins} min ago`})` : ""} · gate {n.gate} ({n.terminal}) · {n.aircraft} · {n.status}{n.issue ? ` · ${n.issue}` : ""}</div>
+          <div className="mt-4 grid sm:grid-cols-2 gap-2">{list.map(c => <label key={c} className="flex items-center gap-2 text-sm text-slate-200 bg-navy-900 border border-navy-600 rounded-lg px-3 py-2"><input type="checkbox" checked={!!done[c]} onChange={e => setDone({ ...done, [c]: e.target.checked })} />{c}</label>)}</div>
+        </Card>
+        <Card><div className="text-white font-semibold mb-2">Weather at {ap.code}</div>
+          {wx ? <div className="grid grid-cols-2 gap-2 text-sm text-slate-200"><div>{wx.temp}°C</div><div>Wind {wx.wind} km/h</div><div>Vis {wx.visibility} km</div><div>RH {wx.humidity}%</div></div> : <div className="text-sm text-slate-400">Weather unavailable right now.</div>}
+          {flags.map(x => <div key={x} className="text-xs text-yellow-300 mt-2">⚠ {x}</div>)}{wx && flags.length === 0 && <div className="text-xs text-green-400 mt-2">No weather concerns flagged.</div>}</Card>
+      </div>
+      <Card className="overflow-x-auto"><div className="text-sm text-slate-300 mb-2">Your upcoming departures</div><table className="w-full text-sm min-w-[480px]"><tbody>{up.map(f => <tr key={f.id} className="border-b border-navy-700 text-slate-200"><td className="p-2 font-mono">{f.flight}</td><td className="p-2">{f.from}→{f.to}</td><td className="p-2">{f.dep}</td><td className="p-2">Gate {f.gate}</td><td className="p-2"><span className={`text-xs px-2 py-0.5 rounded-full border ${badge(f.status)}`}>{f.status}</span></td></tr>)}</tbody></table></Card>
     </div>
   );
 }

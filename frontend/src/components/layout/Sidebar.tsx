@@ -1,4 +1,4 @@
-import {
+import { KeyRound,
   LayoutDashboard, Plane, DoorOpen, Briefcase,
   BarChart3, CreditCard, Bell, FileText, Activity,
   GitBranch, Code2, ChevronLeft, ChevronRight,
@@ -65,6 +65,19 @@ const ALL_NAV = [
       {id:"map",          label:"Airport Map",       icon:Map},
       {id:"flights",      label:"Flight Info",       icon:Plane},
   ]},
+  { group:"Crew", roles:["pilot"], items:[
+      {id:"pilot",        label:"Crew Briefing",    icon:Plane},
+      {id:"flights",      label:"Flight Info",      icon:Plane},
+      {id:"weather",      label:"Weather",          icon:CloudSun},
+      {id:"map",          label:"Airport Map",      icon:Map},
+  ]},
+  { group:"Airline", roles:["airline"], items:[
+      {id:"airline",      label:"Airline Operations",icon:Plane},
+      {id:"flights",      label:"Flight Info",       icon:Plane},
+      {id:"baggage",      label:"Baggage",           icon:Briefcase},
+      {id:"weather",      label:"Weather",           icon:CloudSun},
+      {id:"map",          label:"Airport Map",       icon:Map},
+  ]},
   { group:"My Account", roles:["passenger"], items:[
       {id:"baggage",       label:"My Bags",         icon:Briefcase},
       {id:"accessibility", label:"Assistance",      icon:AccIcon},
@@ -72,6 +85,7 @@ const ALL_NAV = [
   ]},
   { group:"People", roles:["superadmin","airport_admin"], items:[
     {id:"staff",         label:"Staff",        icon:UserCheck},
+    {id:"team",          label:"Team Access",  icon:KeyRound},
     {id:"partner",       label:"Partner Hub",  icon:Building2},
   ]},
   { group:"Management", roles:["superadmin","airport_admin"], items:[
@@ -104,6 +118,12 @@ const ALL_NAV = [
 ];
 
 /** Page ids this role may open (used to validate URL hashes / back-forward navigation). */
+/** Pilots and airline staff arrive as role "staff" with a staffLevel; give them their own navigation. */
+export function navRole(role: string, staffLevel?: string): string {
+  if (role === "staff" && staffLevel?.startsWith("pilot_")) return "pilot";
+  if (role === "staff" && staffLevel?.startsWith("airline_")) return "airline";
+  return role;
+}
 export function allowedPagesFor(role: string): Set<string> {
   const ids = new Set<string>(["dashboard"]);
   ALL_NAV.filter(g => g.roles.includes(role)).forEach(g => g.items.forEach(i => ids.add(i.id)));
@@ -113,7 +133,7 @@ export function allowedPagesFor(role: string): Set<string> {
 export function Sidebar() {
   const { activePage, setActivePage, sidebarOpen, setSidebar, tenant } = useAppStore();
   const { user } = useAuthStore();
-  const role = user?.role || "passenger";
+  const role = navRole(user?.role || "passenger", user?.staffLevel);
 
   // Filter nav by role, deduplicate by group+id
   const seenIds = new Set<string>();
