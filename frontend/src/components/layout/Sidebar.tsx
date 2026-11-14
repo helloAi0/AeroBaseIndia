@@ -66,6 +66,7 @@ const ALL_NAV = [
       {id:"flights",      label:"Flight Info",       icon:Plane},
   ]},
   { group:"My Account", roles:["passenger"], items:[
+      {id:"baggage",       label:"My Bags",         icon:Briefcase},
       {id:"accessibility", label:"Assistance",      icon:AccIcon},
       {id:"subscription",  label:"My Subscription", icon:Crown},
   ]},

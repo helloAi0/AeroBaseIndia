@@ -34,7 +34,7 @@ class RecordsController : public HttpController<RecordsController> {
             {"feedback",      {OPS, [] { Roles r = OPS; r.insert("PASSENGER"); r.insert("AIRLINE_OPS"); return r; }(), OPS}},
             {"contracts",     {ADMIN, ADMIN, ADMIN}},
             {"emergency",     {OPS, OPS, OPS}},
-            {"baggage",       {OPS_AIR, OPS, OPS}},
+            {"baggage",       {[] { Roles r = OPS_AIR; r.insert("PASSENGER"); return r; }(), [] { Roles r = OPS; r.insert("PASSENGER"); return r; }(), OPS, false, {"PASSENGER"}}},   // passengers register and see only their own bags
             {"security_events", {OPS, {"SUPER_ADMIN", "AIRPORT_ADMIN", "SECURITY_OFFICER"}, {"SUPER_ADMIN", "AIRPORT_ADMIN", "SECURITY_OFFICER"}}},
             {"checkins",      {OPS_AIR, OPS, OPS}},
             {"staff",         {OPS, ADMIN, ADMIN}},
@@ -100,6 +100,7 @@ public:
             Json::Value data = *j; data.removeMember("id"); data.removeMember("created_at");
             if (coll == "passes" && !(w.role == "SUPER_ADMIN" || w.role == "AIRPORT_ADMIN")) data["status"] = "Requested";   // passengers cannot self-approve
             if (coll == "accessibility" && w.role == "PASSENGER") { data["status"] = "Open"; data.removeMember("staff"); data.removeMember("eta"); data.removeMember("staffName"); }   // no self-assignment
+            if (coll == "baggage" && w.role == "PASSENGER") { data["status"] = "Checked in"; data.removeMember("belt"); }   // only handlers move a bag along
             const std::string js = dump(data);
             if (js.size() > 8192 || js.size() < 3) return fail(cb, "Record too large or empty", k400BadRequest);
             if (js.find("\\u0000") != std::string::npos) return fail(cb, "Text contains an invalid character", k400BadRequest);

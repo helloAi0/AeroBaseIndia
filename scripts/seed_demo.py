@@ -57,6 +57,22 @@ def seed_staff(code, terminals):
         d = json.dumps({"ref": f"STF-{code}-{i+1:02d}", "name": name, "role": role, "shift": shift, "terminal": terminals[i % len(terminals)], "status": "On duty" if shift != "Night" else "Off duty", "assist": "Yes" if assist else "No", "phone": ""})
         psql("INSERT INTO app_records (tenant_id, collection, data) SELECT id, 'staff', :'d'::jsonb FROM tenants WHERE airport_code=:'c';", c=code, d=d)
 
+BAG_NAMES = ["A. Sharma", "R. Iyer", "M. Khan", "S. Das", "P. Nair", "K. Singh", "N. Gupta", "T. Joshi", "L. Fernandes", "V. Reddy"]
+def seed_baggage(code, rows):
+    """Sample bags for the next departures so Baggage Handling is not empty. Status follows how close the flight is to departure."""
+    import random
+    rnd = random.Random(f"bags-{code}"); now = datetime.now()
+    psql("DELETE FROM app_records WHERE collection='baggage' AND created_by IS NULL AND tenant_id=(SELECT id FROM tenants WHERE airport_code=:'c');", c=code)
+    upcoming = sorted((r for r in rows if r[3] > now - timedelta(hours=1)), key=lambda r: r[3])[:8]
+    n = 0
+    for r in upcoming:
+        mins = (r[3] - now).total_seconds() / 60
+        status = "Delivered" if mins < -20 else "Loaded" if mins < 25 else "Screened" if mins < 90 else "Checked in"
+        for _ in range(3):
+            n += 1; st = "Delayed" if rnd.random() < 0.06 else status
+            d = json.dumps({"ref": f"BAG-{code}-{n:03d}", "tag": f"{rnd.randint(10**9, 10**10-1)}", "flight": r[0], "passenger": rnd.choice(BAG_NAMES), "status": st, "belt": f"Gate {r[5]}", "weight_kg": rnd.randint(12, 28)})
+            psql("INSERT INTO app_records (tenant_id, collection, data) SELECT id, 'baggage', :'d'::jsonb FROM tenants WHERE airport_code=:'c';", c=code, d=d)
+
 def generated_schedule(code, today):
     """A full day of departures from the airport's real route network (OpenFlights); status follows the clock."""
     import random, reference_data as R
@@ -105,6 +121,7 @@ def main():
             rows.append((f["flight"], o, d, dep, arr, f["gate"], f["status"], f["airline"], f["code"], f["aircraft"], f["terminal"], f["pax"], f["issue"], delay))
         rows += generated_schedule(code, today)
         seed_stores(code)
+        seed_baggage(code, rows)
         seed_staff(code, sorted({r[10] for r in rows if r[10]}) or ["T1"])
         vals = ",".join("(gen_random_uuid(),(SELECT id FROM tenants WHERE airport_code='%s'),%s)" % (code, ",".join("'%s'" % str(x).replace("'", "''") if not isinstance(x, int) else str(x) for x in r)) for r in rows)
         psql("INSERT INTO flights (id,tenant_id,flight_number,origin,destination,departure_time,arrival_time,gate,status,airline,airline_code,aircraft,terminal,passengers,issue,delay_minutes) VALUES " + vals + " ON CONFLICT (tenant_id, flight_number, departure_time) DO NOTHING;")

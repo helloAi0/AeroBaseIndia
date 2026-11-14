@@ -41,7 +41,7 @@ const IncidentsPage = rec("IncidentsPage"), FuelManagement = rec("FuelPage"), Ma
   GatesPage = lv("Gates", "GatesPage"), RevenueDashboard = lv("Revenue", "RevenueDashboard"), CarbonDashboard = lv("Carbon", "CarbonDashboard"), FlightScheduler = lv("Scheduler", "FlightScheduler"),
   TenantManager = lazy(() => import("./pages/tenants/TenantManager").then(m => ({ default: m.TenantManager }))),
   RetailPage = rec("RetailPage"), SubscriptionPage = rec("SubscriptionPage"),
-  BaggagePage = rec("BaggagePage"), SecurityPage = rec("SecurityPage"), SecurityOpsPage = rec("SecurityPage"), StaffManagement = rec("StaffPage"), CargoPage = rec("CargoPage"), CheckInSystem = rec("CheckInPage"), FeedbackPage = rec("FeedbackPage"), EmergencyCenter = rec("EmergencyPage");
+  BaggagePage = lazy(() => import("./pages/baggage/BaggagePage").then(m => ({ default: m.BaggagePage }))), SecurityPage = rec("SecurityPage"), SecurityOpsPage = rec("SecurityPage"), StaffManagement = rec("StaffPage"), CargoPage = rec("CargoPage"), CheckInSystem = rec("CheckInPage"), FeedbackPage = rec("FeedbackPage"), EmergencyCenter = rec("EmergencyPage");
 /** Pages whose numbers come from the server when signed in to the live backend. Everything else shows built-in sample data. */
 const LIVE_PAGES = new Set(["dashboard", "flights", "autopilot", "whatif", "copilot", "heatmap", "gateopt", "carbonops", "playbooks", "turnaround", "accessibility",
   "lostfound", "journey", "bids", "announcements", "incidents", "maintenance", "contracts", "parking", "fuel", "weather", "ai", "marketplace",
