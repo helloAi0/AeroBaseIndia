@@ -1,3 +1,4 @@
+import { roleLabel } from "../../lib/roleLabel";
 import { useState } from "react";
 import { Bell, Search, Menu, Wifi, WifiOff, ChevronDown } from "lucide-react";
 import { useAppStore } from "../../store/appStore";
@@ -72,7 +73,7 @@ export function TopBar() {
                 {user?.name?.split(" ")[0]||"Guest"}
               </div>
               <div className="text-xs text-slate-500 leading-tight">
-                {airport.code} • {user?.role==="airport_admin"?"Admin":user?.role==="staff"?"Staff":user?.role==="superadmin"?"SuperAdmin":"Passenger"}
+                {airport.code} • {roleLabel(user)}
               </div>
             </div>
             <ChevronDown className="w-3 h-3 text-slate-500 hidden md:block"/>

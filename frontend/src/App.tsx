@@ -37,7 +37,7 @@ const lv = (file: string, k: string) => lazy(() => import(`./pages/live/${file}.
 const rec = (k: string) => lazy(() => import("./pages/records/configs").then(m => ({ default: (m as any)[k] })));
 const IncidentsPage = rec("IncidentsPage"), FuelManagement = rec("FuelPage"), MaintenancePage = rec("MaintenancePage"), ContractsPage = rec("ContractsPage"), ParkingPage = rec("ParkingPage"),
   BillingPortal = lv("Billing", "BillingPortal"), AnalyticsDashboard = lv("Analytics", "AnalyticsDashboard"), KPIDashboard = lv("Analytics", "KPIDashboard"),
-  PassengerPortal = lv("Portals", "PassengerPortal"), AirlinePortal = lv("Portals", "AirlinePortal"), PilotDashboard = lv("Portals", "PilotDashboard"), RetailerDashboard = lv("Portals", "RetailerDashboard"),
+  PassengerPortal = lv("Portals", "PassengerPortal"), AirlinePortal = lv("Portals", "AirlinePortal"), PilotDashboard = lv("Portals", "PilotDashboard"),
   GatesPage = lv("Gates", "GatesPage"), RevenueDashboard = lv("Revenue", "RevenueDashboard"), CarbonDashboard = lv("Carbon", "CarbonDashboard"), FlightScheduler = lv("Scheduler", "FlightScheduler"),
   TenantManager = lazy(() => import("./pages/tenants/TenantManager").then(m => ({ default: m.TenantManager }))),
   RetailPage = rec("RetailPage"), SubscriptionPage = rec("SubscriptionPage"),
@@ -45,8 +45,11 @@ const IncidentsPage = rec("IncidentsPage"), FuelManagement = rec("FuelPage"), Ma
 /** Pages whose numbers come from the server when signed in to the live backend. Everything else shows built-in sample data. */
 const LIVE_PAGES = new Set(["dashboard", "flights", "autopilot", "whatif", "copilot", "heatmap", "gateopt", "carbonops", "playbooks", "turnaround", "accessibility",
   "lostfound", "journey", "bids", "announcements", "incidents", "maintenance", "contracts", "parking", "fuel", "weather", "ai", "marketplace",
-  "analytics", "kpi", "revenue", "gates", "carbon", "airline", "pilot", "retailer", "passenger", "tenants", "baggage", "security", "security_ops", "cargo", "checkin", "staff", "team", "feedback", "emergency", "billing", "scheduler", "biometric", "retail", "subscription", "partner", "twin", "map", "settings", "branding", "integrations", "payments", "whatsapp", "reports", "notifications", "websocket"]);
+  "analytics", "kpi", "revenue", "gates", "carbon", "airline", "pilot", "retailer", "passenger", "tenants", "baggage", "security", "security_ops", "cargo", "checkin", "staff", "team", "shops", "shoporders", "feedback", "emergency", "billing", "scheduler", "biometric", "retail", "subscription", "partner", "twin", "map", "settings", "branding", "integrations", "payments", "whatsapp", "reports", "notifications", "websocket"]);
 const TeamAccess = lazy(() => import("./pages/team/TeamAccess").then(m => ({ default: m.TeamAccess })));
+const ShopWorkspace = lazy(() => import("./pages/shop/ShopWorkspace").then(m => ({ default: m.ShopWorkspace })));
+const ShopsAndFood = lazy(() => import("./pages/passenger/ShopsAndFood").then(m => ({ default: m.ShopsAndFood })));
+const ShopOrders = lazy(() => import("./pages/shop/ShopOrders").then(m => ({ default: m.ShopOrders })));
 const LandingPage = lazy(() => import("./pages/landing/LandingPage").then(m => ({ default: m.LandingPage })));
 const WeatherMonitor = lazy(() => import("./pages/weather/WeatherMonitor").then(m => ({ default: m.WeatherMonitor })));
 const APITester = lazy(() => import("./pages/api_tester/APITester").then(m => ({ default: m.APITester })));
@@ -98,6 +101,8 @@ const PAGES: Record<string, React.ReactNode> = {
   gateopt: <GateOptimizer />,
   carbonops: <CarbonOps />,
   team: <TeamAccess />,
+  shops: <ShopsAndFood />,
+  shoporders: <ShopOrders />,
   playbooks: <Playbooks />,
   turnaround: <Turnaround />,
   accessibility: <AccessibilityConcierge />,
@@ -121,7 +126,7 @@ const PAGES: Record<string, React.ReactNode> = {
   ai:            <AIPredictions />,
   security:      <SecurityPage />,
   security_ops:  <SecurityOpsPage />,
-  retailer:      <RetailerDashboard />,
+  retailer:      <ShopWorkspace />,
   airline:       <AirlinePortal />,
   pilot:         <PilotDashboard />,
   subscription:  <SubscriptionPage />,

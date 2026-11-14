@@ -57,6 +57,23 @@ def seed_staff(code, terminals):
         d = json.dumps({"ref": f"STF-{code}-{i+1:02d}", "name": name, "role": role, "shift": shift, "terminal": terminals[i % len(terminals)], "status": "On duty" if shift != "Night" else "Off duty", "assist": "Yes" if assist else "No", "phone": ""})
         psql("INSERT INTO app_records (tenant_id, collection, data) SELECT id, 'staff', :'d'::jsonb FROM tenants WHERE airport_code=:'c';", c=code, d=d)
 
+OUTLETS = [  # airport-run sample outlets (no login owner): (name, category, hours, [(product, category, price, stock)])
+    ("Chai & Co", "F&B", "04:00 – 23:59", [("Masala chai", "Drinks", 40, 80), ("Filter coffee", "Drinks", 60, 60), ("Veg sandwich", "Snacks", 120, 30), ("Samosa (2 pcs)", "Snacks", 70, 40), ("Cold coffee", "Drinks", 110, 25)]),
+    ("Terminal Bites", "F&B", "05:00 – 23:00", [("Paneer wrap", "Meals", 220, 20), ("Chicken biryani", "Meals", 340, 15), ("Veg thali", "Meals", 280, 18), ("Fresh lime soda", "Drinks", 90, 40)]),
+    ("Sky Bookstore", "Books/News", "06:00 – 22:00", [("Bestseller paperback", "Books", 399, 25), ("Travel magazine", "Magazines", 250, 20), ("Neck pillow", "Travel", 650, 12), ("Earphones", "Travel", 499, 14)]),
+    ("Wellness Pharmacy", "Services", "24 hours", [("Paracetamol strip", "Health", 30, 60), ("Motion-sickness tablets", "Health", 55, 30), ("Hand sanitiser", "Health", 70, 50), ("Face mask (5)", "Health", 60, 40)]),
+]
+def seed_outlets(code, terminals):
+    """Airport-run sample outlets with menus so passengers can place real orders (stock, totals and delivery are enforced server-side)."""
+    psql("DELETE FROM app_records WHERE created_by IS NULL AND tenant_id=(SELECT id FROM tenants WHERE airport_code=:'c') AND (collection IN ('products','orders') OR (collection='stores' AND data->>'name' = ANY(string_to_array(:'n', '|'))));", c=code, n="|".join(o[0] for o in OUTLETS))
+    for i, (name, cat, hours, prods) in enumerate(OUTLETS):
+        t = terminals[i % len(terminals)]
+        d = json.dumps({"name": name, "category": cat, "terminal": t, "location": "Post-security", "hours": hours, "status": "Open", "deliver": "Yes", "contact": ""})
+        sid = psql("INSERT INTO app_records (tenant_id, collection, data) SELECT id, 'stores', :'d'::jsonb FROM tenants WHERE airport_code=:'c' RETURNING id;", c=code, d=d)
+        for pn, pc, price, stock in prods:
+            pd = json.dumps({"name": pn, "category": pc, "price": price, "stock": stock, "available": "Yes", "shop": name})
+            psql("INSERT INTO app_records (tenant_id, collection, data) SELECT id, 'products', :'d'::jsonb FROM tenants WHERE airport_code=:'c';", c=code, d=pd)
+
 BAG_NAMES = ["A. Sharma", "R. Iyer", "M. Khan", "S. Das", "P. Nair", "K. Singh", "N. Gupta", "T. Joshi", "L. Fernandes", "V. Reddy"]
 def seed_baggage(code, rows):
     """Sample bags for the next departures so Baggage Handling is not empty. Status follows how close the flight is to departure."""
@@ -121,6 +138,7 @@ def main():
             rows.append((f["flight"], o, d, dep, arr, f["gate"], f["status"], f["airline"], f["code"], f["aircraft"], f["terminal"], f["pax"], f["issue"], delay))
         rows += generated_schedule(code, today)
         seed_stores(code)
+        seed_outlets(code, sorted({r[10] for r in rows if r[10]}) or ["T1"])
         seed_baggage(code, rows)
         seed_staff(code, sorted({r[10] for r in rows if r[10]}) or ["T1"])
         vals = ",".join("(gen_random_uuid(),(SELECT id FROM tenants WHERE airport_code='%s'),%s)" % (code, ",".join("'%s'" % str(x).replace("'", "''") if not isinstance(x, int) else str(x) for x in r)) for r in rows)
@@ -128,12 +146,12 @@ def main():
         print(f"{code}: {len(rows)} flights for {today}")
     users = [("Arjun Sharma", "admin@{a}.aerobase.in", "AIRPORT_ADMIN", ""), ("Ravi Kumar", "staff@{a}.aerobase.in", "GROUND_STAFF", ""),
              ("Neha Singh", "security@{a}.aerobase.in", "SECURITY_OFFICER", ""), ("IndiGo Ops", "ops@indigo.{a}.aerobase.in", "AIRLINE_OPS", "6E"),
-             ("Capt. Sharma", "captain@airindia.{a}.aerobase.in", "PILOT", "AI"), ("Starbucks", "shop@{a}.aerobase.in", "RETAILER", "starbucks"), ("Demo Passenger", "passenger@{a}.aerobase.in", "PASSENGER", ""), ("Platform Owner", "owner@aerobase.in", "SUPER_ADMIN", "")]
+             ("Capt. Sharma", "captain@airindia.{a}.aerobase.in", "PILOT", "AI"), ("Demo Shop Owner", "shop@{a}.aerobase.in", "RETAILER", ""), ("Demo Passenger", "passenger@{a}.aerobase.in", "PASSENGER", ""), ("Platform Owner", "owner@aerobase.in", "SUPER_ADMIN", "")]
     ph = hash_pw(pw)
     for a in AIRPORTS:
         vals = ",".join("(gen_random_uuid(),t.id,'%s','%s','%s','%s',%s)" % (n.replace("'", "''"), e.format(a=a.lower()), ph, role, "'%s'" % org if org else "NULL") for n, e, role, org in users if "{a}" in e or a == "DEL")
         psql("INSERT INTO users (id,tenant_id,full_name,email,password_hash,role,org_code) SELECT v.* FROM tenants t, LATERAL (VALUES " + vals + ") AS v(id,tid,n,e,h,r,o) WHERE t.airport_code=:'a' "
-             "ON CONFLICT (email) DO UPDATE SET password_hash=EXCLUDED.password_hash, role=EXCLUDED.role, org_code=EXCLUDED.org_code;", a=a)
+             "ON CONFLICT (email) DO UPDATE SET full_name=EXCLUDED.full_name, password_hash=EXCLUDED.password_hash, role=EXCLUDED.role, org_code=EXCLUDED.org_code;", a=a)
     print("\nDemo users (same password for all):", pw)
     print("  e.g. admin@del.aerobase.in, staff@bom.aerobase.in, ops@indigo.del.aerobase.in, shop@blr.aerobase.in")
 

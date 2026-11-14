@@ -1,4 +1,5 @@
-import { KeyRound,
+import { roleLabel } from "../../lib/roleLabel";
+import { KeyRound, ShoppingBag,
   LayoutDashboard, Plane, DoorOpen, Briefcase,
   BarChart3, CreditCard, Bell, FileText, Activity,
   GitBranch, Code2, ChevronLeft, ChevronRight,
@@ -44,6 +45,7 @@ const ALL_NAV = [
     {id:"feedback",      label:"Feedback",     icon:MessageSquare},
   ]},
   { group:"Operations Ext", roles:["superadmin","airport_admin","staff"], items:[
+    {id:"shoporders",    label:"Shop Orders",  icon:ShoppingBag},
     {id:"cargo",         label:"Cargo",        icon:Package},
     {id:"fuel",          label:"Fuel",         icon:Gauge},
     {id:"maintenance",   label:"Maintenance",  icon:Wrench},
@@ -79,6 +81,7 @@ const ALL_NAV = [
       {id:"map",          label:"Airport Map",       icon:Map},
   ]},
   { group:"My Account", roles:["passenger"], items:[
+      {id:"shops",         label:"Shops & Food",    icon:ShoppingBag},
       {id:"baggage",       label:"My Bags",         icon:Briefcase},
       {id:"accessibility", label:"Assistance",      icon:AccIcon},
       {id:"subscription",  label:"My Subscription", icon:Crown},
@@ -211,10 +214,7 @@ export function Sidebar() {
       {sidebarOpen && (
         <div className="p-3 border-t border-navy-600/60 flex-shrink-0">
           <div className="text-xs text-slate-600">
-            {user?.role==="superadmin"?"Super Admin — All Airports":
-             user?.role==="airport_admin"?`Admin — ${user.airport}`:
-             user?.role==="staff"?`Staff — ${user?.airport}`:
-             "Passenger Portal"}
+            {roleLabel(user)} — {user?.airport}
           </div>
         </div>
       )}

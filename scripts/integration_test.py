@@ -569,6 +569,33 @@ class Accounts(unittest.TestCase):
         self.assertEqual(call("PUT", "/api/records/baggage/" + b["id"], {"status": "Delivered"}, token=tp)[0], 403)
         for x in (b, admin_bag): call("DELETE", "/api/records/baggage/" + x["id"], token=ta)
 
+    def test_shop_orders_stock_ownership_and_totals(self):
+        ts, tp, ta = login(SHOP), login(PAX), login(ADMIN)
+        mine = [x for x in call("GET", "/api/records/stores", token=ts)[1]["records"] if x.get("ownerId")]
+        if mine: shop = mine[0]
+        else:
+            code, shop = call("POST", "/api/records/stores", {"name": "Test Cafe " + RUN, "category": "F&B", "terminal": "T1", "status": "Open"}, token=ts); self.assertEqual(code, 201)
+        self.assertEqual(call("POST", "/api/records/stores", {"name": "Second"}, token=ts)[0], 409)          # one shop per account
+        code, prod = call("POST", "/api/records/products", {"name": "Masala Chai " + RUN, "price": 40, "stock": 3, "available": "Yes"}, token=ts); self.assertEqual(code, 201)
+        # a passenger cannot create products or edit shops
+        self.assertEqual(call("POST", "/api/records/products", {"name": "x", "price": 1}, token=tp)[0], 403)
+        self.assertEqual(call("PUT", "/api/records/stores/" + shop["id"], {"status": "Closed"}, token=tp)[0], 403)
+        # order: total comes from stored price, stock is reserved, delivery needs a gate
+        body = {"shopId": shop["id"], "items": [{"id": prod["id"], "qty": 2, "price": 1}], "deliver": "Gate", "terminal": "T1", "gate": "B12"}
+        self.assertEqual(call("POST", "/api/records/orders", {**body, "gate": ""}, token=tp)[0], 400)
+        code, o = call("POST", "/api/records/orders", body, token=tp); self.assertEqual(code, 201); self.assertEqual((o["total"], o["status"], o["gate"]), (80, "New", "B12"))
+        self.assertEqual(call("POST", "/api/records/orders", body, token=tp)[0], 409)                         # only 1 left
+        self.assertTrue(any(x["id"] == o["id"] for x in call("GET", "/api/records/orders", token=ts)[1]["records"]))   # shop owner sees it
+        self.assertTrue(any(x["id"] == o["id"] for x in call("GET", "/api/records/orders", token=tp)[1]["records"]))
+        self.assertEqual(call("PUT", "/api/records/orders/" + o["id"], {"status": "Accepted"}, token=tp)[0], 403)
+        self.assertEqual(call("PUT", "/api/records/orders/" + o["id"], {"status": "Accepted"}, token=ts)[0], 200)
+        self.assertEqual(call("PUT", "/api/records/orders/" + o["id"], {"status": "Cancelled"}, token=tp)[0], 403)   # too late for the passenger
+        self.assertEqual(call("PUT", "/api/records/orders/" + o["id"], {"status": "Cancelled"}, token=ts)[0], 200)
+        stock = [x for x in call("GET", "/api/records/products", token=ts)[1]["records"] if x["id"] == prod["id"]][0]["stock"]
+        self.assertEqual(stock, 3)                                                                              # cancelling returned the stock
+        call("DELETE", "/api/records/products/" + prod["id"], token=ts)
+        if not mine: call("DELETE", "/api/records/stores/" + shop["id"], token=ts)
+
     def test_owner_can_switch_airport_and_data_follows(self):
         self.assertEqual(call("POST", "/api/auth/switch-airport", {"airport": "BOM"}, token=login(ADMIN))[0], 403)
         self.assertEqual(call("POST", "/api/auth/switch-airport", {"airport": "BOM"})[0], 401)
