@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Eye, EyeOff, Plane, ArrowRight, AlertCircle, CheckCircle2, Loader2, ShieldCheck, Store, UserRound, Wrench, Building2, Radar, Mail, KeyRound } from "lucide-react";
 import { useAuthStore } from "../../store/authStore";
 import { MOCK_USERS } from "../../data/users";
@@ -35,7 +35,11 @@ export function LoginPage() {
   const [acct, setAcct] = useState<"PASSENGER" | "RETAILER">("PASSENGER"); const [shop, setShop] = useState("");
   const [show, setShow] = useState(false); const [busy, setBusy] = useState(false);
   const [error, setError] = useState(""); const [info, setInfo] = useState(""); const [link, setLink] = useState("");
-  const resetToken = useMemo(() => new URLSearchParams(location.hash.split("?")[1] ?? "").get("token") ?? "", []);
+  const [resetToken, setResetToken] = useState(() => new URLSearchParams(location.hash.split("?")[1] ?? "").get("token") ?? "");
+  useEffect(() => {   // the emailed / on-screen link only changes the hash, so follow it
+    const onHash = () => { if (location.hash.startsWith("#/reset")) { setResetToken(new URLSearchParams(location.hash.split("?")[1] ?? "").get("token") ?? ""); setMode("reset"); setError(""); setInfo(""); setLink(""); setPassword(""); } };
+    window.addEventListener("hashchange", onHash); return () => window.removeEventListener("hashchange", onHash);
+  }, []);
 
   useEffect(() => { if (API_ENABLED) fetchAirports().then(a => a.length && setAirports(a)).catch(() => undefined); }, []);
   const go = (m: Mode) => { setMode(m); setError(""); setInfo(""); setLink(""); };
