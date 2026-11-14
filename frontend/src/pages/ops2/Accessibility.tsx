@@ -17,7 +17,7 @@ const etaFor = (staffTerminal: string, terminal: string, area: string) => (staff
 export function AccessibilityConcierge() {
   const role = useAuthStore(s => s.user?.role); const setPage = useAppStore(s => s.setActivePage);
   const isPax = role === "passenger"; const isAdmin = role === "airport_admin" || role === "superadmin";
-  const col = useCollection<Req>("accessibility", []); const staffCol = useCollection<Person>("staff", []);
+  const col = useCollection<Req>("accessibility", []); const staffCol = useCollection<Person>("staff", [], { skip: isPax });
   const { flights } = useBoard();
   const terminals = useMemo(() => { const t = Array.from(new Set(flights.map(f => f.terminal).filter(x => x && x !== "—"))).sort(); return t.length ? t : ["T1"]; }, [flights]);
   const [f, setF] = useState({ pax: "", flight: "", need: NEEDS[0], terminal: "", area: AREAS[0], note: "" });
@@ -63,7 +63,7 @@ export function AccessibilityConcierge() {
         <datalist id="flt">{flights.slice(0, 200).map(x => <option key={x.id} value={x.flight} />)}</datalist></form></Card>
       <div className="space-y-3">{col.error && <div className="text-xs text-red-400">{col.error}</div>}
         {reqs.length === 0 && <Card><div className="text-sm text-slate-400">No requests yet.</div></Card>}
-        {reqs.map(r => (<Card key={r.id}><div className="flex justify-between gap-3 items-center"><div><div className="text-white">{r.need} · {r.flight}</div><div className="text-xs text-slate-400 mt-1">{r.terminal} {r.area.toLowerCase()}{r.staff ? ` · ${r.staff} is on the way (about ${r.eta} min)` : r.status === "Open" ? " · waiting for a team member" : ""}</div></div>
+        {reqs.map(r => (<Card key={r.id}><div className="flex justify-between gap-3 items-center"><div><div className="text-white">{r.need} · {r.flight}</div><div className="text-xs text-slate-400 mt-1">{r.terminal} {(r.area ?? "").toLowerCase()}{r.staff ? ` · ${r.staff} is on the way (about ${r.eta} min)` : r.status === "Open" ? " · waiting for a team member" : ""}</div></div>
           <span className={`text-xs px-2 py-1 rounded-full border ${r.status === "Open" ? "text-yellow-300 border-yellow-500/30" : r.status === "Assigned" ? "text-sky-300 border-sky-500/30" : "text-green-300 border-green-500/30"}`}>{r.status === "Assigned" ? "On the way" : r.status === "Done" ? "Completed" : "Requested"}</span></div></Card>))}</div>
     </div>);
 
@@ -99,7 +99,7 @@ export function AccessibilityConcierge() {
             return (<Card key={r.id} className={late ? "!border-red-500/60" : warn ? "!border-yellow-500/50" : ""}>
               <div className="flex flex-wrap justify-between gap-3 items-center">
                 <div className="min-w-0"><div className="text-white flex items-center gap-2"><Icon className="w-4 h-4 text-sky-400" />{r.pax} <span className="text-slate-400 text-sm font-mono">{r.flight}</span>{fi && <span className="text-xs text-slate-500">gate {fi.gate} · dep {fi.dep}</span>}</div>
-                  <div className="text-xs text-slate-400 mt-1">{r.need} · {r.terminal} {r.area.toLowerCase()}{r.note ? ` · “${r.note}”` : ""}</div>
+                  <div className="text-xs text-slate-400 mt-1">{r.need} · {r.terminal} {(r.area ?? "").toLowerCase()}{r.note ? ` · “${r.note}”` : ""}</div>
                   <div className="text-xs mt-1 flex items-center gap-3">
                     {r.requestedAt && <span className={late ? "text-red-400" : warn ? "text-yellow-400" : "text-slate-500"}><Clock className="inline w-3 h-3 mr-1" />{r.status === "Done" ? "closed" : `waiting ${wait} min`}</span>}
                     {r.staff && <span className="text-sky-300"><UserCheck className="inline w-3 h-3 mr-1" />{r.staff}{r.status === "Assigned" ? `, ETA ${r.eta} min` : ""}</span>}</div></div>

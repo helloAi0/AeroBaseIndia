@@ -29,7 +29,7 @@ class RecordsController : public HttpController<RecordsController> {
         static const Roles OPS_AIR = [] { Roles r = OPS; r.insert("AIRLINE_OPS"); return r; }();
         static const std::map<std::string, Policy> P = {
             {"accessibility", {[] { Roles r = OPS; r.insert("PASSENGER"); return r; }(), [] { Roles r = OPS; r.insert("PASSENGER"); return r; }(), OPS, false, {"PASSENGER"}}},   // passengers can ask for help and see only their own requests
-            {"lostfound",     {OPS, OPS, OPS}},
+            {"lostfound",     {[] { Roles r = OPS; r.insert("PASSENGER"); return r; }(), [] { Roles r = OPS; r.insert("PASSENGER"); return r; }(), OPS}},   // passengers can report a lost item and look for it
             {"incidents",     {OPS_AIR, OPS, OPS}},
             {"maintenance",   {OPS_AIR, OPS, OPS}},
             {"cargo",         {OPS_AIR, OPS, OPS}},

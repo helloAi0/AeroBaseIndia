@@ -11,10 +11,10 @@ export type Rec<T> = T & { id: string; created_at?: string };
  * A persisted list backed by /api/records/{name} when signed in to the live backend (shared by every user
  * of the airport, role-checked on the server); a local in-memory list seeded with `seed` in demo mode.
  */
-export function useCollection<T extends object>(name: string, seed: Rec<T>[] = []) {
+export function useCollection<T extends object>(name: string, seed: Rec<T>[] = [], opts: { skip?: boolean } = {}) {
   const tenant = useAirport().code;
   const loggedIn = useAuthStore(s => s.isLoggedIn);
-  const live = API_ENABLED && loggedIn && useAuthStore(s => s.source) === "backend";
+  const live = !opts.skip && API_ENABLED && loggedIn && useAuthStore(s => s.source) === "backend";
   const qc = useQueryClient();
   const key = ["records", name, tenant];
   const q = useQuery({ queryKey: key, enabled: live, retry: false, refetchInterval: 20_000, refetchIntervalInBackground: false,

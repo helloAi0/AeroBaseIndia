@@ -43,7 +43,7 @@ const IncidentsPage = rec("IncidentsPage"), FuelManagement = rec("FuelPage"), Ma
   RetailPage = rec("RetailPage"), SubscriptionPage = rec("SubscriptionPage"),
   BaggagePage = lazy(() => import("./pages/baggage/BaggagePage").then(m => ({ default: m.BaggagePage }))), SecurityPage = rec("SecurityPage"), SecurityOpsPage = rec("SecurityPage"), StaffManagement = rec("StaffPage"), CargoPage = rec("CargoPage"), CheckInSystem = rec("CheckInPage"), FeedbackPage = rec("FeedbackPage"), EmergencyCenter = rec("EmergencyPage");
 /** Pages whose numbers come from the server when signed in to the live backend. Everything else shows built-in sample data. */
-const LIVE_PAGES = new Set(["dashboard", "flights", "autopilot", "whatif", "copilot", "heatmap", "gateopt", "carbonops", "playbooks", "turnaround", "accessibility",
+const LIVE_PAGES = new Set(["api_test", "baggage_predict", "deployment", "graphql", "metrics", "traces", "dashboard", "flights", "autopilot", "whatif", "copilot", "heatmap", "gateopt", "carbonops", "playbooks", "turnaround", "accessibility",
   "lostfound", "journey", "bids", "announcements", "incidents", "maintenance", "contracts", "parking", "fuel", "weather", "ai", "marketplace",
   "analytics", "kpi", "revenue", "gates", "carbon", "airline", "pilot", "retailer", "passenger", "tenants", "baggage", "security", "security_ops", "cargo", "checkin", "staff", "team", "command", "crew", "trips", "desk", "shops", "shoporders", "feedback", "emergency", "billing", "scheduler", "biometric", "retail", "subscription", "partner", "twin", "map", "settings", "branding", "integrations", "payments", "whatsapp", "reports", "notifications", "websocket"]);
 const TeamAccess = lazy(() => import("./pages/team/TeamAccess").then(m => ({ default: m.TeamAccess })));
