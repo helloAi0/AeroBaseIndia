@@ -4,19 +4,29 @@ import { capacityOf, delayMinutes, toMin } from "./opsEngine";
 
 /* ───────── Crowd ───────── */
 export const CROWD = { checkinLeadMin: 150, securityLeadMin: 90, checkinPaxPerMin: 14, securityPaxPerMin: 22, checkinCap: 900, securityCap: 700 };
-export interface Zone { terminal: string; kind: "Check-in" | "Security" | "Gates"; people: number; wait: number; load: number }
+/** Counters / lanes: the default staffing reproduces the throughput above; each extra lane adds its share. Target = the longest wait we want to tolerate. */
+export const LANES = {
+  "Check-in": { def: 12, max: 40, target: 20, rate: CROWD.checkinPaxPerMin / 12 },
+  Security:   { def: 12, max: 24, target: 15, rate: CROWD.securityPaxPerMin / 12 },
+} as const;
+export interface Zone { terminal: string; kind: "Check-in" | "Security" | "Gates"; people: number; wait: number; load: number; lanes?: number; recommended?: number }
+export const laneKey = (terminal: string, kind: string) => `${terminal}|${kind}`;
 
-/** Passengers expected in a zone at `now`, spreading each flight's pax across the window before departure. */
-export function crowdAt(flights: DemoFlight[], now: number): Zone[] {
+/** Passengers expected in a zone at `now`, spreading each flight's pax across the window before departure. `lanes` overrides the counters open per "T1|Check-in". */
+export function crowdAt(flights: DemoFlight[], now: number, lanes: Record<string, number> = {}, terminals: string[] = ["T1", "T2", "T3"]): Zone[] {
   const out: Zone[] = [];
-  for (const t of ["T1", "T2", "T3"]) {
+  for (const t of terminals) {
     const fs = flights.filter(f => f.terminal === t && f.status !== "Landed" && f.status !== "Departed" && f.status !== "Cancelled");
     const inWindow = (f: DemoFlight, lead: number, tail: number) => { const d = toMin(f.dep) + delayMinutes(f) - now; return d <= lead && d >= tail; };
     const ci = fs.filter(f => inWindow(f, CROWD.checkinLeadMin, 45)).reduce((a, f) => a + f.pax * 0.9, 0);
     const sec = fs.filter(f => inWindow(f, CROWD.securityLeadMin, 25)).reduce((a, f) => a + f.pax * 0.9, 0);
     const gt = fs.filter(f => inWindow(f, 45, -10)).reduce((a, f) => a + f.pax, 0);
-    out.push({ terminal: t, kind: "Check-in", people: Math.round(ci), wait: Math.round(ci / CROWD.checkinPaxPerMin), load: Math.min(1, ci / CROWD.checkinCap) });
-    out.push({ terminal: t, kind: "Security", people: Math.round(sec), wait: Math.round(sec / CROWD.securityPaxPerMin), load: Math.min(1, sec / CROWD.securityCap) });
+    const zone = (kind: "Check-in" | "Security", people: number): Zone => {
+      const L = LANES[kind], n = Math.max(1, Math.min(L.max, lanes[laneKey(t, kind)] ?? L.def));
+      return { terminal: t, kind, people: Math.round(people), wait: Math.round(people / (n * L.rate)), load: Math.min(1, people / (n * L.rate * L.target * 2)), lanes: n,
+        recommended: Math.max(4, Math.min(L.max, Math.ceil(people / (L.rate * L.target)))) };
+    };
+    out.push(zone("Check-in", ci), zone("Security", sec));
     out.push({ terminal: t, kind: "Gates", people: Math.round(gt), wait: 0, load: Math.min(1, gt / 700) });
   }
   return out;

@@ -41,6 +41,7 @@ class RecordsController : public HttpController<RecordsController> {
             {"actions",       {OPS, OPS, ADMIN}},          // approved autopilot / playbook actions
             {"announcements", {OPS, OPS, ADMIN}},
             {"settings",      {ADMIN, ADMIN, ADMIN}},
+            {"lane_config",   {OPS, OPS, ADMIN}},          // counters / lanes open per terminal zone
             {"stores",        {[] { Roles r = OPS; r.insert("RETAILER"); r.insert("PASSENGER"); r.insert("AIRLINE_OPS"); return r; }(), ADMIN, ADMIN}},
             {"passes",        {[] { Roles r = ADMIN; r.insert("PASSENGER"); return r; }(), {"PASSENGER", "AIRPORT_ADMIN", "SUPER_ADMIN"}, ADMIN, true}},
             {"bids",          {[] { Roles r = ADMIN; r.insert("RETAILER"); return r; }(), {"RETAILER"}, ADMIN, true}},

@@ -26,7 +26,7 @@ const ALL_NAV = [
     {id:"autopilot",   label:"Disruption Autopilot",icon:Siren},
     {id:"whatif",      label:"What-if Simulator",icon:FlaskConical},
     {id:"copilot",     label:"Ops Copilot",    icon:Bot},
-    {id:"heatmap",     label:"Crowd Heatmap",  icon:FlameIcon},
+    {id:"heatmap",     label:"Crowd & Queues",  icon:FlameIcon},
     {id:"gateopt",     label:"Smart Gates",    icon:LayoutGrid},
     {id:"carbonops",   label:"Carbon Ops",     icon:Leaf},
     {id:"playbooks",   label:"Weather Playbooks",icon:CloudLightning},

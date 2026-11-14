@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useAirport } from "./useAirport";
 
-export const AIRPORT_COORDS: Record<string, [number, number]> = { DEL: [28.5562, 77.1], BOM: [19.0896, 72.8656], BLR: [13.1979, 77.7063] };
+import { AIRPORT_COORDS } from "../data/airportCoords";
+export { AIRPORT_COORDS };
 export type Weather = { temp: number; wind: number; visibility: number; humidity: number } | null;
 
 /** Current conditions at the airport from Open-Meteo (free, no key). null while loading or if unreachable. */
