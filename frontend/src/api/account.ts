@@ -17,7 +17,7 @@ export async function fetchAirports(): Promise<AirportInfo[]> {
   return (r.data?.airports ?? []) as AirportInfo[];
 }
 
-export interface SignupInput { name: string; email: string; password: string; airport: string; account_type: "PASSENGER" | "RETAILER"; shop?: string; }
+export interface SignupInput { name: string; email: string; password: string; airport: string; account_type: "PASSENGER" | "RETAILER" | "PILOT"; shop?: string; crew_ref?: string; license?: string; }
 export async function signup(input: SignupInput): Promise<string> {
   try { return String((await api.post("/api/auth/register", input)).data?.message ?? "Account created."); }
   catch (e) { throw new Error(msg(e, "Could not create the account")); }
@@ -50,3 +50,21 @@ export async function removeTeamMember(id: string): Promise<void> {
 
 export const passwordProblem = (p: string): string =>
   p.length < 10 ? "Use at least 10 characters" : !/[A-Za-z]/.test(p) || !/\d/.test(p) ? "Include a letter and a number" : "";
+
+export interface Officer { id: string; name: string; email: string; ref: string; head: boolean }
+export async function securityTeam(): Promise<Officer[]> {
+  try { return ((await api.get("/api/team/security")).data?.officers ?? []) as Officer[]; }
+  catch (e) { throw new Error(msg(e, "Could not load the security team")); }
+}
+
+/** A pilot who changed airline (or airport) links the reference ID the new airline issued; returns a fresh session token for the new assignment. */
+export async function linkCrewRef(crew_ref: string, license: string): Promise<{ token: string; airport: string; airport_name: string }> {
+  try { return (await api.post("/api/crew/link", { crew_ref, license })).data; }
+  catch (e) { throw new Error(msg(e, "Could not link the reference ID")); }
+}
+
+export interface AirlineInfo { code: string; name: string }
+export async function fetchAirlines(airport: string): Promise<AirlineInfo[]> {
+  const r = await api.get("/api/public/airlines", { params: { airport } });
+  return (r.data?.airlines ?? []) as AirlineInfo[];
+}

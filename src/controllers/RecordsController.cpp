@@ -109,7 +109,7 @@ class RecordsController : public HttpController<RecordsController> {
         d["items"] = items; d["total"] = total; d["status"] = "New"; d["deliver"] = mode; d["payment"] = mode == "Gate" ? "Pay on delivery" : "Pay at the counter";
         d["terminal"] = clip(in, "terminal", 12); d["gate"] = clip(in, "gate", 12); d["flight"] = clip(in, "flight", 12); d["note"] = clip(in, "note", 200); d["passenger"] = w.name.empty() ? "Passenger" : w.name;
         if (mode == "Gate" && d["gate"].asString().empty()) return fail(cb, "Tell us your gate so we can bring the order to you", k400BadRequest);
-        auto r = t.exec_params("INSERT INTO app_records (tenant_id, collection, data, created_by) VALUES ($1::uuid, 'orders', $2::jsonb, $3::uuid) RETURNING id::text, data::text, to_char(created_at,'YYYY-MM-DD\"T\"HH24:MI:SS')", w.tenant, dump(d), w.user);
+        auto r = t.exec_params("INSERT INTO app_records (tenant_id, collection, data, created_by) VALUES ($1::uuid, 'orders', $2::jsonb, $3::uuid) RETURNING id::text, data::text, to_char((created_at AT TIME ZONE current_setting('TimeZone')) AT TIME ZONE 'UTC','YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')", w.tenant, dump(d), w.user);
         t.commit();
         Json::Value a; a["collection"] = "orders"; AuditWriter::record(w.tenant, w.user, "RECORD_CREATED", "orders", a, req->peerAddr().toIp());
         reply(cb, row(r[0]), k201Created);
@@ -129,7 +129,7 @@ class RecordsController : public HttpController<RecordsController> {
         if (old == "Delivered" || old == "Cancelled") return fail(cb, "This order is already closed", k409Conflict);
         if (next == "Cancelled") for (const auto& it : d["items"]) if (isUuid(it["id"].asString()))
             t.exec_params("UPDATE app_records SET data = jsonb_set(data, '{stock}', to_jsonb((data->>'stock')::int + $2::int)) WHERE id=$1::uuid AND collection='products' AND data->>'stock' IS NOT NULL AND data->>'stock' <> ''", it["id"].asString(), it["qty"].asInt());
-        auto r = t.exec_params("UPDATE app_records SET data = data || jsonb_build_object('status', $2::text), updated_at = CURRENT_TIMESTAMP WHERE id=$1::uuid RETURNING id::text, data::text, to_char(created_at,'YYYY-MM-DD\"T\"HH24:MI:SS')", id, next);
+        auto r = t.exec_params("UPDATE app_records SET data = data || jsonb_build_object('status', $2::text), updated_at = CURRENT_TIMESTAMP WHERE id=$1::uuid RETURNING id::text, data::text, to_char((created_at AT TIME ZONE current_setting('TimeZone')) AT TIME ZONE 'UTC','YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')", id, next);
         t.commit();
         Json::Value a; a["collection"] = "orders"; a["id"] = id; a["status"] = next; AuditWriter::record(w.tenant, w.user, "RECORD_UPDATED", "orders", a, req->peerAddr().toIp());
         reply(cb, row(r[0]));
@@ -151,7 +151,7 @@ public:
             const bool own = ((it->second.ownOnlyRead && !(w.role == "SUPER_ADMIN" || w.role == "AIRPORT_ADMIN")) || it->second.ownRoles.count(w.role) > 0) && !(coll == "dispatch" && isHead(w));
             const std::string orgF = it->second.orgRoles.count(w.role) ? (w.org.empty() ? "-" : w.org) : "";
             auto conn = DatabaseManager::getConnection(); pqxx::read_transaction t(*conn);
-            auto rows = t.exec_params("SELECT id::text, data::text, to_char(created_at,'YYYY-MM-DD\"T\"HH24:MI:SS') FROM app_records "
+            auto rows = t.exec_params("SELECT id::text, data::text, to_char((created_at AT TIME ZONE current_setting('TimeZone')) AT TIME ZONE 'UTC','YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"') FROM app_records "
                                       "WHERE tenant_id = $1::uuid AND collection = $2 AND ($3 = FALSE OR created_by = $4::uuid OR data->>'ownerId' = $4::text OR data->>'claimedBy' = $4::text OR data->>'toId' = $4::text) "
                                       "AND ($5 = '' OR data->>'airline' = $5) "
                                       "ORDER BY created_at DESC LIMIT 500", w.tenant, coll, own, w.user, orgF);
@@ -196,7 +196,7 @@ public:
             if (js.find("\\u0000") != std::string::npos) return fail(cb, "Text contains an invalid character", k400BadRequest);
             auto conn = DatabaseManager::getConnection(); pqxx::work t(*conn);
             auto r = t.exec_params("INSERT INTO app_records (tenant_id, collection, data, created_by) VALUES ($1::uuid, $2, $3::jsonb, $4::uuid) "
-                                   "RETURNING id::text, data::text, to_char(created_at,'YYYY-MM-DD\"T\"HH24:MI:SS')", w.tenant, coll, js, w.user);
+                                   "RETURNING id::text, data::text, to_char((created_at AT TIME ZONE current_setting('TimeZone')) AT TIME ZONE 'UTC','YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')", w.tenant, coll, js, w.user);
             t.commit();
             Json::Value d; d["collection"] = coll; AuditWriter::record(w.tenant, w.user, "RECORD_CREATED", coll, d, req->peerAddr().toIp());
             reply(cb, row(r[0]), k201Created);
@@ -224,7 +224,7 @@ public:
             auto conn = DatabaseManager::getConnection(); pqxx::work t(*conn);
             auto r = t.exec_params("UPDATE app_records SET data = data || $4::jsonb, updated_at = CURRENT_TIMESTAMP WHERE id = $1::uuid AND tenant_id = $2::uuid AND collection = $3 "
                                    "AND (NOT $5 OR created_by = $6::uuid OR data->>'ownerId' = $6::text OR data->>'toId' = $6::text) AND ($7 = '' OR data->>'airline' = $7) "
-                                   "RETURNING id::text, data::text, to_char(created_at,'YYYY-MM-DD\"T\"HH24:MI:SS')", id, w.tenant, coll, js, mustOwn, w.user, orgF);
+                                   "RETURNING id::text, data::text, to_char((created_at AT TIME ZONE current_setting('TimeZone')) AT TIME ZONE 'UTC','YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')", id, w.tenant, coll, js, mustOwn, w.user, orgF);
             t.commit();
             if (r.empty()) return fail(cb, "Not found", k404NotFound);
             Json::Value d; d["collection"] = coll; d["id"] = id; AuditWriter::record(w.tenant, w.user, "RECORD_UPDATED", coll, d, req->peerAddr().toIp());

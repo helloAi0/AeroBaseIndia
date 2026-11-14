@@ -18,6 +18,7 @@ class AccountController : public HttpController<AccountController> {
 public:
     METHOD_LIST_BEGIN
         ADD_METHOD_TO(AccountController::airports, "/api/public/airports", Get);
+        ADD_METHOD_TO(AccountController::airlines, "/api/public/airlines", Get);
         ADD_METHOD_TO(AccountController::registerUser, "/api/auth/register", Post);
         ADD_METHOD_TO(AccountController::forgot, "/api/auth/forgot", Post);
         ADD_METHOD_TO(AccountController::reset, "/api/auth/reset", Post);
@@ -63,6 +64,18 @@ public:
             Json::Value arr(Json::arrayValue);
             for (const auto& r : rows) { Json::Value o; o["code"] = r[0].c_str(); o["name"] = r[1].c_str(); arr.append(o); }
             Json::Value out; out["airports"] = arr; send(cb, k200OK, out);
+        } catch (const std::exception&) { fail(cb, k500InternalServerError, "Internal server error"); }
+    }
+
+    // GET /api/public/airlines?airport=BOM: the airlines operating at an airport (public schedule information; lets an airline-ops user pick their airline).
+    void airlines(const HttpRequestPtr& req, Cb&& cb) {
+        const std::string airport = req->getParameter("airport");
+        try {
+            auto conn = DatabaseManager::makeConnection(); pqxx::read_transaction t(conn);
+            auto rows = t.exec_params("SELECT airline_code, airline FROM (SELECT DISTINCT ON (f.airline_code) f.airline_code, f.airline FROM flights f JOIN tenants te ON te.id = f.tenant_id WHERE te.airport_code = upper($1) AND f.airline_code IS NOT NULL ORDER BY f.airline_code, f.airline) x ORDER BY airline", airport);
+            Json::Value arr(Json::arrayValue);
+            for (const auto& r : rows) { Json::Value o; o["code"] = r[0].c_str(); o["name"] = r[1].c_str(); arr.append(o); }
+            Json::Value out; out["airlines"] = arr; send(cb, k200OK, out);
         } catch (const std::exception&) { fail(cb, k500InternalServerError, "Internal server error"); }
     }
 

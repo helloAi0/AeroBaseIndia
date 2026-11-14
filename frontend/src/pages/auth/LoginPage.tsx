@@ -3,7 +3,7 @@ import { Eye, EyeOff, Plane, ArrowRight, AlertCircle, CheckCircle2, Loader2, Shi
 import { useAuthStore } from "../../store/authStore";
 import { MOCK_USERS } from "../../data/users";
 import { loginWithBackend, LoginError } from "../../api/auth";
-import { fetchAirports, signup, forgotPassword, resetPassword, passwordProblem, type AirportInfo } from "../../api/account";
+import { fetchAirlines, type AirlineInfo, fetchAirports, signup, forgotPassword, resetPassword, passwordProblem, type AirportInfo } from "../../api/account";
 import { API_ENABLED, DEMO_LOGIN_ENABLED, SHOW_DEMO_ACCOUNTS, DEMO_PASSWORD } from "../../config";
 
 type Mode = "signin" | "signup" | "forgot" | "reset";
@@ -18,7 +18,8 @@ const ROLES = [
   { key: "admin", label: "Airport director", icon: Building2, color: "#38bdf8", blurb: "Runs the whole airport: flights, gates, revenue, team.", email: (a: string) => `admin@${a}.aerobase.in` },
   { key: "staff", label: "Ground staff", icon: Wrench, color: "#2dd4bf", blurb: "Check-in, baggage, turnaround, assistance requests.", email: (a: string) => `staff@${a}.aerobase.in` },
   { key: "security", label: "Security", icon: ShieldCheck, color: "#f87171", blurb: "Security events, CCTV, emergencies.", email: (a: string) => `security@${a}.aerobase.in` },
-  { key: "airline", label: "Airline ops", icon: Plane, color: "#fbbf24", blurb: "Your airline's flights, fleet, crew and revenue.", email: (a: string) => `ops@indigo.${a}.aerobase.in` },
+  { key: "airline", label: "Airline ops", icon: Plane, color: "#fbbf24", blurb: "Your airline's flights, fleet, crew and revenue.", email: (a: string, x?: string) => `ops.${(x || "6e").toLowerCase()}@${a}.aerobase.in` },
+  { key: "sechead", label: "Security head", icon: ShieldCheck, color: "#fb7185", blurb: "Your officers by reference ID; send them instructions.", email: (a: string) => `head.security@${a}.aerobase.in` },
   { key: "pilot", label: "Pilot", icon: Radar, color: "#a78bfa", blurb: "Duty roster, briefing, weather and gate for your flights.", email: (a: string) => `captain@airindia.${a}.aerobase.in` },
   { key: "retailer", label: "Shop owner", icon: Store, color: "#fb923c", blurb: "Your unit, bids, sales and notices from the airport.", email: (a: string) => `shop@${a}.aerobase.in` },
   { key: "passenger", label: "Passenger", icon: UserRound, color: "#c084fc", blurb: "Your flight, boarding pass, bags and wayfinding.", email: (a: string) => `passenger@${a}.aerobase.in` },
@@ -30,9 +31,9 @@ export function LoginPage() {
   const login = useAuthStore(s => s.login);
   const [mode, setMode] = useState<Mode>(() => (location.hash.startsWith("#/reset") ? "reset" : "signin"));
   const [airports, setAirports] = useState<AirportInfo[]>(FALLBACK_AIRPORTS);
-  const [airport, setAirport] = useState("DEL"); const [demoRole, setDemoRole] = useState<string | null>(null);
+  const [airport, setAirport] = useState("DEL"); const [demoRole, setDemoRole] = useState<string | null>(null); const [airlines, setAirlines] = useState<AirlineInfo[]>([]); const [airline, setAirline] = useState("");
   const [email, setEmail] = useState(""); const [password, setPassword] = useState(""); const [name, setName] = useState("");
-  const [acct, setAcct] = useState<"PASSENGER" | "RETAILER">("PASSENGER"); const [shop, setShop] = useState("");
+  const [acct, setAcct] = useState<"PASSENGER" | "RETAILER" | "PILOT">("PASSENGER"); const [shop, setShop] = useState(""); const [crewRef, setCrewRef] = useState(""); const [license, setLicense] = useState("");
   const [show, setShow] = useState(false); const [busy, setBusy] = useState(false);
   const [error, setError] = useState(""); const [info, setInfo] = useState(""); const [link, setLink] = useState("");
   const [resetToken, setResetToken] = useState(() => new URLSearchParams(location.hash.split("?")[1] ?? "").get("token") ?? "");
@@ -41,6 +42,7 @@ export function LoginPage() {
     window.addEventListener("hashchange", onHash); return () => window.removeEventListener("hashchange", onHash);
   }, []);
 
+  useEffect(() => { if (API_ENABLED) fetchAirlines(airport).then(a => { setAirlines(a); setAirline(x => a.some(y => y.code === x) ? x : (a.find(y => y.code === "6E") ?? a[0])?.code ?? ""); }).catch(() => setAirlines([])); }, [airport]);
   useEffect(() => { if (API_ENABLED) fetchAirports().then(a => a.length && setAirports(a)).catch(() => undefined); }, []);
   const go = (m: Mode) => { setMode(m); setError(""); setInfo(""); setLink(""); };
 
@@ -67,7 +69,7 @@ export function LoginPage() {
     try {
       if (mode === "signup") {
         const p = passwordProblem(password); if (p) { setError(p); return; }
-        await signup({ name: name.trim(), email: email.trim(), password, airport, account_type: acct, shop: shop.trim() });
+        await signup({ name: name.trim(), email: email.trim(), password, airport, account_type: acct, shop: shop.trim(), crew_ref: crewRef.trim(), license: license.trim() });
         setInfo("Account created. Signing you in…"); await doSignin(email.trim(), password);
       } else if (mode === "forgot") {
         const r = await forgotPassword(email.trim()); setInfo(r.message); setLink(r.resetLink ?? "");
@@ -80,7 +82,7 @@ export function LoginPage() {
   };
 
   const titles: Record<Mode, [string, string]> = {
-    signin: ["Welcome back", "Sign in to your airport workspace"], signup: ["Create your account", "Passengers and shop owners can sign up here"],
+    signin: ["Welcome back", "Sign in to your airport workspace"], signup: ["Create your account", "Passengers, shop owners and airline crew can sign up here"],
     forgot: ["Forgot your password?", "We'll email you a link to choose a new one"], reset: ["Choose a new password", "At least 10 characters, with a letter and a number"],
   };
 
@@ -117,14 +119,17 @@ export function LoginPage() {
 
             <form onSubmit={submit} className="space-y-4" noValidate={false}>
               {mode === "signup" && (<>
-                <div className="grid grid-cols-2 gap-2">
-                  {([["PASSENGER", "I'm a passenger", UserRound], ["RETAILER", "I own a shop", Store]] as const).map(([v, l, I]) => (
+                <div className="grid grid-cols-3 gap-2">
+                  {([["PASSENGER", "Passenger", UserRound], ["RETAILER", "Shop owner", Store], ["PILOT", "Pilot / crew", Plane]] as const).map(([v, l, I]) => (
                     <button key={v} type="button" onClick={() => setAcct(v)} className={`flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm border transition ${acct === v ? "border-sky-400 bg-sky-500/10 text-white" : "border-white/10 text-slate-400 hover:text-white"}`}><I className="w-4 h-4" />{l}</button>))}
                 </div>
                 <div><label className="text-xs font-semibold text-slate-400 mb-1.5 block">Full name</label><input className={inputCls} value={name} onChange={e => setName(e.target.value)} required minLength={2} autoComplete="name" placeholder="Asha Rao" /></div>
                 {acct === "RETAILER" && <div><label className="text-xs font-semibold text-slate-400 mb-1.5 block">Shop or brand name</label><input className={inputCls} value={shop} onChange={e => setShop(e.target.value)} required placeholder="Blue Tokai Coffee" /></div>}
-                <div><label className="text-xs font-semibold text-slate-400 mb-1.5 block">Airport</label>
-                  <select className={inputCls} value={airport} onChange={e => setAirport(e.target.value)}>{airports.map(a => <option key={a.code} value={a.code} className="bg-slate-900">{a.code} — {a.name}</option>)}</select></div>
+                {acct === "PILOT" && <div className="space-y-3 rounded-xl border border-white/10 bg-white/[0.03] p-3"><div className="text-[11px] text-slate-400">Your airline's operations team issues a crew reference ID and you give them your licence number. Enter your name exactly as they registered it.</div>
+                  <input className={inputCls} placeholder="Crew reference ID e.g. EK-FD-3FA21C" value={crewRef} onChange={e => setCrewRef(e.target.value)} required autoCapitalize="characters" aria-label="Crew reference ID" />
+                  <input className={inputCls} placeholder="Licence number e.g. ATPL-IN-4471" value={license} onChange={e => setLicense(e.target.value)} required aria-label="Licence number" /></div>}
+                {acct !== "PILOT" && <div><label className="text-xs font-semibold text-slate-400 mb-1.5 block">Airport</label>
+                  <select className={inputCls} value={airport} onChange={e => setAirport(e.target.value)}>{airports.map(a => <option key={a.code} value={a.code} className="bg-slate-900">{a.code} — {a.name}</option>)}</select></div>}
               </>)}
 
               {mode !== "reset" && (<div><label className="text-xs font-semibold text-slate-400 mb-1.5 block">Email</label>
@@ -152,16 +157,19 @@ export function LoginPage() {
             <div className="mt-5 rounded-2xl p-4 bg-white/[0.03] border border-white/10">
               <div className="flex items-center justify-between gap-3 mb-3">
                 <div><div className="text-sm font-bold text-white">Try a demo account</div><div className="text-[11px] text-slate-500">One click fills the form · password <code className="text-slate-300">{DEMO_PASSWORD}</code></div></div>
-                <select aria-label="Demo airport" className="rounded-lg px-2 py-1.5 text-xs bg-white/5 border border-white/10 text-white" value={airport} onChange={e => { setAirport(e.target.value); const r = ROLES.find(x => x.key === demoRole); if (r) setEmail(r.email(e.target.value.toLowerCase())); }}>
+                <select aria-label="Demo airport" className="rounded-lg px-2 py-1.5 text-xs bg-white/5 border border-white/10 text-white" value={airport} onChange={e => { setAirport(e.target.value); const r = ROLES.find(x => x.key === demoRole); if (r) setEmail((r.email as (a: string, x?: string) => string)(e.target.value.toLowerCase(), airline)); }}>
                   {airports.map(a => <option key={a.code} value={a.code} className="bg-slate-900">{a.code}</option>)}</select>
               </div>
               <div className="grid grid-cols-2 gap-2">
-                {ROLES.map(r => (<button key={r.key} type="button" onClick={() => { setDemoRole(r.key); setEmail(r.email(airport.toLowerCase())); setPassword(DEMO_PASSWORD); setError(""); }}
+                {ROLES.map(r => (<button key={r.key} type="button" onClick={() => { setDemoRole(r.key); setEmail((r.email as (a: string, x?: string) => string)(airport.toLowerCase(), airline)); setPassword(DEMO_PASSWORD); setError(""); }}
                   className="flex items-center gap-2 rounded-xl px-3 py-2 text-left border border-white/10 hover:border-white/30 hover:bg-white/5 transition">
                   <r.icon className="w-4 h-4 shrink-0" style={{ color: r.color }} /><span className="text-xs font-semibold text-slate-200">{r.label}</span></button>))}
                 <button type="button" onClick={() => { setEmail("owner@aerobase.in"); setPassword(DEMO_PASSWORD); setError(""); }} className="col-span-2 flex items-center gap-2 rounded-xl px-3 py-2 text-left border border-amber-400/30 hover:bg-amber-400/5 transition">
                   <Building2 className="w-4 h-4 text-amber-400" /><span className="text-xs font-semibold text-amber-200">Platform owner</span><span className="text-[11px] text-slate-500">— switches between all airports</span></button>
               </div>
+              {demoRole === "airline" && airlines.length > 0 && <div className="mt-3"><label className="text-[11px] text-slate-400 block mb-1">Which airline? (only airlines flying at {airport})</label>
+                <select aria-label="Demo airline" className="w-full rounded-lg px-2 py-2 text-xs bg-white/5 border border-white/10 text-white" value={airline} onChange={e => { setAirline(e.target.value); setEmail(`ops.${e.target.value.toLowerCase()}@${airport.toLowerCase()}.aerobase.in`); }}>
+                  {airlines.map(a => <option key={a.code} value={a.code} className="bg-slate-900">{a.name} ({a.code})</option>)}</select></div>}
               {email && <div className="text-[11px] text-slate-500 mt-3">Filled: <span className="text-slate-300">{email}</span> — press <b>Sign in</b></div>}
             </div>)}
         </div>

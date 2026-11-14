@@ -4,6 +4,8 @@ import { useAuthStore } from "../../store/authStore";
 import { useAppStore } from "../../store/appStore";
 import { useAirport } from "../../hooks/useAirport";
 import { useWeather } from "../../hooks/useWeather";
+import { linkCrewRef } from "../../api/account";
+import { decodeJwt } from "../../api/auth";
 import { useCollection } from "../../hooks/useCollection";
 import { api } from "../../api/client";
 import { API_ENABLED } from "../../config";
@@ -31,16 +33,41 @@ export function AirlinePortal() {
 }
 
 /** Flight-crew briefing: next departures for the airline, live weather and a pre-departure checklist. */
+interface Crew { refId: string; name: string; rank?: string; airline?: string; aircraft?: string; flights?: string; base?: string; status?: string; license?: string }
+function CrewCard() {
+  const user = useAuthStore(s => s.user); const crew = useCollection<Crew>("crew", []); const { flights } = useBoard();
+  const mine = (crew.items.find(c => c.status === "Active") ?? crew.items[0]) as Crew | undefined;
+  const [ref, setRef] = useState(""); const [lic, setLic] = useState(""); const [msg, setMsg] = useState(""); const [err, setErr] = useState(""); const [busy, setBusy] = useState(false);
+  const link = async (e: React.FormEvent) => { e.preventDefault(); setErr(""); setMsg(""); setBusy(true);
+    try { const r = await linkCrewRef(ref.trim(), lic.trim()); const st = useAuthStore.getState(); const claims = decodeJwt(r.token); const exp = typeof claims?.exp === "number" ? claims.exp * 1000 : st.expiresAt; const org = String(claims?.org ?? "").replace(/[^A-Za-z0-9]/g, "");
+      if (st.user) st.login({ ...st.user, airport: r.airport, airportName: r.airport_name, staffLevel: `pilot_captain_${org}` }, r.token, { source: "backend", expiresAt: exp }); setMsg("Linked. Your assignment now follows the new reference ID."); setRef(""); setLic(""); setTimeout(() => location.reload(), 900); }
+    catch (x) { setErr(x instanceof Error ? x.message : "Could not link"); } finally { setBusy(false); } };
+  const al = flights.find(f => f.airCode === mine?.airline)?.airline ?? mine?.airline;
+  const inp = "bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-white text-sm min-w-0 outline-none focus:border-sky-500 w-full";
+  return (<div className="grid xl:grid-cols-3 gap-5">
+    <Card className="xl:col-span-2">{!mine ? <div className="text-sm text-slate-400">No crew record is linked to your account yet. Enter a reference ID from your airline below.</div> : <>
+      <div className="text-xs text-slate-400">{user?.name}</div><div className="text-2xl font-bold text-white">{mine.rank ?? "Crew"} · {al}</div>
+      <div className="grid sm:grid-cols-4 gap-3 mt-3 text-sm"><div><div className="text-[11px] text-slate-500">Aircraft</div><div className="text-slate-200">{mine.aircraft || "To be assigned"}</div></div><div><div className="text-[11px] text-slate-500">Base</div><div className="text-slate-200">{mine.base || "—"}</div></div>
+        <div><div className="text-[11px] text-slate-500">Reference ID</div><div className="text-slate-200 font-mono">{mine.refId}</div></div><div><div className="text-[11px] text-slate-500">Assigned flights</div><div className="text-slate-200">{mine.flights || "None yet"}</div></div></div></>}</Card>
+    <Card><div className="text-white font-semibold mb-2">Changed airline?</div><div className="text-xs text-slate-400 mb-3">Enter the reference ID and licence number your new airline gave you. Your airline, aircraft and flights update automatically.</div>
+      <form onSubmit={link} className="space-y-2"><input className={inp} placeholder="New reference ID" value={ref} onChange={e => setRef(e.target.value)} required aria-label="New reference ID" /><input className={inp} placeholder="Licence number" value={lic} onChange={e => setLic(e.target.value)} required aria-label="Licence number" />
+        <button disabled={busy} className="w-full px-3 py-2 rounded-lg bg-sky-500 text-white text-sm disabled:opacity-50">{busy ? "Verifying…" : "Link reference ID"}</button></form>
+      {msg && <div className="text-xs text-green-300 mt-2">{msg}</div>}{err && <div className="text-xs text-red-400 mt-2">{err}</div>}</Card></div>);
+}
+
 export function PilotDashboard() {
   const { flights } = useBoard(); const ap = useAirport(); const wx = useWeather(); const [done, setDone] = useState<Record<string, boolean>>({});
-  const up = flights.filter(f => f.status !== "Departed" && f.status !== "Landed" && f.status !== "Cancelled").sort((a, b) => a.dep.localeCompare(b.dep));
-  if (!up.length) return <Empty>No upcoming departures for your airline at {ap.name}.</Empty>;
+  const crew = useCollection<Crew>("crew", []); const mine = (crew.items.find(c => c.status === "Active") ?? crew.items[0]) as Crew | undefined;
+  const assigned = new Set((mine?.flights ?? "").split(/[,\s]+/).map(x => x.trim().toUpperCase()).filter(Boolean));
+  const up = flights.filter(f => f.status !== "Departed" && f.status !== "Landed" && f.status !== "Cancelled" && (!assigned.size || assigned.has(f.flight.toUpperCase()))).sort((a, b) => a.dep.localeCompare(b.dep));
+  if (!up.length) return <div className="space-y-6"><PageHead title="Crew briefing" sub={ap.name} /><CrewCard /><Empty>No upcoming departures assigned to you at {ap.name}.</Empty></div>;
   const n = up[0]; const flags = wx ? [wx.visibility < 1 && "Low visibility — expect LVP and longer taxi", wx.visibility >= 1 && wx.visibility < 3 && "Reduced visibility", wx.wind >= 40 && "Strong surface wind — check crosswind limits", wx.temp >= 40 && "High temperature — check take-off performance"].filter(Boolean) as string[] : [];
   const list = ["Weather and NOTAMs reviewed", "Fuel and load sheet signed", "Gate and stand confirmed", "Crew briefing complete"];
   const mins = (() => { const [h, m] = n.dep.split(":").map(Number); const d = new Date(); d.setHours(h, m, 0, 0); return Math.round((d.getTime() - Date.now()) / 60000); })();
   return (
     <div className="space-y-6">
       <PageHead title="Crew briefing" sub={ap.name} />
+      <CrewCard />
       <div className="grid xl:grid-cols-3 gap-5">
         <Card className="xl:col-span-2"><div className="text-xs text-slate-400">Next departure</div><div className="text-3xl font-bold font-mono text-white">{n.flight} <span className="text-lg text-slate-300">{n.from}→{n.to}</span></div>
           <div className="text-sm text-slate-300 mt-1">Dep {n.dep}{Number.isFinite(mins) ? ` (${mins >= 0 ? `in ${mins} min` : `${-mins} min ago`})` : ""} · gate {n.gate} ({n.terminal}) · {n.aircraft} · {n.status}{n.issue ? ` · ${n.issue}` : ""}</div>

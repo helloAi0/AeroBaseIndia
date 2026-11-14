@@ -171,6 +171,10 @@ def main():
         psql("INSERT INTO users (id,tenant_id,full_name,email,password_hash,role,org_code) SELECT v.* FROM tenants t, LATERAL (VALUES " + vals + ") AS v(id,tid,n,e,h,r,o) WHERE t.airport_code=:'a' "
              "ON CONFLICT (email) DO UPDATE SET full_name=EXCLUDED.full_name, password_hash=EXCLUDED.password_hash, role=EXCLUDED.role, org_code=EXCLUDED.org_code;", a=a)
     for a in AIRPORTS: seed_crew_and_dispatch(a)
+    for a in AIRPORTS:   # one operations login per airline that flies at the airport: ops.<iata>@<airport>.aerobase.in
+        psql("INSERT INTO users (id,tenant_id,full_name,email,password_hash,role,org_code) SELECT gen_random_uuid(), t.id, f.airline || ' Operations', 'ops.' || lower(f.airline_code) || '@' || lower(:'a') || '.aerobase.in', :'h', 'AIRLINE_OPS', f.airline_code "
+             "FROM tenants t JOIN (SELECT DISTINCT ON (tenant_id, airline_code) tenant_id, airline, airline_code FROM flights WHERE airline_code IS NOT NULL ORDER BY tenant_id, airline_code, airline) f ON f.tenant_id = t.id WHERE t.airport_code=:'a' "
+             "ON CONFLICT (email) DO UPDATE SET password_hash=EXCLUDED.password_hash, role=EXCLUDED.role, org_code=EXCLUDED.org_code;", a=a, h=ph)
     print("\nDemo users (same password for all):", pw)
     print("  e.g. admin@del.aerobase.in, staff@bom.aerobase.in, ops@indigo.del.aerobase.in, shop@blr.aerobase.in")
 

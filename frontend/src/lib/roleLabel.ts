@@ -8,7 +8,8 @@ export function roleLabel(u?: { role?: string; staffLevel?: string } | null): st
   if (u.role === "staff") {
     if (sl.startsWith("pilot_")) return `Pilot · ${sl.split("_").pop()?.toUpperCase()}`;
     if (sl.startsWith("airline_")) return `Airline ops · ${sl.split("_").pop()?.toUpperCase()}`;
-    if (sl === "staff_security") return "Security";
+    if (sl === "staff_security_head") return "Security head";
+    if (sl === "staff_security") return "Security officer";
     return "Ground staff";
   }
   return "Passenger";

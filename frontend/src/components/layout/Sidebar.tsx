@@ -67,6 +67,15 @@ const ALL_NAV = [
       {id:"map",          label:"Airport Map",       icon:Map},
       {id:"flights",      label:"Flight Info",       icon:Plane},
   ]},
+  { group:"Security", roles:["security_head","security"], items:[
+      {id:"command",      label:"Security Command",  icon:Shield},
+      {id:"security",     label:"Security Events",   icon:Shield},
+      {id:"incidents",    label:"Incidents",         icon:AlertOctagon},
+      {id:"emergency",    label:"Emergency Center",  icon:Siren},
+      {id:"heatmap",      label:"Crowd & Queues",    icon:Users},
+      {id:"flights",      label:"Flight Info",       icon:Plane},
+      {id:"map",          label:"Airport Map",       icon:Map},
+  ]},
   { group:"Crew", roles:["pilot"], items:[
       {id:"pilot",        label:"Crew Briefing",    icon:Plane},
       {id:"flights",      label:"Flight Info",      icon:Plane},
@@ -75,6 +84,7 @@ const ALL_NAV = [
   ]},
   { group:"Airline", roles:["airline"], items:[
       {id:"airline",      label:"Airline Operations",icon:Plane},
+      {id:"crew",         label:"Crew & IDs",        icon:KeyRound},
       {id:"flights",      label:"Flight Info",       icon:Plane},
       {id:"baggage",      label:"Baggage",           icon:Briefcase},
       {id:"weather",      label:"Weather",           icon:CloudSun},
@@ -125,6 +135,8 @@ const ALL_NAV = [
 export function navRole(role: string, staffLevel?: string): string {
   if (role === "staff" && staffLevel?.startsWith("pilot_")) return "pilot";
   if (role === "staff" && staffLevel?.startsWith("airline_")) return "airline";
+  if (role === "staff" && staffLevel === "staff_security_head") return "security_head";
+  if (role === "staff" && staffLevel === "staff_security") return "security";
   return role;
 }
 export function allowedPagesFor(role: string): Set<string> {

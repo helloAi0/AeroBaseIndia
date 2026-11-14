@@ -6,6 +6,7 @@ import { Card, PageHead, Stat } from "../../components/ui/PageHead";
 const ROLES: { v: string; label: string; hint: string }[] = [
   { v: "GROUND_STAFF", label: "Ground staff", hint: "Operations pages, baggage, accessibility" },
   { v: "SECURITY_OFFICER", label: "Security officer", hint: "Security events and incidents" },
+  { v: "SECURITY_HEAD", label: "Security head", hint: "Leads the security team: sees every officer by reference ID and sends them instructions" },
   { v: "AIRLINE_OPS", label: "Airline operations", hint: "Sees only that airline's flights" },
   { v: "PILOT", label: "Pilot / crew", hint: "Crew briefing for that airline" },
   { v: "RETAILER", label: "Retailer", hint: "Shop dashboard and offer marketplace" },
@@ -22,7 +23,7 @@ export function TeamAccess() {
   const needsOrg = f.role === "AIRLINE_OPS" || f.role === "PILOT";
   const submit = async (e: React.FormEvent) => {
     e.preventDefault(); setErr(""); setOk(""); setBusy(true);
-    try { await addTeamMember({ ...f, org: needsOrg ? f.org.trim().toUpperCase() : undefined }); setOk(`${f.name} can now sign in with ${f.email} and the password below. Share it securely; they can change it with “Forgot password”.`); await load(); setF({ ...f, name: "", email: "", org: "" }); }
+    try { await addTeamMember(f.role === "SECURITY_HEAD" ? { ...f, role: "SECURITY_OFFICER", org: "HEAD" } : { ...f, org: needsOrg ? f.org.trim().toUpperCase() : undefined }); setOk(`${f.name} can now sign in with ${f.email} and the password below. Share it securely; they can change it with “Forgot password”.`); await load(); setF({ ...f, name: "", email: "", org: "" }); }
     catch (x) { setErr(x instanceof Error ? x.message : "Could not add"); } finally { setBusy(false); }
   };
   const remove = async (m: TeamMember) => { if (!confirm(`Remove ${m.name}? They will no longer be able to sign in.`)) return; try { await removeTeamMember(m.id); await load(); } catch (x) { setErr(x instanceof Error ? x.message : "Could not remove"); } };
@@ -47,7 +48,7 @@ export function TeamAccess() {
       </Card>
       <Card className="overflow-x-auto">
         <table className="w-full text-sm min-w-[560px]"><thead><tr className="text-left text-xs text-slate-400 border-b border-navy-600"><th className="p-2">Name</th><th className="p-2">Email</th><th className="p-2">Role</th><th className="p-2">Airline</th><th className="p-2" /></tr></thead>
-          <tbody>{team.map(m => <tr key={m.id} className="border-b border-navy-700 text-slate-200"><td className="p-2">{m.name}</td><td className="p-2 text-slate-400">{m.email}</td><td className="p-2">{label(m.role)}</td><td className="p-2">{m.org || "—"}</td>
+          <tbody>{team.map(m => <tr key={m.id} className="border-b border-navy-700 text-slate-200"><td className="p-2">{m.name}</td><td className="p-2 text-slate-400">{m.email}</td><td className="p-2">{m.role === "SECURITY_OFFICER" && m.org === "HEAD" ? "Security head" : label(m.role)}</td><td className="p-2">{m.org && m.org !== "HEAD" ? m.org : "—"}</td>
             <td className="p-2 text-right">{m.role !== "AIRPORT_ADMIN" && m.role !== "SUPER_ADMIN" && <button onClick={() => void remove(m)} aria-label={`Remove ${m.name}`} className="text-red-400 hover:text-red-300"><Trash2 className="w-4 h-4" /></button>}</td></tr>)}</tbody></table>
         {team.length === 0 && <div className="text-sm text-slate-400 text-center py-6">No accounts yet.</div>}
       </Card>

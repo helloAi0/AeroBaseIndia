@@ -67,7 +67,8 @@ export async function loginWithBackend(email: string, password: string): Promise
 
   const org = String(claims.org ?? "").replace(/[^A-Za-z0-9]/g, "");
   const backendRole = String(claims.role ?? "");
-  const mapped = backendRole === "AIRLINE_OPS" && org ? { role: "staff" as UserRole, staffLevel: `airline_${org}` }
+  const mapped = backendRole === "SECURITY_OFFICER" && org === "HEAD" ? { role: "staff" as UserRole, staffLevel: "staff_security_head" }
+    : backendRole === "AIRLINE_OPS" && org ? { role: "staff" as UserRole, staffLevel: `airline_${org}` }
     : backendRole === "PILOT" && org ? { role: "staff" as UserRole, staffLevel: `pilot_captain_${org}` }
     : backendRole === "RETAILER" ? { role: "retailer" as UserRole }
     : ROLE_MAP[backendRole];
