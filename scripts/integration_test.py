@@ -547,6 +547,16 @@ class Accounts(unittest.TestCase):
         code, fl = call("GET", "/flights", token=login(ADMIN)); rows = fl if isinstance(fl, list) else fl.get("flights", [])
         self.assertTrue(any(r.get("passengers", 0) > 0 for r in rows))
 
+    def test_passenger_assistance_requests_are_own_only_and_unassignable(self):
+        tp, ta = login(PAX), login(ADMIN)
+        code, r = call("POST", "/api/records/accessibility", {"pax": "Pax " + RUN, "flight": "AI-101", "need": "Wheelchair", "where": "T3 check-in", "status": "Done", "staff": "Me", "eta": 1}, token=tp)
+        self.assertEqual(code, 201); self.assertEqual((r["status"], "staff" in r), ("Open", False))
+        mine = call("GET", "/api/records/accessibility", token=tp)[1]["records"]
+        self.assertTrue(mine and all(x["id"] == r["id"] or x.get("pax", "").startswith("Pax ") for x in mine))
+        self.assertTrue(any(x["id"] == r["id"] for x in call("GET", "/api/records/accessibility", token=ta)[1]["records"]))
+        self.assertEqual(call("PUT", "/api/records/accessibility/" + r["id"], {"status": "Done"}, token=tp)[0], 403)
+        call("DELETE", "/api/records/accessibility/" + r["id"], token=ta)
+
     def test_owner_can_switch_airport_and_data_follows(self):
         self.assertEqual(call("POST", "/api/auth/switch-airport", {"airport": "BOM"}, token=login(ADMIN))[0], 403)
         self.assertEqual(call("POST", "/api/auth/switch-airport", {"airport": "BOM"})[0], 401)

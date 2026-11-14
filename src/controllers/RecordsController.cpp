@@ -17,14 +17,14 @@ using namespace drogon;
 // Which roles may read/write each collection is the policy table below; everything else is refused.
 class RecordsController : public HttpController<RecordsController> {
     using Roles = std::set<std::string>;
-    struct Policy { Roles read, create, modify; bool ownOnlyRead = false; };
+    struct Policy { Roles read, create, modify; bool ownOnlyRead = false; Roles ownRoles = {}; };   // ownRoles: roles that only see records they created
 
     static const std::map<std::string, Policy>& policies() {
         static const Roles OPS{"SUPER_ADMIN", "AIRPORT_ADMIN", "GROUND_STAFF", "SECURITY_OFFICER"};
         static const Roles ADMIN{"SUPER_ADMIN", "AIRPORT_ADMIN"};
         static const Roles OPS_AIR = [] { Roles r = OPS; r.insert("AIRLINE_OPS"); return r; }();
         static const std::map<std::string, Policy> P = {
-            {"accessibility", {OPS, OPS, OPS}},
+            {"accessibility", {[] { Roles r = OPS; r.insert("PASSENGER"); return r; }(), [] { Roles r = OPS; r.insert("PASSENGER"); return r; }(), OPS, false, {"PASSENGER"}}},   // passengers can ask for help and see only their own requests
             {"lostfound",     {OPS, OPS, OPS}},
             {"incidents",     {OPS_AIR, OPS, OPS}},
             {"maintenance",   {OPS_AIR, OPS, OPS}},
@@ -81,7 +81,7 @@ public:
             Who w; if (!who(req, w)) return fail(cb, "Unauthorized", k401Unauthorized);
             auto it = policies().find(coll); if (it == policies().end()) return fail(cb, "Unknown collection", k404NotFound);
             if (!it->second.read.count(w.role)) return fail(cb, "Forbidden", k403Forbidden);
-            const bool own = it->second.ownOnlyRead && !(w.role == "SUPER_ADMIN" || w.role == "AIRPORT_ADMIN");
+            const bool own = (it->second.ownOnlyRead && !(w.role == "SUPER_ADMIN" || w.role == "AIRPORT_ADMIN")) || it->second.ownRoles.count(w.role) > 0;
             auto conn = DatabaseManager::getConnection(); pqxx::read_transaction t(*conn);
             auto rows = t.exec_params("SELECT id::text, data::text, to_char(created_at,'YYYY-MM-DD\"T\"HH24:MI:SS') FROM app_records "
                                       "WHERE tenant_id = $1::uuid AND collection = $2 AND ($3 = FALSE OR created_by = $4::uuid) "
@@ -99,6 +99,7 @@ public:
             auto j = req->getJsonObject(); if (!j || !j->isObject()) return fail(cb, "JSON object required", k400BadRequest);
             Json::Value data = *j; data.removeMember("id"); data.removeMember("created_at");
             if (coll == "passes" && !(w.role == "SUPER_ADMIN" || w.role == "AIRPORT_ADMIN")) data["status"] = "Requested";   // passengers cannot self-approve
+            if (coll == "accessibility" && w.role == "PASSENGER") { data["status"] = "Open"; data.removeMember("staff"); data.removeMember("eta"); data.removeMember("staffName"); }   // no self-assignment
             const std::string js = dump(data);
             if (js.size() > 8192 || js.size() < 3) return fail(cb, "Record too large or empty", k400BadRequest);
             if (js.find("\\u0000") != std::string::npos) return fail(cb, "Text contains an invalid character", k400BadRequest);

@@ -132,12 +132,12 @@ const STAFF: RecordsConfig = {
   collection: "staff", title: "Staff Management", subtitle: "Roster, shifts and duty status", noun: "staff member", prefix: "STF", titleKey: "name", statusKey: "status",
   fields: [
     { key: "name", label: "Name", required: true }, { key: "role", label: "Role", required: true, placeholder: "Ramp agent" },
-    { key: "shift", label: "Shift", type: "select", options: ["Morning", "Afternoon", "Night"] }, { key: "terminal", label: "Terminal", type: "select", options: ["T1", "T2", "T3"] },
-    { key: "status", label: "Status", type: "select", options: ["On duty", "Off duty", "Leave"] }, { key: "phone", label: "Phone", table: false },
+    { key: "shift", label: "Shift", type: "select", options: ["Morning", "Afternoon", "Night"] }, { key: "terminal", label: "Terminal", type: "select", options: ["T1", "T2", "T3", "T4"] },
+    { key: "status", label: "Status", type: "select", options: ["On duty", "Off duty", "Leave"] }, { key: "assist", label: "Accessibility trained", type: "select", options: ["No", "Yes"] }, { key: "phone", label: "Phone", table: false },
   ],
   kpis: [{ label: "Staff", value: r => r.length }, { label: "On duty", value: r => n(r, x => x.status === "On duty"), tone: "green" },
-         { label: "On leave", value: r => n(r, x => x.status === "Leave"), tone: "yellow" }, { label: "Night shift", value: r => n(r, x => x.shift === "Night") }],
-  seed: [{ id: "s1", ref: "STF-S01", name: "Ravi Kumar", role: "Ramp agent", shift: "Morning", terminal: "T3", status: "On duty", phone: "" }],
+         { label: "On leave", value: r => n(r, x => x.status === "Leave"), tone: "yellow" }, { label: "Accessibility trained", value: r => n(r, x => x.assist === "Yes"), tone: "sky" }],
+  seed: [],
 };
 const FEEDBACK: RecordsConfig = {
   collection: "feedback", title: "Passenger Feedback", subtitle: "Ratings and comments from passengers and staff", noun: "feedback", prefix: "FB", titleKey: "comment", statusKey: "status",

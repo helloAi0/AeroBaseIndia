@@ -48,6 +48,15 @@ def seed_stores(code):
         d = json.dumps({k: v for k, v in {"name": name, "category": cat, "terminal": term, "location": loc, "status": "Open"}.items() if v})
         psql("INSERT INTO app_records (tenant_id, collection, data) SELECT id, 'stores', :'d'::jsonb FROM tenants WHERE airport_code=:'c';", c=code, d=d)
 
+ROSTER = [("Ravi Kumar", "Passenger assistance agent", "Morning", True), ("Meena Nair", "Passenger assistance agent", "Afternoon", True), ("Imran Khan", "Terminal duty officer", "Morning", True),
+          ("Kavita Singh", "Check-in agent", "Afternoon", False), ("Suresh Patil", "Ramp agent", "Night", False), ("Anita Das", "Passenger assistance agent", "Night", True)]
+def seed_staff(code, terminals):
+    """A small sample roster so Staff Management and the Accessibility team are not empty. Names are placeholders; replace via Staff Management."""
+    psql("DELETE FROM app_records WHERE collection='staff' AND created_by IS NULL AND tenant_id=(SELECT id FROM tenants WHERE airport_code=:'c');", c=code)
+    for i, (name, role, shift, assist) in enumerate(ROSTER):
+        d = json.dumps({"ref": f"STF-{code}-{i+1:02d}", "name": name, "role": role, "shift": shift, "terminal": terminals[i % len(terminals)], "status": "On duty" if shift != "Night" else "Off duty", "assist": "Yes" if assist else "No", "phone": ""})
+        psql("INSERT INTO app_records (tenant_id, collection, data) SELECT id, 'staff', :'d'::jsonb FROM tenants WHERE airport_code=:'c';", c=code, d=d)
+
 def generated_schedule(code, today):
     """A full day of departures from the airport's real route network (OpenFlights); status follows the clock."""
     import random, reference_data as R
@@ -96,6 +105,7 @@ def main():
             rows.append((f["flight"], o, d, dep, arr, f["gate"], f["status"], f["airline"], f["code"], f["aircraft"], f["terminal"], f["pax"], f["issue"], delay))
         rows += generated_schedule(code, today)
         seed_stores(code)
+        seed_staff(code, sorted({r[10] for r in rows if r[10]}) or ["T1"])
         vals = ",".join("(gen_random_uuid(),(SELECT id FROM tenants WHERE airport_code='%s'),%s)" % (code, ",".join("'%s'" % str(x).replace("'", "''") if not isinstance(x, int) else str(x) for x in r)) for r in rows)
         psql("INSERT INTO flights (id,tenant_id,flight_number,origin,destination,departure_time,arrival_time,gate,status,airline,airline_code,aircraft,terminal,passengers,issue,delay_minutes) VALUES " + vals + " ON CONFLICT (tenant_id, flight_number, departure_time) DO NOTHING;")
         print(f"{code}: {len(rows)} flights for {today}")
