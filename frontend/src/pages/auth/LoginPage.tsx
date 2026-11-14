@@ -30,7 +30,7 @@ export function LoginPage() {
   const login = useAuthStore(s => s.login);
   const [mode, setMode] = useState<Mode>(() => (location.hash.startsWith("#/reset") ? "reset" : "signin"));
   const [airports, setAirports] = useState<AirportInfo[]>(FALLBACK_AIRPORTS);
-  const [airport, setAirport] = useState("DEL");
+  const [airport, setAirport] = useState("DEL"); const [demoRole, setDemoRole] = useState<string | null>(null);
   const [email, setEmail] = useState(""); const [password, setPassword] = useState(""); const [name, setName] = useState("");
   const [acct, setAcct] = useState<"PASSENGER" | "RETAILER">("PASSENGER"); const [shop, setShop] = useState("");
   const [show, setShow] = useState(false); const [busy, setBusy] = useState(false);
@@ -152,11 +152,11 @@ export function LoginPage() {
             <div className="mt-5 rounded-2xl p-4 bg-white/[0.03] border border-white/10">
               <div className="flex items-center justify-between gap-3 mb-3">
                 <div><div className="text-sm font-bold text-white">Try a demo account</div><div className="text-[11px] text-slate-500">One click fills the form · password <code className="text-slate-300">{DEMO_PASSWORD}</code></div></div>
-                <select aria-label="Demo airport" className="rounded-lg px-2 py-1.5 text-xs bg-white/5 border border-white/10 text-white" value={airport} onChange={e => setAirport(e.target.value)}>
+                <select aria-label="Demo airport" className="rounded-lg px-2 py-1.5 text-xs bg-white/5 border border-white/10 text-white" value={airport} onChange={e => { setAirport(e.target.value); const r = ROLES.find(x => x.key === demoRole); if (r) setEmail(r.email(e.target.value.toLowerCase())); }}>
                   {airports.map(a => <option key={a.code} value={a.code} className="bg-slate-900">{a.code}</option>)}</select>
               </div>
               <div className="grid grid-cols-2 gap-2">
-                {ROLES.map(r => (<button key={r.key} type="button" onClick={() => { setEmail(r.email(airport.toLowerCase())); setPassword(DEMO_PASSWORD); setError(""); }}
+                {ROLES.map(r => (<button key={r.key} type="button" onClick={() => { setDemoRole(r.key); setEmail(r.email(airport.toLowerCase())); setPassword(DEMO_PASSWORD); setError(""); }}
                   className="flex items-center gap-2 rounded-xl px-3 py-2 text-left border border-white/10 hover:border-white/30 hover:bg-white/5 transition">
                   <r.icon className="w-4 h-4 shrink-0" style={{ color: r.color }} /><span className="text-xs font-semibold text-slate-200">{r.label}</span></button>))}
                 <button type="button" onClick={() => { setEmail("owner@aerobase.in"); setPassword(DEMO_PASSWORD); setError(""); }} className="col-span-2 flex items-center gap-2 rounded-xl px-3 py-2 text-left border border-amber-400/30 hover:bg-amber-400/5 transition">

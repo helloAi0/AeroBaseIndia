@@ -18,7 +18,7 @@ using namespace drogon;
 // Which roles may read/write each collection is the policy table below; everything else is refused.
 class RecordsController : public HttpController<RecordsController> {
     using Roles = std::set<std::string>;
-    struct Policy { Roles read, create, modify; bool ownOnlyRead = false; Roles ownRoles = {}; Roles ownWrite = {}; };   // ownRoles: roles that only see records they created
+    struct Policy { Roles read, create, modify; bool ownOnlyRead = false; Roles ownRoles = {}; Roles ownWrite = {}; Roles orgRoles = {}; };   // orgRoles: only see/change records of their own airline (data.airline == org)   // ownRoles: roles that only see records they created
 
     static const std::map<std::string, Policy>& policies() {
         static const Roles OPS{"SUPER_ADMIN", "AIRPORT_ADMIN", "GROUND_STAFF", "SECURITY_OFFICER"};
@@ -44,6 +44,8 @@ class RecordsController : public HttpController<RecordsController> {
             {"settings",      {ADMIN, ADMIN, ADMIN}},
             {"lane_config",   {OPS, OPS, ADMIN}},          // counters / lanes open per terminal zone
             {"stores",        {[] { Roles r = OPS; r.insert("RETAILER"); r.insert("PASSENGER"); r.insert("AIRLINE_OPS"); return r; }(), [] { Roles r = ADMIN; r.insert("RETAILER"); return r; }(), [] { Roles r = ADMIN; r.insert("RETAILER"); return r; }(), false, {}, {"RETAILER"}}},   // a retailer creates and edits only their own shop
+            {"crew",          {[] { Roles r = ADMIN; r.insert("AIRLINE_OPS"); r.insert("PILOT"); return r; }(), [] { Roles r = ADMIN; r.insert("AIRLINE_OPS"); return r; }(), [] { Roles r = ADMIN; r.insert("AIRLINE_OPS"); return r; }(), false, {"PILOT"}, {}, {"AIRLINE_OPS"}}},   // reference IDs issued by the airline; a pilot sees only their own record
+            {"dispatch",      {[] { Roles r = ADMIN; r.insert("SECURITY_OFFICER"); return r; }(), [] { Roles r = ADMIN; r.insert("SECURITY_OFFICER"); return r; }(), [] { Roles r = ADMIN; r.insert("SECURITY_OFFICER"); return r; }(), false, {"SECURITY_OFFICER"}, {"SECURITY_OFFICER"}}},   // security head -> officers; the head and directors see all, an officer only their own
             {"products",      {[] { Roles r = OPS; r.insert("RETAILER"); r.insert("PASSENGER"); return r; }(), [] { Roles r = ADMIN; r.insert("RETAILER"); return r; }(), [] { Roles r = ADMIN; r.insert("RETAILER"); return r; }(), false, {}, {"RETAILER"}}},
             {"orders",        {[] { Roles r = OPS; r.insert("RETAILER"); r.insert("PASSENGER"); return r; }(), {"PASSENGER"}, [] { Roles r = OPS; r.insert("RETAILER"); r.insert("PASSENGER"); return r; }(), false, {"RETAILER", "PASSENGER"}, {"RETAILER", "PASSENGER"}}},   // placed by passengers; the shop owner sees and moves only their shop's orders
             {"passes",        {[] { Roles r = ADMIN; r.insert("PASSENGER"); return r; }(), {"PASSENGER", "AIRPORT_ADMIN", "SUPER_ADMIN"}, ADMIN, true}},
@@ -56,13 +58,15 @@ class RecordsController : public HttpController<RecordsController> {
     }
     static void fail(const std::function<void(const HttpResponsePtr&)>& cb, const char* m, HttpStatusCode c) { Json::Value e; e["error"] = m; reply(cb, e, c); }
 
-    struct Who { std::string role, tenant, user, name; };
+    struct Who { std::string role, tenant, user, name, org; };
+    static bool isHead(const Who& w) { return w.role == "SECURITY_OFFICER" && w.org == "HEAD"; }
     static bool who(const HttpRequestPtr& req, Who& w) {
         const std::string h = req->getHeader("Authorization");
         if (h.size() <= 7) return false;
         auto d = JwtService::verifyToken(h.substr(7));
         w.role = d.get_payload_claim("role").as_string(); w.tenant = d.get_payload_claim("tenant_id").as_string(); w.user = d.get_payload_claim("user_id").as_string();
         if (d.has_payload_claim("name")) w.name = d.get_payload_claim("name").as_string();
+        if (d.has_payload_claim("org")) w.org = d.get_payload_claim("org").as_string();
         return !w.tenant.empty();
     }
     static Json::Value row(const pqxx::row& r) {
@@ -144,11 +148,13 @@ public:
             Who w; if (!who(req, w)) return fail(cb, "Unauthorized", k401Unauthorized);
             auto it = policies().find(coll); if (it == policies().end()) return fail(cb, "Unknown collection", k404NotFound);
             if (!it->second.read.count(w.role)) return fail(cb, "Forbidden", k403Forbidden);
-            const bool own = (it->second.ownOnlyRead && !(w.role == "SUPER_ADMIN" || w.role == "AIRPORT_ADMIN")) || it->second.ownRoles.count(w.role) > 0;
+            const bool own = ((it->second.ownOnlyRead && !(w.role == "SUPER_ADMIN" || w.role == "AIRPORT_ADMIN")) || it->second.ownRoles.count(w.role) > 0) && !(coll == "dispatch" && isHead(w));
+            const std::string orgF = it->second.orgRoles.count(w.role) ? (w.org.empty() ? "-" : w.org) : "";
             auto conn = DatabaseManager::getConnection(); pqxx::read_transaction t(*conn);
             auto rows = t.exec_params("SELECT id::text, data::text, to_char(created_at,'YYYY-MM-DD\"T\"HH24:MI:SS') FROM app_records "
-                                      "WHERE tenant_id = $1::uuid AND collection = $2 AND ($3 = FALSE OR created_by = $4::uuid OR data->>'ownerId' = $4::text) "
-                                      "ORDER BY created_at DESC LIMIT 500", w.tenant, coll, own, w.user);
+                                      "WHERE tenant_id = $1::uuid AND collection = $2 AND ($3 = FALSE OR created_by = $4::uuid OR data->>'ownerId' = $4::text OR data->>'claimedBy' = $4::text OR data->>'toId' = $4::text) "
+                                      "AND ($5 = '' OR data->>'airline' = $5) "
+                                      "ORDER BY created_at DESC LIMIT 500", w.tenant, coll, own, w.user, orgF);
             Json::Value arr(Json::arrayValue); for (const auto& r : rows) arr.append(row(r));
             Json::Value out; out["records"] = arr; reply(cb, out);
         } catch (const std::exception&) { fail(cb, "Unauthorized", k401Unauthorized); }
@@ -162,6 +168,19 @@ public:
             auto j = req->getJsonObject(); if (!j || !j->isObject()) return fail(cb, "JSON object required", k400BadRequest);
             Json::Value data = *j; data.removeMember("id"); data.removeMember("created_at");
             if (coll == "orders") return placeOrder(w, data, req, cb);
+            if (coll == "dispatch") {   // only the security head or a director may send instructions
+                if (!(w.role == "SUPER_ADMIN" || w.role == "AIRPORT_ADMIN" || isHead(w))) return fail(cb, "Only the security head can send instructions", k403Forbidden);
+                data["from"] = w.name; data["status"] = "New";
+                if (!isUuid(data["toId"].asString())) return fail(cb, "Choose an officer", k400BadRequest);
+            }
+            if (coll == "crew") {   // the airline's operations team issues reference IDs; the server generates and owns them
+                const std::string al = w.role == "AIRLINE_OPS" ? w.org : data["airline"].asString();
+                if (al.empty() || al.size() > 3) return fail(cb, "Airline code is required", k400BadRequest);
+                static std::mt19937 rg{std::random_device{}()}; char buf[16]; std::snprintf(buf, sizeof buf, "%06X", (unsigned)(rg() & 0xFFFFFF));
+                std::string up = al; for (auto& ch : up) ch = (char)std::toupper((unsigned char)ch);
+                data["airline"] = up; data["refId"] = up + "-" + (data["rank"].asString() == "Cabin crew" ? "CC" : "FD") + "-" + buf; data["status"] = "Unclaimed";
+                data.removeMember("claimedBy"); data.removeMember("claimedName");
+            }
             if ((coll == "stores" || coll == "products") && w.role == "RETAILER") {
                 data["ownerId"] = w.user;
                 if (coll == "stores") {   // one shop per retailer account
@@ -193,14 +212,19 @@ public:
             auto j = req->getJsonObject(); if (!j || !j->isObject()) return fail(cb, "JSON object required", k400BadRequest);
             Json::Value data = *j; data.removeMember("id"); data.removeMember("created_at");
             if (coll == "orders") return updateOrder(w, id, data, req, cb);
-            data.removeMember("ownerId");   // ownership can never be re-assigned from the client
-            const bool mustOwn = it->second.ownWrite.count(w.role) > 0;
+            data.removeMember("ownerId"); data.removeMember("claimedBy"); data.removeMember("refId"); data.removeMember("toId");   // identity fields can never be re-assigned from the client
+            const bool mustOwn = it->second.ownWrite.count(w.role) > 0 && !(coll == "dispatch" && isHead(w));
+            const std::string orgF = it->second.orgRoles.count(w.role) ? (w.org.empty() ? "-" : w.org) : "";
+            if (coll == "dispatch" && !(w.role == "SUPER_ADMIN" || w.role == "AIRPORT_ADMIN" || isHead(w))) {   // an officer can only acknowledge / resolve their own instruction
+                const std::string st = data["status"].asString(); if (st != "Acknowledged" && st != "Resolved") return fail(cb, "Invalid status", k400BadRequest);
+                Json::Value only; only["status"] = st; if (data["response"].isString()) only["response"] = data["response"].asString().substr(0, 200); data = only;
+            }
             const std::string js = dump(data); if (js.size() > 8192) return fail(cb, "Record too large", k400BadRequest);
             if (js.find("\\u0000") != std::string::npos) return fail(cb, "Text contains an invalid character", k400BadRequest);
             auto conn = DatabaseManager::getConnection(); pqxx::work t(*conn);
             auto r = t.exec_params("UPDATE app_records SET data = data || $4::jsonb, updated_at = CURRENT_TIMESTAMP WHERE id = $1::uuid AND tenant_id = $2::uuid AND collection = $3 "
-                                   "AND (NOT $5 OR created_by = $6::uuid OR data->>'ownerId' = $6::text) "
-                                   "RETURNING id::text, data::text, to_char(created_at,'YYYY-MM-DD\"T\"HH24:MI:SS')", id, w.tenant, coll, js, mustOwn, w.user);
+                                   "AND (NOT $5 OR created_by = $6::uuid OR data->>'ownerId' = $6::text OR data->>'toId' = $6::text) AND ($7 = '' OR data->>'airline' = $7) "
+                                   "RETURNING id::text, data::text, to_char(created_at,'YYYY-MM-DD\"T\"HH24:MI:SS')", id, w.tenant, coll, js, mustOwn, w.user, orgF);
             t.commit();
             if (r.empty()) return fail(cb, "Not found", k404NotFound);
             Json::Value d; d["collection"] = coll; d["id"] = id; AuditWriter::record(w.tenant, w.user, "RECORD_UPDATED", coll, d, req->peerAddr().toIp());
@@ -215,7 +239,7 @@ public:
             if (!it->second.modify.count(w.role)) return fail(cb, "Forbidden", k403Forbidden);
             static const std::regex uuid("^[0-9a-fA-F-]{36}$"); if (!std::regex_match(id, uuid)) return fail(cb, "Invalid id", k400BadRequest);
             auto conn = DatabaseManager::getConnection(); pqxx::work t(*conn);
-            auto r = t.exec_params("DELETE FROM app_records WHERE id = $1::uuid AND tenant_id = $2::uuid AND collection = $3 AND (NOT $4 OR created_by = $5::uuid OR data->>'ownerId' = $5::text)", id, w.tenant, coll, it->second.ownWrite.count(w.role) > 0, w.user);
+            auto r = t.exec_params("DELETE FROM app_records WHERE id = $1::uuid AND tenant_id = $2::uuid AND collection = $3 AND (NOT $4 OR created_by = $5::uuid OR data->>'ownerId' = $5::text) AND ($6 = '' OR data->>'airline' = $6)", id, w.tenant, coll, it->second.ownWrite.count(w.role) > 0 && !(coll == "dispatch" && isHead(w)), w.user, it->second.orgRoles.count(w.role) ? (w.org.empty() ? "-" : w.org) : std::string());
             t.commit();
             if (r.affected_rows() == 0) return fail(cb, "Not found", k404NotFound);
             Json::Value d; d["collection"] = coll; d["id"] = id; AuditWriter::record(w.tenant, w.user, "RECORD_DELETED", coll, d, req->peerAddr().toIp());

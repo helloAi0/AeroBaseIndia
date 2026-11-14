@@ -25,6 +25,8 @@ public:
         ADD_METHOD_TO(AccountController::listTeam, "/api/team", Get);
         ADD_METHOD_TO(AccountController::createTeam, "/api/team", Post);
         ADD_METHOD_TO(AccountController::removeTeam, "/api/team/{1}", Delete);
+        ADD_METHOD_TO(AccountController::securityTeam, "/api/team/security", Get);
+        ADD_METHOD_TO(AccountController::linkCrew, "/api/crew/link", Post);
     METHOD_LIST_END
 
     using Cb = std::function<void(const HttpResponsePtr&)>;
@@ -73,6 +75,7 @@ public:
         if (name.size() < 2) return fail(cb, k400BadRequest, "Please enter your full name");
         if (!validEmail(email)) return fail(cb, k400BadRequest, "Please enter a valid email address");
         if (!strongPassword(pw)) return fail(cb, k400BadRequest, "Password must be at least 10 characters with a letter and a number");
+        if (type == "PILOT") return registerPilot(req, cb, name, email, pw, str(*j, "crew_ref", 40), str(*j, "license", 40));
         const std::string role = type == "RETAILER" ? "RETAILER" : "PASSENGER";
         if (role == "RETAILER" && shop.size() < 2) return fail(cb, k400BadRequest, "Please enter your shop or brand name");
         try {
@@ -89,6 +92,64 @@ public:
             Json::Value ok; ok["result"] = "ok"; ok["message"] = "Account created. You can sign in now.";
             send(cb, k201Created, ok);
         } catch (const std::exception&) { fail(cb, k500InternalServerError, "Could not create the account"); }
+    }
+
+    // Pilots and crew cannot self-assign an airline: they present the reference ID and licence number their airline issued, plus their name.
+    void registerPilot(const HttpRequestPtr& req, Cb& cb, const std::string& name, const std::string& email, const std::string& pw, const std::string& ref, const std::string& license) {
+        static const char* kNoMatch = "We could not verify those details. Check your name, licence number and crew reference ID with your airline's operations team.";
+        if (ref.size() < 6 || license.size() < 4) return fail(cb, k400BadRequest, "Enter the crew reference ID and licence number your airline gave you");
+        try {
+            auto conn = DatabaseManager::makeConnection(); pqxx::work tx(conn);
+            auto c = tx.exec_params("SELECT id::text, tenant_id::text, COALESCE(data->>'airline','') FROM app_records WHERE collection='crew' AND upper(data->>'refId') = upper($1) AND upper(data->>'license') = upper($2) "
+                                    "AND lower(btrim(data->>'name')) = lower(btrim($3)) AND COALESCE(data->>'status','Unclaimed') = 'Unclaimed' FOR UPDATE", ref, license, name);
+            if (c.empty()) return fail(cb, k400BadRequest, kNoMatch);
+            if (!tx.exec_params("SELECT 1 FROM users WHERE lower(email) = lower($1)", email).empty()) return fail(cb, k409Conflict, "An account with this email already exists. Try signing in or reset your password.");
+            auto u = tx.exec_params("INSERT INTO users (id, tenant_id, full_name, email, password_hash, role, org_code) VALUES (gen_random_uuid(), $1::uuid, $2, lower($3), $4, 'PILOT', NULLIF($5,'')) RETURNING id::text",
+                                    c[0][1].c_str(), name, email, PasswordService::hashPassword(pw), c[0][2].c_str());
+            tx.exec_params("UPDATE app_records SET data = data || jsonb_build_object('status','Active','claimedBy',$2::text,'claimedName',$3::text) WHERE id = $1::uuid", c[0][0].c_str(), u[0][0].c_str(), name);
+            tx.commit();
+            Json::Value d; d["email"] = email; d["role"] = "PILOT"; AuditWriter::record(c[0][1].c_str(), u[0][0].c_str(), "SIGNUP", "user", d, req->getPeerAddr().toIp());
+            Json::Value ok; ok["result"] = "ok"; ok["message"] = "Crew account verified. You can sign in now."; send(cb, k201Created, ok);
+        } catch (const std::exception&) { fail(cb, k500InternalServerError, "Could not create the account"); }
+    }
+
+    // POST /api/crew/link {crew_ref, license}: a pilot who changed airline (or airport) enters the new reference ID; everything follows it.
+    void linkCrew(const HttpRequestPtr& req, Cb&& cb) {
+        jwtid::Identity id; if (!jwtid::identify(req, id)) return cb(jwtid::error(k401Unauthorized, "Unauthorized"));
+        if (id.role != "PILOT") return cb(jwtid::error(k403Forbidden, "Only crew accounts can link a crew reference ID"));
+        const auto j = req->getJsonObject(); const std::string ref = j ? str(*j, "crew_ref", 40) : "", license = j ? str(*j, "license", 40) : "";
+        try {
+            auto conn = DatabaseManager::makeConnection(); pqxx::work tx(conn);
+            auto me = tx.exec_params("SELECT full_name, email FROM users WHERE id = $1::uuid", id.user); if (me.empty()) return fail(cb, k404NotFound, "Account not found");
+            auto c = tx.exec_params("SELECT id::text, tenant_id::text, COALESCE(data->>'airline','') FROM app_records WHERE collection='crew' AND upper(data->>'refId') = upper($1) AND upper(data->>'license') = upper($2) "
+                                    "AND lower(btrim(data->>'name')) = lower(btrim($3)) AND COALESCE(data->>'status','Unclaimed') = 'Unclaimed' FOR UPDATE", ref, license, me[0][0].c_str());
+            if (c.empty()) return fail(cb, k400BadRequest, "We could not verify those details. Check the reference ID and licence number with your new airline.");
+            tx.exec_params("UPDATE app_records SET data = data || '{\"status\":\"Left\"}'::jsonb WHERE collection='crew' AND data->>'claimedBy' = $1", id.user);
+            tx.exec_params("UPDATE users SET tenant_id = $2::uuid, org_code = NULLIF($3,'') WHERE id = $1::uuid", id.user, c[0][1].c_str(), c[0][2].c_str());
+            tx.exec_params("UPDATE app_records SET data = data || jsonb_build_object('status','Active','claimedBy',$2::text,'claimedName',$3::text) WHERE id = $1::uuid", c[0][0].c_str(), id.user, me[0][0].c_str());
+            auto te = tx.exec_params("SELECT airport_code, airport_name FROM tenants WHERE id = $1::uuid", c[0][1].c_str());
+            tx.commit();
+            Json::Value o;
+            o["token"] = JwtService::generateToken({{"user_id", id.user}, {"tenant_id", c[0][1].c_str()}, {"role", "PILOT"}, {"name", me[0][0].c_str()}, {"email", me[0][1].c_str()},
+                                                    {"airport", te[0][0].c_str()}, {"airport_name", te[0][1].c_str()}, {"org", c[0][2].c_str()}});
+            o["airport"] = te[0][0].c_str(); o["airport_name"] = te[0][1].c_str();
+            AuditWriter::record(c[0][1].c_str(), id.user, "CREW_LINKED", "user", Json::Value(), req->getPeerAddr().toIp());
+            send(cb, k200OK, o);
+        } catch (const std::exception&) { fail(cb, k500InternalServerError, "Could not link the reference ID"); }
+    }
+
+    // GET /api/team/security: the security officers at this airport with their reference IDs (security head and airport director only).
+    void securityTeam(const HttpRequestPtr& req, Cb&& cb) {
+        jwtid::Identity id; if (!jwtid::identify(req, id)) return cb(jwtid::error(k401Unauthorized, "Unauthorized"));
+        const bool head = id.role == "SECURITY_OFFICER" && id.org == "HEAD";
+        if (!head && id.role != "AIRPORT_ADMIN" && id.role != "SUPER_ADMIN") return cb(jwtid::error(k403Forbidden, "Forbidden"));
+        try {
+            auto conn = DatabaseManager::makeConnection(); pqxx::read_transaction t(conn);
+            auto rows = t.exec_params("SELECT id::text, full_name, email, COALESCE(org_code,''), 'SEC-' || upper(substr(replace(id::text,'-',''),1,6)) FROM users WHERE tenant_id = $1::uuid AND role = 'SECURITY_OFFICER' ORDER BY (org_code = 'HEAD') DESC NULLS LAST, full_name", id.tenant);
+            Json::Value arr(Json::arrayValue);
+            for (const auto& r : rows) { Json::Value o; o["id"] = r[0].c_str(); o["name"] = r[1].c_str(); o["email"] = r[2].c_str(); o["head"] = std::string(r[3].c_str()) == "HEAD"; o["ref"] = r[4].c_str(); arr.append(o); }
+            Json::Value out; out["officers"] = arr; send(cb, k200OK, out);
+        } catch (const std::exception&) { fail(cb, k500InternalServerError, "Internal server error"); }
     }
 
     // POST /api/auth/forgot {email}: always answers the same (no account enumeration).
@@ -180,10 +241,12 @@ public:
 
     void createTeam(const HttpRequestPtr& req, Cb&& cb) {
         jwtid::Identity id; if (!jwtid::identify(req, id)) return cb(jwtid::error(k401Unauthorized, "Unauthorized"));
-        if (id.role != "AIRPORT_ADMIN" && id.role != "SUPER_ADMIN") return cb(jwtid::error(k403Forbidden, "Forbidden"));
+        const bool head = id.role == "SECURITY_OFFICER" && id.org == "HEAD";
+        if (id.role != "AIRPORT_ADMIN" && id.role != "SUPER_ADMIN" && !head) return cb(jwtid::error(k403Forbidden, "Forbidden"));
         const auto j = req->getJsonObject();
         if (!j || !j->isObject()) return fail(cb, k400BadRequest, "JSON body required");
         const std::string name = str(*j, "name", 120), email = str(*j, "email", 254), pw = str(*j, "password", 200), role = str(*j, "role", 24), org = str(*j, "org", 60);
+        if (head && !(role == "SECURITY_OFFICER" && org.empty())) return cb(jwtid::error(k403Forbidden, "A security head can only add security officers"));
         static const std::set<std::string> allowed{"GROUND_STAFF", "SECURITY_OFFICER", "AIRLINE_OPS", "PILOT", "RETAILER", "PASSENGER"};
         if (!allowed.count(role)) return fail(cb, k400BadRequest, "Unknown role");
         if (name.size() < 2 || !validEmail(email)) return fail(cb, k400BadRequest, "Name and a valid email are required");

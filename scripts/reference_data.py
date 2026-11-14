@@ -45,4 +45,6 @@ def terminal(code, airline, intl):
     if code == "BLR": return "T1" if airline in {"6E", "SG", "QP", "S5", "9I", "IX"} and not intl else "T2"
     if code == "MAA": return "T4" if intl else "T1"
     if code == "CCU": return "T2"
+    if code == "DXB": return "T3" if airline == "EK" else "T2" if airline in {"FZ", "G9"} else "T1"
+    if code == "LHR": return "T5" if airline == "BA" else "T2" if airline in {"AI", "SQ", "LH", "UA"} else "T3" if airline in {"EK", "VS", "QR"} else "T4"
     return "T1"   # single-terminal airports (HYD, SXR, GOI, ...) and others: one passenger terminal

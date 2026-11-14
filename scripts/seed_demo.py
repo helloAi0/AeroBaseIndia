@@ -14,7 +14,8 @@ ITER = int(os.environ.get("PASSWORD_PBKDF2_ITERATIONS", "600000"))
 HERE = os.path.dirname(os.path.abspath(__file__))
 AIRPORTS = {"DEL": "Indira Gandhi Intl", "BOM": "Mumbai CSMIA", "BLR": "Kempegowda Intl", "HYD": "Rajiv Gandhi Intl", "CCU": "Netaji Subhas Chandra Bose Intl",
             "MAA": "Chennai Intl", "COK": "Cochin Intl", "GOI": "Manohar Intl (Mopa)", "AMD": "Sardar Vallabhbhai Patel Intl", "PNQ": "Pune Intl",
-            "JAI": "Jaipur Intl", "GAU": "Lokpriya Gopinath Bordoloi Intl", "SXR": "Sheikh ul-Alam Intl (Srinagar)", "LKO": "Chaudhary Charan Singh Intl", "TRV": "Trivandrum Intl"}
+            "JAI": "Jaipur Intl", "GAU": "Lokpriya Gopinath Bordoloi Intl", "SXR": "Sheikh ul-Alam Intl (Srinagar)", "LKO": "Chaudhary Charan Singh Intl", "TRV": "Trivandrum Intl",
+            "DXB": "Dubai Intl", "DOH": "Hamad Intl (Doha)", "LHR": "London Heathrow", "SIN": "Singapore Changi", "AUH": "Zayed Intl (Abu Dhabi)"}
 
 def hash_pw(pw):
     salt = secrets.token_bytes(16)
@@ -74,6 +75,20 @@ def seed_outlets(code, terminals):
             pd = json.dumps({"name": pn, "category": pc, "price": price, "stock": stock, "available": "Yes", "shop": name})
             psql("INSERT INTO app_records (tenant_id, collection, data) SELECT id, 'products', :'d'::jsonb FROM tenants WHERE airport_code=:'c';", c=code, d=pd)
 
+def seed_crew_and_dispatch(code):
+    """Crew reference IDs (one claimed by the demo captain, one unclaimed to try pilot sign-up) and sample security instructions."""
+    T = "(SELECT id FROM tenants WHERE airport_code=:'c')"
+    psql(f"DELETE FROM app_records WHERE created_by IS NULL AND tenant_id={T} AND collection IN ('crew','dispatch');", c=code)
+    for ref, name, lic, air, rank, claim in ((f"AI-FD-{code}001", "Capt. Sharma", "ATPL-IN-4471", "AI", "Captain", f"captain@airindia.{code.lower()}.aerobase.in"), (f"6E-FD-{code}002", "Demo Pilot", "ATPL-DEMO-1002", "6E", "First Officer", "")):
+        psql(f"""INSERT INTO app_records (tenant_id, collection, data) SELECT {T}, 'crew', jsonb_build_object('refId', :'ref', 'name', :'name', 'license', :'lic', 'airline', :'air', 'rank', :'rank', 'base', :'c',
+              'aircraft', COALESCE((SELECT aircraft FROM flights WHERE tenant_id={T} AND airline_code=:'air' ORDER BY departure_time LIMIT 1), ''),
+              'flights', COALESCE((SELECT string_agg(flight_number, ', ') FROM (SELECT flight_number FROM flights WHERE tenant_id={T} AND airline_code=:'air' ORDER BY departure_time LIMIT 4) x), ''),
+              'status', CASE WHEN :'claim' = '' THEN 'Unclaimed' ELSE 'Active' END)
+              || CASE WHEN :'claim' = '' THEN '{{}}'::jsonb ELSE (SELECT jsonb_build_object('claimedBy', id::text, 'claimedName', full_name) FROM users WHERE email = :'claim') END;""", c=code, ref=ref, name=name, lic=lic, air=air, rank=rank, claim=claim)
+    for to_email, text, zone, pr, st in (("rohan.security", "Unattended bag reported near the gate area. Check and clear it.", "Gates", "High", "New"), ("priya.security", "Support the departure queue at security screening; passengers are backing up.", "Security", "Medium", "Acknowledged"), ("imran.security", "Escort the VIP delegation from arrivals to the kerb.", "Arrivals", "Medium", "New")):
+        psql(f"""INSERT INTO app_records (tenant_id, collection, data) SELECT {T}, 'dispatch', jsonb_build_object('toId', u.id::text, 'toName', u.full_name, 'to', 'SEC-' || upper(substr(replace(u.id::text,'-',''),1,6)), 'text', :'t', 'zone', :'z', 'priority', :'p', 'status', :'st', 'from', 'Head of Security')
+              FROM users u WHERE u.email = :'e';""", c=code, e=f"{to_email}@{code.lower()}.aerobase.in", t=text, z=zone, p=pr, st=st)
+
 BAG_NAMES = ["A. Sharma", "R. Iyer", "M. Khan", "S. Das", "P. Nair", "K. Singh", "N. Gupta", "T. Joshi", "L. Fernandes", "V. Reddy"]
 def seed_baggage(code, rows):
     """Sample bags for the next departures so Baggage Handling is not empty. Status follows how close the flight is to departure."""
@@ -95,11 +110,14 @@ def generated_schedule(code, today):
     import random, reference_data as R
     rnd = random.Random(f"{code}-{today}"); now = datetime.now(); rows = []; used = set()
     ac = {a[0]: a for a in R.AIRCRAFT}; names = {a[0]: a[2] for a in R.AIRLINES}
-    for dst, air, types, on_route in R.ROUTES.get(code, []):
+    routes = R.ROUTES.get(code)
+    hub = not routes   # overseas hubs: the real routes into the hub, flown in reverse, 2-3 times a day
+    if hub: routes = [(src, air, types, n) for src, items in R.ROUTES.items() for dst, air, types, n in items if dst == code]
+    for dst, air, types, on_route in routes:
         if dst not in {a[0] for a in R.AIRPORTS}: continue
-        intl = R.airport(dst)[4] != "IN"; km = R.distance_km(code, dst)
+        intl = R.airport(dst)[4] != R.airport(code)[4]; km = R.distance_km(code, dst)
         if not types: types = ["A320neo"] if km < 2500 else ["B787-8"] if km < 9000 else ["B777-300ER"]
-        for k in range(1 if intl or air not in R.LOW_COST else rnd.choice([1, 2, 2, 3])):
+        for k in range(rnd.choice([2, 2, 3]) if hub else 1 if intl or air not in R.LOW_COST else rnd.choice([1, 2, 2, 3])):
             t = rnd.choice(types); minute = rnd.choice(range(0, 60, 5))
             dep = datetime.combine(today, datetime.min.time()) + timedelta(hours=rnd.randint(5, 23), minutes=minute)
             num = f"{air}-{rnd.randint(100, 999) if intl else rnd.randint(200, 899)}"
@@ -146,12 +164,13 @@ def main():
         print(f"{code}: {len(rows)} flights for {today}")
     users = [("Arjun Sharma", "admin@{a}.aerobase.in", "AIRPORT_ADMIN", ""), ("Ravi Kumar", "staff@{a}.aerobase.in", "GROUND_STAFF", ""),
              ("Neha Singh", "security@{a}.aerobase.in", "SECURITY_OFFICER", ""), ("IndiGo Ops", "ops@indigo.{a}.aerobase.in", "AIRLINE_OPS", "6E"),
-             ("Capt. Sharma", "captain@airindia.{a}.aerobase.in", "PILOT", "AI"), ("Demo Shop Owner", "shop@{a}.aerobase.in", "RETAILER", ""), ("Demo Passenger", "passenger@{a}.aerobase.in", "PASSENGER", ""), ("Platform Owner", "owner@aerobase.in", "SUPER_ADMIN", "")]
+             ("Capt. Sharma", "captain@airindia.{a}.aerobase.in", "PILOT", "AI"), ("Head of Security", "head.security@{a}.aerobase.in", "SECURITY_OFFICER", "HEAD"), ("Rohan Verma", "rohan.security@{a}.aerobase.in", "SECURITY_OFFICER", ""), ("Priya Nair", "priya.security@{a}.aerobase.in", "SECURITY_OFFICER", ""), ("Imran Sheikh", "imran.security@{a}.aerobase.in", "SECURITY_OFFICER", ""), ("Demo Shop Owner", "shop@{a}.aerobase.in", "RETAILER", ""), ("Demo Passenger", "passenger@{a}.aerobase.in", "PASSENGER", ""), ("Platform Owner", "owner@aerobase.in", "SUPER_ADMIN", "")]
     ph = hash_pw(pw)
     for a in AIRPORTS:
         vals = ",".join("(gen_random_uuid(),t.id,'%s','%s','%s','%s',%s)" % (n.replace("'", "''"), e.format(a=a.lower()), ph, role, "'%s'" % org if org else "NULL") for n, e, role, org in users if "{a}" in e or a == "DEL")
         psql("INSERT INTO users (id,tenant_id,full_name,email,password_hash,role,org_code) SELECT v.* FROM tenants t, LATERAL (VALUES " + vals + ") AS v(id,tid,n,e,h,r,o) WHERE t.airport_code=:'a' "
              "ON CONFLICT (email) DO UPDATE SET full_name=EXCLUDED.full_name, password_hash=EXCLUDED.password_hash, role=EXCLUDED.role, org_code=EXCLUDED.org_code;", a=a)
+    for a in AIRPORTS: seed_crew_and_dispatch(a)
     print("\nDemo users (same password for all):", pw)
     print("  e.g. admin@del.aerobase.in, staff@bom.aerobase.in, ops@indigo.del.aerobase.in, shop@blr.aerobase.in")
 
