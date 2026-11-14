@@ -186,7 +186,7 @@ const STORES: RecordsConfig = {
 const PASSES: RecordsConfig = {
   collection: "passes", title: "Lounge & Fast-track Passes", subtitle: "Request a pass; the airport team approves it", noun: "pass request", prefix: "PAS", titleKey: "type", statusKey: "status",
   fields: [
-    { key: "type", label: "Pass", required: true, type: "select", options: ["Lounge access", "Fast-track security", "Porter assistance", "Parking pre-booking"] },
+    { key: "type", label: "Pass", required: true, type: "select", options: ["Lounge access", "Pro membership", "Fast-track security", "Porter assistance", "Parking pre-booking"] },
     { key: "flight", label: "Flight", placeholder: "AI-101" }, { key: "date", label: "Date", type: "date", required: true },
     { key: "status", label: "Status", type: "select", options: ["Requested", "Approved", "Rejected", "Used"] }, { key: "notes", label: "Notes", type: "textarea", table: false },
   ],

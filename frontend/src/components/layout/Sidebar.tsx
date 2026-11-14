@@ -46,6 +46,7 @@ const ALL_NAV = [
   ]},
   { group:"Operations Ext", roles:["superadmin","airport_admin","staff"], items:[
     {id:"desk",          label:"Passenger Desk", icon:Users},
+    {id:"passes",        label:"Pass Requests",  icon:Crown},
     {id:"shoporders",    label:"Shop Orders",  icon:ShoppingBag},
     {id:"cargo",         label:"Cargo",        icon:Package},
     {id:"fuel",          label:"Fuel",         icon:Gauge},
@@ -97,7 +98,7 @@ const ALL_NAV = [
       {id:"shops",         label:"Shops & Food",    icon:ShoppingBag},
       {id:"baggage",       label:"My Bags",         icon:Briefcase},
       {id:"accessibility", label:"Assistance",      icon:AccIcon},
-      {id:"subscription",  label:"My Subscription", icon:Crown},
+      {id:"subscription",  label:"Lounges & Pro", icon:Crown},
   ]},
   { group:"People", roles:["superadmin","airport_admin"], items:[
     {id:"staff",         label:"Staff",        icon:UserCheck},
