@@ -26,7 +26,7 @@ RUN cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-I/tmp/jwt
 FROM ubuntu:24.04
 ENV DEBIAN_FRONTEND=noninteractive AEROBASE_ENV=production
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libjsoncpp25 libuuid1 zlib1g libssl3t64 libcares2 libpq5 libpqxx-7.8t64 libhiredis1.1.0 libbrotli1 ca-certificates curl \
+    libjsoncpp25 libuuid1 zlib1g libssl3t64 libcares2 libpq5 libpqxx-7.8t64 libhiredis1.1.0 libbrotli1 ca-certificates curl python3 postgresql-client \
     && rm -rf /var/lib/apt/lists/* && useradd -r -u 10001 aerobase
 WORKDIR /app
 COPY --from=build /usr/local/lib/ /usr/local/lib/
@@ -34,7 +34,9 @@ RUN ldconfig
 COPY --from=build /src/build/AeroBaseIndia /app/AeroBaseIndia
 COPY src/config/config.json /app/config.json
 COPY migrations /app/migrations
+COPY scripts /app/scripts
+RUN chmod +x /app/scripts/docker-entrypoint.sh
 USER aerobase
 EXPOSE 8080
-HEALTHCHECK --interval=15s --timeout=3s --start-period=20s CMD curl -fsS http://localhost:8080/health || exit 1
-CMD ["./AeroBaseIndia"]
+HEALTHCHECK --interval=15s --timeout=3s --start-period=60s CMD curl -fsS http://localhost:${PORT:-8080}/health || exit 1
+CMD ["/app/scripts/docker-entrypoint.sh"]

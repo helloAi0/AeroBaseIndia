@@ -15,7 +15,8 @@ public:
                " port="    + quote(env("DB_PORT",     "5432"))      +
                " dbname="  + quote(env("DB_NAME",     "aerobase"))  +
                " user="    + quote(env("DB_USER",     "postgres"))  +
-               " password="+ quote(env("DB_PASSWORD", "postgres"));
+               " password="+ quote(env("DB_PASSWORD", "postgres")) +
+               " sslmode=" + quote(env("DB_SSLMODE", "prefer"));   // set DB_SSLMODE=require for a managed database reached over the internet
     }
 
     /// Per-thread connection (a pqxx::connection is not thread-safe, and Drogon serves requests on

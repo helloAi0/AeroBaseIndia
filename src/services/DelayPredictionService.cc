@@ -7,7 +7,9 @@
 std::string& DelayPredictionService::mlServiceUrl() {
     static std::string url = [] {
         const char* env = std::getenv("ML_SERVICE_URL");
-        return env ? std::string(env) : "http://localhost:5000";
+        std::string u = (env && *env) ? std::string(env) : "localhost:5000";
+        if (u.find("://") == std::string::npos) u = "http://" + u;   // hosting platforms hand over a bare host:port
+        return u;
     }();
     return url;
 }

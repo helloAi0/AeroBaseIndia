@@ -1,0 +1,76 @@
+# Render Blueprint: backend (Docker), ML service, Redis and Postgres.
+# New > Blueprint > pick this repo > fill in the three values marked "set after" (see docs/DEPLOY_RENDER_VERCEL.md).
+# The frontend is deployed separately on Vercel.
+databases:
+  - name: aerobase-db
+    plan: free              # free Postgres on Render expires after 30 days; see the guide for a permanent free option (Neon)
+    databaseName: aerobase
+    user: aerobase
+
+services:
+  - type: keyvalue          # Redis-compatible; the app works without it, this only turns on caching and rate limits
+    name: aerobase-redis
+    plan: free
+    ipAllowList: []         # internal connections only
+
+  - type: web
+    name: aerobase-ml
+    runtime: docker
+    plan: free
+    dockerfilePath: ./ml_service/Dockerfile
+    dockerContext: ./ml_service
+    envVars:
+      - key: PORT
+        value: "5000"
+
+  - type: web
+    name: aerobase-api
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    envVars:
+      - key: AEROBASE_ENV
+        value: production
+      - key: PORT
+        value: "8080"
+      - key: DB_HOST
+        fromDatabase: { name: aerobase-db, property: host }
+      - key: DB_PORT
+        fromDatabase: { name: aerobase-db, property: port }
+      - key: DB_NAME
+        fromDatabase: { name: aerobase-db, property: database }
+      - key: DB_USER
+        fromDatabase: { name: aerobase-db, property: user }
+      - key: DB_PASSWORD
+        fromDatabase: { name: aerobase-db, property: password }
+      - key: REDIS_HOST
+        fromService: { type: keyvalue, name: aerobase-redis, property: host }
+      - key: REDIS_PORT
+        fromService: { type: keyvalue, name: aerobase-redis, property: port }
+      - key: ML_SERVICE_URL
+        fromService: { type: web, name: aerobase-ml, property: hostport }
+      - key: JWT_SECRET
+        generateValue: true
+      - key: METRICS_TOKEN
+        generateValue: true
+      # Demo data: today's flights for 20 airports and one login per role. Turn SEED_DEMO off for a real launch.
+      - key: SEED_DEMO
+        value: "true"
+      - key: DEMO_PASSWORD
+        sync: false         # set: a password of 10+ characters for the demo accounts
+      # Set after the Vercel deploy (your site's address, e.g. https://aerobase.vercel.app):
+      - key: CORS_ORIGINS
+        sync: false
+      - key: PUBLIC_APP_URL
+        sync: false
+      - key: WEBAUTHN_ORIGINS
+        sync: false
+      # Optional: real password-reset emails (free Brevo account). Without them the reset page shows the link itself.
+      - key: AUTH_DEV_RETURN_RESET_LINK
+        value: "true"
+      - key: BREVO_API_KEY
+        sync: false
+      - key: BREVO_SENDER_EMAIL
+        sync: false

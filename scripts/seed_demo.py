@@ -138,12 +138,14 @@ def swap(code, home):   # re-home the Delhi board onto another airport
     return home if code == "DEL" else ("DEL" if code == home else code)
 
 def main():
-    subprocess.run([sys.executable, os.path.join(HERE, "load_reference_data.py")], check=True)
+    if not os.environ.get("SEED_KEEP_TODAY"): subprocess.run([sys.executable, os.path.join(HERE, "load_reference_data.py")], check=True)   # bootstrap.py loads it once on a hosted deployment
     pw = os.environ.get("DEMO_PASSWORD") or secrets.token_urlsafe(12)
     if len(pw) < 10: sys.exit("DEMO_PASSWORD must be at least 10 characters")
     flights = json.load(open(os.path.join(HERE, "demo_flights.json")))
-    today = date.today()
+    today = date.today(); seeded = []
     for code, name in AIRPORTS.items():
+        if os.environ.get("SEED_KEEP_TODAY") and psql("SELECT 1 FROM flights f JOIN tenants t ON t.id=f.tenant_id WHERE t.airport_code=:'c' AND f.departure_time::date = CURRENT_DATE LIMIT 1;", c=code).strip():
+            print(f"{code}: today's flights already there, keeping them"); continue   # a restart must not wipe flights that bookings point at
         psql("INSERT INTO tenants (id, airport_name, airport_code, subscription_plan) SELECT gen_random_uuid(), :'n', :'c', 'STANDARD' WHERE NOT EXISTS (SELECT 1 FROM tenants WHERE airport_code = :'c');", n=name, c=code)
         psql("DELETE FROM users WHERE email LIKE 'ops@vistara.%';")
         psql("DELETE FROM flights WHERE tenant_id = (SELECT id FROM tenants WHERE airport_code = :'c') AND airline_partner_id IS NULL;", c=code)
@@ -163,7 +165,8 @@ def main():
         seed_staff(code, sorted({r[10] for r in rows if r[10]}) or ["T1"])
         vals = ",".join("(gen_random_uuid(),(SELECT id FROM tenants WHERE airport_code='%s'),%s)" % (code, ",".join("'%s'" % str(x).replace("'", "''") if not isinstance(x, int) else str(x) for x in r)) for r in rows)
         psql("INSERT INTO flights (id,tenant_id,flight_number,origin,destination,departure_time,arrival_time,gate,status,airline,airline_code,aircraft,terminal,passengers,issue,delay_minutes) VALUES " + vals + " ON CONFLICT (tenant_id, flight_number, departure_time) DO NOTHING;")
-        print(f"{code}: {len(rows)} flights for {today}")
+        print(f"{code}: {len(rows)} flights for {today}"); seeded.append(code)
+    if os.environ.get("SEED_KEEP_TODAY") and not seeded: return print("Nothing to do: today's data is already in place.")
     users = [("Arjun Sharma", "admin@{a}.aerobase.in", "AIRPORT_ADMIN", ""), ("Ravi Kumar", "staff@{a}.aerobase.in", "GROUND_STAFF", ""),
              ("Neha Singh", "security@{a}.aerobase.in", "SECURITY_OFFICER", ""), ("IndiGo Ops", "ops@indigo.{a}.aerobase.in", "AIRLINE_OPS", "6E"),
              ("Capt. Sharma", "captain@airindia.{a}.aerobase.in", "PILOT", "AI"), ("Head of Security", "head.security@{a}.aerobase.in", "SECURITY_OFFICER", "HEAD"), ("Rohan Verma", "rohan.security@{a}.aerobase.in", "SECURITY_OFFICER", ""), ("Priya Nair", "priya.security@{a}.aerobase.in", "SECURITY_OFFICER", ""), ("Imran Sheikh", "imran.security@{a}.aerobase.in", "SECURITY_OFFICER", ""), ("Demo Shop Owner", "shop@{a}.aerobase.in", "RETAILER", ""), ("Demo Passenger", "passenger@{a}.aerobase.in", "PASSENGER", ""), ("Platform Owner", "owner@aerobase.in", "SUPER_ADMIN", "")]
@@ -172,7 +175,7 @@ def main():
         vals = ",".join("(gen_random_uuid(),t.id,'%s','%s','%s','%s',%s)" % (n.replace("'", "''"), e.format(a=a.lower()), ph, role, "'%s'" % org if org else "NULL") for n, e, role, org in users if "{a}" in e or a == "DEL")
         psql("INSERT INTO users (id,tenant_id,full_name,email,password_hash,role,org_code) SELECT v.* FROM tenants t, LATERAL (VALUES " + vals + ") AS v(id,tid,n,e,h,r,o) WHERE t.airport_code=:'a' "
              "ON CONFLICT (email) DO UPDATE SET full_name=EXCLUDED.full_name, password_hash=EXCLUDED.password_hash, role=EXCLUDED.role, org_code=EXCLUDED.org_code;", a=a)
-    for a in AIRPORTS: seed_crew_and_dispatch(a)
+    for a in seeded: seed_crew_and_dispatch(a)
     for a in AIRPORTS:   # one operations login per airline that flies at the airport: ops.<iata>@<airport>.aerobase.in
         psql("INSERT INTO users (id,tenant_id,full_name,email,password_hash,role,org_code) SELECT gen_random_uuid(), t.id, f.airline || ' Operations', 'ops.' || lower(f.airline_code) || '@' || lower(:'a') || '.aerobase.in', :'h', 'AIRLINE_OPS', f.airline_code "
              "FROM tenants t JOIN (SELECT DISTINCT ON (tenant_id, airline_code) tenant_id, airline, airline_code FROM flights WHERE airline_code IS NOT NULL ORDER BY tenant_id, airline_code, airline) f ON f.tenant_id = t.id WHERE t.airport_code=:'a' "
