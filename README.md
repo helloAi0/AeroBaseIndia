@@ -9,9 +9,9 @@ One platform for the airport owner, operations director, airlines, pilots, secur
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 ![Tests](https://img.shields.io/badge/tests-63_integration_%2B_76_unit-2ea44f)
-![C++20](https://img.shields.io/badge/C%2B%2B-20-00599C?logo=cplusplus&logoColor=white)
+![C++17](https://img.shields.io/badge/C%2B%2B-17-00599C?logo=cplusplus&logoColor=white)
 ![Drogon](https://img.shields.io/badge/Drogon-HTTP%20%2B%20WS-1c1428)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql&logoColor=white)
 ![Redis](https://img.shields.io/badge/Redis-cache-DC382D?logo=redis&logoColor=white)
 ![React](https://img.shields.io/badge/React-TypeScript-61DAFB?logo=react&logoColor=black)
 ![Vite](https://img.shields.io/badge/Vite-Tailwind-646CFF?logo=vite&logoColor=white)
@@ -221,10 +221,10 @@ flowchart LR
   subgraph Client
     FE["React + TypeScript + Vite + Tailwind<br/>(Vercel)"]
   end
-  subgraph API["Drogon C++20 API (Render)"]
+  subgraph API["Drogon C++17 API (Render)"]
     REST["REST controllers"]
     GQL["GraphQL"]
-    WS["WebSocket realtime"]
+    WS["WebSocket endpoints<br/>(/ws/events, /ws/flights)"]
     POL["Role policies and JWT"]
   end
   subgraph Data
@@ -236,7 +236,7 @@ flowchart LR
 
   FE -- HTTPS --> REST
   FE -- HTTPS --> GQL
-  FE -- WSS --> WS
+  FE -. 10-15s polling .-> REST
   REST --> POL
   POL --> PG
   POL --> RD
@@ -266,9 +266,9 @@ Fares are indicative: computed from great-circle distance with low-cost-carrier 
 
 | Layer | Technology |
 |---|---|
-| Backend | C++20, Drogon, pqxx, jwt-cpp |
-| Database | PostgreSQL with 45 migrations, Redis |
-| Realtime | WebSocket |
+| Backend | C++17, Drogon, libpqxx, hiredis, jwt-cpp, OpenSSL |
+| Database | PostgreSQL (16 in the production compose file) with 45 migrations; Redis for caching and rate limits |
+| Realtime | The UI refreshes live data by polling every 10-15 s; the API also exposes WebSocket endpoints (`/ws/events`, `/ws/flights`) |
 | API | REST, GraphQL, OpenAPI (Swagger) |
 | Frontend | React, TypeScript, Vite, Tailwind CSS, three.js |
 | ML | Python, Flask (delay prediction) |
@@ -292,6 +292,8 @@ Reference data covers **20 airports** (15 in India, 5 overseas: DXB, AUH, DOH, L
 - **Frontend.** Security headers set in `frontend/vercel.json`; demo accounts can be stripped from production builds.
 
 See [docs/SECURITY.md](docs/SECURITY.md) for the runbook and rotation steps.
+
+For a full engineering write-up (architecture, schema, APIs, decisions, limitations, 30 interview questions) see the [technical dossier](docs/technical-dossier.html); open the downloaded file in a browser.
 
 ---
 
@@ -363,7 +365,7 @@ render.yaml     Render Blueprint
 - Weather comes from Open-Meteo; map tiles come from OpenStreetMap.
 - Free-tier hosting sleeps when idle, so the first request after a pause is slow.
 - Demo data is synthetic. No real passenger data is included.
-- Payments are simulated; no real money moves.
+- Razorpay and Stripe gateway code is wired in (orders and signed webhooks) but only active when you configure keys; the demo runs without them.
 
 ---
 
@@ -371,7 +373,7 @@ render.yaml     Render Blueprint
 
 - Live airline fare and schedule feeds in place of indicative fares.
 - Native mobile apps for passengers and ground staff.
-- Real payment gateway integration for bookings and shop orders.
+- Take passenger bookings and shop orders through the Razorpay and Stripe gateways already in the backend.
 - Offline-friendly staff tools for poor-connectivity zones.
 - More overseas hubs and localisation.
 
