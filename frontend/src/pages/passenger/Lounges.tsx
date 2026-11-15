@@ -3,7 +3,7 @@ import { Armchair, Crown, CheckCircle2, Clock } from "lucide-react";
 import { useCollection } from "../../hooks/useCollection";
 import { useAirport } from "../../hooks/useAirport";
 import { COMMON_RULES, LOUNGES, METHODS, WALK_IN, type Method } from "../../data/lounges";
-import { inr } from "../../lib/booking";
+const rs = (n: number) => "₹" + n.toLocaleString("en-IN");
 import { Card, PageHead } from "../../components/ui/PageHead";
 
 interface Pass { type: string; status: string; date?: string; flight?: string; notes?: string }
@@ -27,7 +27,7 @@ export function Lounges() {
       <div className="grid lg:grid-cols-2 gap-4">
         <Card><div className="flex items-center gap-2 text-white font-semibold mb-3"><Armchair className="w-4 h-4" />Lounges at {code}</div>
           {lounges.length === 0 ? <div className="text-sm text-slate-400">No lounge listed for this airport yet.</div> : <div className="space-y-2">{lounges.map((l, i) => <div key={i} className="rounded-xl border border-navy-600 bg-navy-900 p-3 flex justify-between gap-2"><div><div className="text-sm text-white">{l.name}</div><div className="text-xs text-slate-400">{l.operator} · {l.terminal} · {l.zone}</div></div><div className="text-xs text-slate-500 inline-flex items-center gap-1"><Clock className="w-3 h-3" />{l.hours}</div></div>)}</div>}
-          <div className="text-xs text-slate-400 mt-3">Walk-in rate: {inr(WALK_IN.domestic)} domestic, {inr(WALK_IN.international)} international, for {WALK_IN.hours} hours (published operator rate; it can change).</div></Card>
+          {lounges.length > 0 && <div className="text-xs text-slate-400 mt-3">Walk-in rate: {rs(WALK_IN.domestic)} domestic, {rs(WALK_IN.international)} international, for {WALK_IN.hours} hours (published operator rate; it can change).</div>}</Card>
         <Card><div className="text-white font-semibold mb-3">How will you get in?</div>
           <div className="flex flex-wrap gap-2 mb-3">{METHODS.map(m => <button key={m.id} onClick={() => setMethod(m.id)} className={`text-xs px-3 py-1.5 rounded-full border ${method === m.id ? "border-sky-500 text-sky-300 bg-sky-500/10" : "border-navy-600 text-slate-300"}`}>{m.label}</button>)}</div>
           <p className="text-sm text-slate-300">{rule.rule}</p>

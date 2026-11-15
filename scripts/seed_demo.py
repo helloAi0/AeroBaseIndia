@@ -72,6 +72,8 @@ def seed_outlets(code, terminals):
         d = json.dumps({"name": name, "category": cat, "terminal": t, "location": "Post-security", "hours": hours, "status": "Open", "deliver": "Yes", "contact": ""})
         sid = psql("INSERT INTO app_records (tenant_id, collection, data) SELECT id, 'stores', :'d'::jsonb FROM tenants WHERE airport_code=:'c' RETURNING id;", c=code, d=d)
         for pn, pc, price, stock in prods:
+            per = {"DXB": 24, "AUH": 24, "DOH": 24, "LHR": 112, "SIN": 65}.get(code, 1)   # shop prices are in the airport's own currency
+            if per > 1: price = max(round(price / per * 2) / 2, 0.5)
             pd = json.dumps({"name": pn, "category": pc, "price": price, "stock": stock, "available": "Yes", "shop": name})
             psql("INSERT INTO app_records (tenant_id, collection, data) SELECT id, 'products', :'d'::jsonb FROM tenants WHERE airport_code=:'c';", c=code, d=pd)
 

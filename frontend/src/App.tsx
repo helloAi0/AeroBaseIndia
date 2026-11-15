@@ -198,6 +198,8 @@ function AppContent() {
   const effectivePage =
     user?.role==="retailer" && !["retailer","map","flights","payments","passenger","checkin","bids"].includes(activePage)
       ? "retailer"
+    : user?.role==="passenger" && activePage==="dashboard"
+      ? "trips"
     : sl.startsWith("pilot_") && activePage==="dashboard"
       ? "pilot"
     : sl.startsWith("airline_") && activePage==="dashboard"

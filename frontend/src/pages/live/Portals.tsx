@@ -1,3 +1,4 @@
+import { money } from "../../lib/currency";
 import { useMemo, useState } from "react";
 import { useBoard } from "../../hooks/useBoard";
 import { useAuthStore } from "../../store/authStore";
@@ -59,8 +60,17 @@ export function PilotDashboard() {
   const { flights } = useBoard(); const ap = useAirport(); const wx = useWeather(); const [done, setDone] = useState<Record<string, boolean>>({});
   const crew = useCollection<Crew>("crew", []); const mine = (crew.items.find(c => c.status === "Active") ?? crew.items[0]) as Crew | undefined;
   const assigned = new Set((mine?.flights ?? "").split(/[,\s]+/).map(x => x.trim().toUpperCase()).filter(Boolean));
-  const up = flights.filter(f => f.status !== "Departed" && f.status !== "Landed" && f.status !== "Cancelled" && (!assigned.size || assigned.has(f.flight.toUpperCase()))).sort((a, b) => a.dep.localeCompare(b.dep));
-  if (!up.length) return <div className="space-y-6"><PageHead title="Crew briefing" sub={ap.name} /><CrewCard /><Empty>No upcoming departures assigned to you at {ap.name}.</Empty></div>;
+  const minsTo = (dep: string) => { const [h, m] = dep.split(":").map(Number); const d = new Date(); d.setHours(h, m, 0, 0); return Math.round((d.getTime() - Date.now()) / 60000); };
+  const all = flights.filter(f => f.status !== "Departed" && f.status !== "Landed" && f.status !== "Cancelled" && (!assigned.size || assigned.has(f.flight.toUpperCase())));
+  const up = all.filter(f => !Number.isFinite(minsTo(f.dep)) || minsTo(f.dep) >= -45).sort((a, b) => a.dep.localeCompare(b.dep));   // a flight more than 45 min past its time is no longer "next"
+  if (!up.length) {
+    const onBoard = flights.filter(f => assigned.has(f.flight.toUpperCase())).length;
+    const msg = !mine ? "No crew record is linked to your account yet. Ask your airline for a reference ID and enter it above."
+      : assigned.size && !onBoard ? `Your assigned flights (${[...assigned].join(", ")}) are not on today's board at ${ap.name}. They may operate on another day or from another airport. Your airline can update your assignment.`
+      : assigned.size ? "No more departures today: all of your assigned flights have left, landed or been cancelled."
+      : `No flights are assigned to you yet. ${mine.airline} operations can add them to your crew record.`;
+    return <div className="space-y-6"><PageHead title="Crew briefing" sub={ap.name} /><CrewCard /><Empty>{msg}</Empty></div>;
+  }
   const n = up[0]; const flags = wx ? [wx.visibility < 1 && "Low visibility — expect LVP and longer taxi", wx.visibility >= 1 && wx.visibility < 3 && "Reduced visibility", wx.wind >= 40 && "Strong surface wind — check crosswind limits", wx.temp >= 40 && "High temperature — check take-off performance"].filter(Boolean) as string[] : [];
   const list = ["Weather and NOTAMs reviewed", "Fuel and load sheet signed", "Gate and stand confirmed", "Crew briefing complete"];
   const mins = (() => { const [h, m] = n.dep.split(":").map(Number); const d = new Date(); d.setHours(h, m, 0, 0); return Math.round((d.getTime() - Date.now()) / 60000); })();
@@ -91,7 +101,7 @@ export function RetailerDashboard() {
     <div className="space-y-6">
       <PageHead title="My shop" sub="Your marketplace bids and the audiences available today." />
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-4"><Stat label="Bids placed" value={mine.length} /><Stat label="Accepted" value={acc.length} tone="text-green-400" />
-        <Stat label="Pending" value={mine.filter(b => b.status === "Pending").length} tone="text-yellow-400" /><Stat label="Spend on accepted" value={"₹" + acc.reduce((s, b) => s + (Number(b.amount) || 0), 0).toLocaleString("en-IN")} /></div>
+        <Stat label="Pending" value={mine.filter(b => b.status === "Pending").length} tone="text-yellow-400" /><Stat label="Spend on accepted" value={money(acc.reduce((s, b) => s + (Number(b.amount) || 0), 0))} /></div>
       <Card><div className="text-sm text-slate-300 mb-3">Biggest audiences today</div><div className="space-y-2">{top.map(f => <div key={f.id} className="flex justify-between text-sm text-slate-200"><span className="font-mono">{f.flight} {f.from}→{f.to}</span><span className="text-slate-400">{f.pax} passengers · dep {f.dep}</span></div>)}</div>
         <button onClick={() => go("bids")} className="mt-4 px-4 py-2 rounded-xl bg-sky-500 text-white text-sm font-semibold">Place a bid</button></Card>
     </div>

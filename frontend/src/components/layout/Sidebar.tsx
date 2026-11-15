@@ -72,6 +72,7 @@ const ALL_NAV = [
   { group:"Security", roles:["security_head","security"], items:[
       {id:"command",      label:"Security Command",  icon:Shield},
       {id:"security",     label:"Security Events",   icon:Shield},
+      {id:"desk",         label:"Pre-checks",        icon:Users},
       {id:"incidents",    label:"Incidents",         icon:AlertOctagon},
       {id:"emergency",    label:"Emergency Center",  icon:Siren},
       {id:"heatmap",      label:"Crowd & Queues",    icon:Users},

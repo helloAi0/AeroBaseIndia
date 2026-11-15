@@ -645,7 +645,7 @@ class Accounts(unittest.TestCase):
         # a second passenger only sees it once named: register Mohit, then he sees the booking
         email = "mohit.%s@example.com" % RUN.lower(); self.assertEqual(call("POST", "/api/auth/register", {"name": "Mohit Verma", "email": email, "password": PW, "airport": "DEL", "account_type": "PASSENGER"})[0], 201)
         tm = login(email); self.assertTrue(any(x["id"] == b["id"] for x in call("GET", "/api/records/bookings", token=tm)[1]["records"]))   # linked by email
-        self.assertFalse(any(x["id"] == b["id"] for x in call("GET", "/api/records/bookings", token=login(STAFF))[1]["records"]) is False)   # staff can see (desk work)
+        self.assertTrue(any(x["id"] == b["id"] for x in call("GET", "/api/records/bookings", token=ts)[1]["records"]))   # staff can see it (desk work)
         # the airline sees it, and only the airline/desk can mark it paid
         self.assertTrue(any(x["id"] == b["id"] for x in call("GET", "/api/records/bookings", token=tai)[1]["records"]))
         self.assertEqual(call("PUT", "/api/records/bookings/" + b["id"], {"action": "payment", "payment": "Paid"}, token=tp)[0], 403)
@@ -653,7 +653,18 @@ class Accounts(unittest.TestCase):
         self.assertEqual(call("PUT", "/api/records/bookings/" + b["id"], {"action": "stage", "index": 0, "stage": "Security cleared"}, token=ts)[0], 409)
         self.assertEqual(call("PUT", "/api/records/bookings/" + b["id"], {"action": "stage", "index": 0, "stage": "Checked in"}, token=tp)[0], 200)
         self.assertEqual(call("PUT", "/api/records/bookings/" + b["id"], {"action": "stage", "index": 0, "stage": "Bag dropped"}, token=tp)[0], 403)
-        for st in ("Bag dropped", "Security cleared"): self.assertEqual(call("PUT", "/api/records/bookings/" + b["id"], {"action": "stage", "index": 0, "stage": st}, token=ts)[0], 200)
+        U = "/api/records/bookings/" + b["id"]; tsec = login(SEC)
+        self.assertEqual(call("PUT", U, {"action": "stage", "index": 0, "stage": "Bag dropped"}, token=ts)[0], 409)               # pre-checks come first
+        self.assertEqual(call("PUT", U, {"action": "check", "index": 0, "key": "screen", "value": True}, token=ts)[0], 403)        # ground staff cannot record screening
+        self.assertEqual(call("PUT", U, {"action": "check", "index": 0, "key": "id", "value": True}, token=tsec)[0], 403)         # security cannot record the ID check
+        for k in ("id", "bag"): self.assertEqual(call("PUT", U, {"action": "check", "index": 0, "key": k, "value": True}, token=ts)[0], 200)
+        self.assertEqual(call("PUT", U, {"action": "stage", "index": 0, "stage": "Bag dropped"}, token=ts)[0], 200)
+        self.assertEqual(call("PUT", U, {"action": "stage", "index": 0, "stage": "Security cleared"}, token=ts)[0], 409)          # screening not recorded yet
+        self.assertEqual(call("PUT", U, {"action": "check", "index": 0, "key": "hold", "note": "Prohibited item in hand bag"}, token=tsec)[0], 200)
+        self.assertEqual(call("PUT", U, {"action": "check", "index": 0, "key": "screen", "value": True}, token=tsec)[0], 200)
+        self.assertEqual(call("PUT", U, {"action": "stage", "index": 0, "stage": "Security cleared"}, token=ts)[0], 409)          # on hold
+        self.assertEqual(call("PUT", U, {"action": "check", "index": 0, "key": "hold", "note": ""}, token=tsec)[0], 200)
+        self.assertEqual(call("PUT", U, {"action": "stage", "index": 0, "stage": "Security cleared"}, token=ts)[0], 200)
         self.assertEqual(call("PUT", "/api/records/bookings/" + b["id"], {"action": "stage", "index": 0, "stage": "Boarded"}, token=ts)[0], 409)   # unpaid
         self.assertEqual(call("PUT", "/api/records/bookings/" + b["id"], {"action": "payment", "payment": "Paid"}, token=tai)[0], 200)
         self.assertEqual(call("PUT", "/api/records/bookings/" + b["id"], {"action": "stage", "index": 0, "stage": "Boarded"}, token=ts)[0], 200)

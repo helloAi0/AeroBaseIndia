@@ -1,8 +1,9 @@
+import { money } from "../../lib/currency";
 import { ArrowRight, MapPin, Truck } from "lucide-react";
 import { nextStatus, type Order } from "../../lib/shopStats";
 import { Card } from "../../components/ui/PageHead";
 
-const rupee = (n: number) => "₹" + Math.round(n).toLocaleString("en-IN");
+const rupee = (n: number) => money(n);
 export const statusTone = (s: string) => s === "Delivered" ? "text-green-300 border-green-500/30" : s === "Cancelled" ? "text-red-300 border-red-500/40" : s === "New" ? "text-yellow-300 border-yellow-500/40" : "text-sky-300 border-sky-500/30";
 const closed = (s: string) => s === "Delivered" || s === "Cancelled";
 

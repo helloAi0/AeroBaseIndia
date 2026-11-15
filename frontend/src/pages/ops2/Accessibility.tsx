@@ -1,3 +1,4 @@
+import { type Booking } from "../../lib/booking";
 import { useEffect, useMemo, useState } from "react";
 import { Accessibility as Icon, UserCheck, Clock, CheckCircle2, Hourglass, Users, AlertTriangle } from "lucide-react";
 import { useCollection } from "../../hooks/useCollection";
@@ -6,7 +7,7 @@ import { useAuthStore } from "../../store/authStore";
 import { useAppStore } from "../../store/appStore";
 import { Card, PageHead, Stat } from "../../components/ui/PageHead";
 
-interface Req { pax: string; flight: string; need: string; terminal: string; area: string; note?: string; status: "Open" | "Assigned" | "Done"; staff?: string; eta?: number; requestedAt?: string; assignedAt?: string; doneAt?: string }
+interface Req { pnr?: string; seat?: string; pax: string; flight: string; need: string; terminal: string; area: string; note?: string; status: "Open" | "Assigned" | "Done"; staff?: string; eta?: number; requestedAt?: string; assignedAt?: string; doneAt?: string }
 interface Person { name: string; role: string; terminal: string; status: string; assist: string; shift: string }
 const NEEDS = ["Wheelchair", "Visually impaired escort", "Elderly assistance", "Hearing impaired support", "Stretcher / medical", "Child travelling alone", "Other"];
 const AREAS = ["Check-in", "Security", "Gates", "Arrivals", "Baggage belt", "Kerbside"];
@@ -19,6 +20,10 @@ export function AccessibilityConcierge() {
   const isPax = role === "passenger"; const isAdmin = role === "airport_admin" || role === "superadmin";
   const col = useCollection<Req>("accessibility", []); const staffCol = useCollection<Person>("staff", [], { skip: isPax });
   const { flights } = useBoard();
+  const trips = useCollection<Booking>("bookings", [], { skip: !isPax }).items as Booking[];
+  const options = trips.filter(b => b.status === "Confirmed").flatMap(b => b.travellers.map(t => ({ key: `${b.pnr}|${t.seat}`, pnr: b.pnr, seat: t.seat, name: t.name, flight: b.flight, label: `${b.flight} · ${b.origin}→${b.destination} · ${t.name} (seat ${t.seat})` })));
+  const [trip, setTrip] = useState("");
+  const pickTrip = (key: string) => { setTrip(key); const o = options.find(x => x.key === key); if (!o) return; const fl = flights.find(x => x.flight === o.flight); setF(v => ({ ...v, pax: o.name, flight: o.flight, terminal: fl && fl.terminal !== "—" ? fl.terminal : v.terminal })); };
   const terminals = useMemo(() => { const t = Array.from(new Set(flights.map(f => f.terminal).filter(x => x && x !== "—"))).sort(); return t.length ? t : ["T1"]; }, [flights]);
   const [f, setF] = useState({ pax: "", flight: "", need: NEEDS[0], terminal: "", area: AREAS[0], note: "" });
   const [filter, setFilter] = useState<"Active" | "Done" | "All">("Active"); const [msg, setMsg] = useState("");
@@ -35,7 +40,7 @@ export function AccessibilityConcierge() {
 
   const add = async (e: React.FormEvent) => {
     e.preventDefault(); if (!f.pax.trim() || !f.flight.trim()) return;
-    const ok = await col.add({ ...f, pax: f.pax.trim(), flight: f.flight.trim().toUpperCase(), note: f.note.trim() || undefined, status: "Open", requestedAt: new Date().toISOString() } as never);
+    const o = options.find(x => x.key === trip); const ok = await col.add({ ...f, ...(o ? { pnr: o.pnr, seat: o.seat } : {}), pax: f.pax.trim(), flight: f.flight.trim().toUpperCase(), note: f.note.trim() || undefined, status: "Open", requestedAt: new Date().toISOString() } as never);
     if (ok) { setF({ ...f, pax: isPax ? f.pax : "", flight: "", note: "" }); setMsg(isPax ? "Request sent. Airport staff will come to you." : "Request added."); }
   };
   const assign = async (r: Req & { id: string }, who?: Person) => {
@@ -53,6 +58,7 @@ export function AccessibilityConcierge() {
       <PageHead title="Assistance" sub="Need a wheelchair, an escort or other help? Tell us where you are and a trained team member will come to you." />
       {msg && <div className="text-sm text-green-300 flex items-center gap-2"><CheckCircle2 className="w-4 h-4" />{msg}</div>}
       <Card><form onSubmit={add} className="grid sm:grid-cols-2 gap-3">
+        {options.length > 0 && <select className={inp + " sm:col-span-2"} value={trip} onChange={e => pickTrip(e.target.value)} aria-label="Which trip"><option value="">Choose one of your trips (optional)</option>{options.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}</select>}
         <input className={inp} placeholder="Your name" value={f.pax} onChange={e => setF({ ...f, pax: e.target.value })} required aria-label="Your name" />
         <input className={inp} placeholder="Flight e.g. AI-101" list="flt" value={f.flight} onChange={e => setF({ ...f, flight: e.target.value })} required aria-label="Flight" />
         <select className={inp} value={f.need} onChange={e => setF({ ...f, need: e.target.value })} aria-label="Help needed">{NEEDS.map(n => <option key={n}>{n}</option>)}</select>
@@ -98,7 +104,7 @@ export function AccessibilityConcierge() {
           {list.map(r => { const wait = minsAgo(r.requestedAt), late = r.status === "Open" && wait > 20, warn = r.status === "Open" && wait > 10; const fi = flightInfo(r.flight);
             return (<Card key={r.id} className={late ? "!border-red-500/60" : warn ? "!border-yellow-500/50" : ""}>
               <div className="flex flex-wrap justify-between gap-3 items-center">
-                <div className="min-w-0"><div className="text-white flex items-center gap-2"><Icon className="w-4 h-4 text-sky-400" />{r.pax} <span className="text-slate-400 text-sm font-mono">{r.flight}</span>{fi && <span className="text-xs text-slate-500">gate {fi.gate} · dep {fi.dep}</span>}</div>
+                <div className="min-w-0"><div className="text-white flex items-center gap-2"><Icon className="w-4 h-4 text-sky-400" />{r.pax} <span className="text-slate-400 text-sm font-mono">{r.flight}</span>{fi && <span className="text-xs text-slate-500">gate {fi.gate} · dep {fi.dep}</span>}{r.pnr && <span className="text-xs text-sky-300">PNR {r.pnr} · seat {r.seat}</span>}</div>
                   <div className="text-xs text-slate-400 mt-1">{r.need} · {r.terminal} {(r.area ?? "").toLowerCase()}{r.note ? ` · “${r.note}”` : ""}</div>
                   <div className="text-xs mt-1 flex items-center gap-3">
                     {r.requestedAt && <span className={late ? "text-red-400" : warn ? "text-yellow-400" : "text-slate-500"}><Clock className="inline w-3 h-3 mr-1" />{r.status === "Done" ? "closed" : `waiting ${wait} min`}</span>}

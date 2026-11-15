@@ -16,7 +16,7 @@ export function BillingPortal() {
   const live = API_ENABLED && useAuthStore(s => s.source) === "backend"; const role = useAuthStore(s => s.user?.role);
   const [plan, setPlan] = useState<{ plan: string; status: string; renews_on?: string } | null>(null); const [msg, setMsg] = useState<{ ok: boolean; t: string } | null>(null);
   const [inv, setInv] = useState<any[] | null>(null);
-  const load = useCallback(() => { api.get("/api/billing/current-plan").then(r => setPlan(r.data)).catch(() => setMsg({ ok: false, t: "Could not load your plan" })); api.get("/api/billing/invoices").then(r => setInv(r.data.invoices ?? r.data ?? [])).catch(() => setInv(null)); }, []);
+  const load = useCallback(() => { api.get("/api/billing/current-plan").then(r => setPlan(r.data)).catch(() => setMsg({ ok: false, t: "Could not load your plan" })); if (useAuthStore.getState().user?.role === "superadmin") api.get("/api/billing/invoices").then(r => setInv(r.data.invoices ?? r.data ?? [])).catch(() => setInv(null)); }, []);
   useEffect(() => { if (live) load(); }, [live, load]);
   if (!live) return <Card><div className="text-sm text-yellow-400">Billing needs the live backend.</div></Card>;
   const change = async (id: string) => {

@@ -1,3 +1,4 @@
+import { activeCurrency, money } from "../../lib/currency";
 import { useState } from "react";
 import { Store, Package, ClipboardList, Settings, LayoutDashboard, Plus, Trash2 } from "lucide-react";
 import { useCollection } from "../../hooks/useCollection";
@@ -11,7 +12,7 @@ import { Card, PageHead, Stat } from "../../components/ui/PageHead";
 interface Shop { name: string; category: string; terminal: string; location?: string; hours?: string; contact?: string; status: string; deliver?: string; ownerId?: string }
 const CATS = ["F&B", "Retail", "Duty Free", "Beauty", "Books/News", "Services"];
 const inp = "bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-white text-sm min-w-0 outline-none focus:border-sky-500 w-full";
-const rupee = (n: number) => "₹" + Math.round(n).toLocaleString("en-IN");
+const rupee = (n: number) => money(n);
 
 export function ShopWorkspace() {
   const me = useAuthStore(s => s.user); const go = useAppStore(s => s.setActivePage); const { flights } = useBoard();
@@ -70,7 +71,7 @@ export function ShopWorkspace() {
       {tab === "products" && <>
         <Card><form onSubmit={addProduct} className="grid sm:grid-cols-5 gap-3"><input className={inp + " sm:col-span-2"} placeholder="Product name" value={np.name} onChange={e => setNp({ ...np, name: e.target.value })} required aria-label="Product name" />
           <input className={inp} placeholder="Category (optional)" value={np.category} onChange={e => setNp({ ...np, category: e.target.value })} aria-label="Category" />
-          <input className={inp} type="number" min={0} step="0.5" placeholder="Price ₹" value={np.price} onChange={e => setNp({ ...np, price: e.target.value })} required aria-label="Price" />
+          <input className={inp} type="number" min={0} step="0.5" placeholder={`Price (${activeCurrency().code})`} value={np.price} onChange={e => setNp({ ...np, price: e.target.value })} required aria-label="Price" />
           <input className={inp} type="number" min={0} placeholder="Stock (blank = unlimited)" value={np.stock} onChange={e => setNp({ ...np, stock: e.target.value })} aria-label="Stock" />
           <button className="sm:col-span-5 px-4 py-2 rounded-lg bg-sky-500 text-white text-sm font-semibold inline-flex items-center justify-center gap-2"><Plus className="w-4 h-4" />Add product</button></form></Card>
         <Card className="overflow-x-auto">{prods.length === 0 ? <div className="text-sm text-slate-400 text-center py-6">No products yet.</div> :

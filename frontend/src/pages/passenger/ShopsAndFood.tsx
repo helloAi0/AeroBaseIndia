@@ -1,3 +1,4 @@
+import { money } from "../../lib/currency";
 import { useMemo, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { ShoppingBag, Minus, Plus, Truck, MapPin, Search, CheckCircle2 } from "lucide-react";
@@ -11,7 +12,7 @@ import { Card, PageHead } from "../../components/ui/PageHead";
 
 interface Shop { name: string; category: string; terminal: string; location?: string; hours?: string; status: string; deliver?: string }
 const inp = "bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-white text-sm min-w-0 outline-none focus:border-sky-500 w-full";
-const rupee = (n: number) => "₹" + Math.round(n).toLocaleString("en-IN");
+const rupee = (n: number) => money(n);
 
 export function ShopsAndFood() {
   const qc = useQueryClient(); const ap = useAirport(); const { flights } = useBoard();

@@ -1,3 +1,4 @@
+import { activeCurrency, money } from "../../lib/currency";
 import { useState } from "react";
 import { useCollection } from "../../hooks/useCollection";
 import { useBoard } from "../../hooks/useBoard";
@@ -6,7 +7,7 @@ import { Card, PageHead } from "../../components/ui/PageHead";
 
 const COMMISSION = 0.12;
 interface Bid { slot: string; shop: string; offer: string; amount: number; status: "Pending" | "Accepted" | "Declined" }
-const inr = (n: number) => "₹" + n.toLocaleString("en-IN");
+const inr = (n: number) => money(n);
 
 export function RetailBids() {
   const role = useAuthStore(s => s.user?.role);
@@ -31,7 +32,7 @@ export function RetailBids() {
       {!admin && <Card><form onSubmit={place} className="grid grid-cols-1 md:grid-cols-4 gap-3">
         <select className={inp} value={f.slot || SLOTS[0]?.flight || ""} onChange={e => setF({ ...f, slot: e.target.value })} aria-label="Flight">{SLOTS.map(s => <option key={s.id}>{s.flight}</option>)}</select>
         <input className={inp} placeholder="Offer, e.g. 15% off coffee" value={f.offer} onChange={e => setF({ ...f, offer: e.target.value })} />
-        <input className={inp} type="number" min={1} placeholder="Bid (₹)" value={f.amount} onChange={e => setF({ ...f, amount: e.target.value })} />
+        <input className={inp} type="number" min={1} placeholder={`Bid (${activeCurrency().code})`} value={f.amount} onChange={e => setF({ ...f, amount: e.target.value })} />
         <button className="px-4 py-2 rounded-lg bg-sky-500 text-white text-sm font-semibold">Place bid</button></form></Card>}
       <div className="space-y-3">{bids.map(b => <Card key={b.id}><div className="flex flex-wrap justify-between gap-3 items-center"><div className="min-w-0"><div className="text-white text-sm">{b.shop}: {b.offer}</div><div className="text-xs text-slate-400">Flight {b.slot} · bid {inr(b.amount)} · airport share {inr(Math.round(b.amount * COMMISSION))}</div></div>
         <div className="flex items-center gap-2"><span className="text-xs text-slate-300">{b.status}</span>{admin && b.status === "Pending" && <><button onClick={() => set(b.id, "Accepted")} className="text-xs px-3 py-2 rounded-lg bg-green-600 text-white">Accept</button><button onClick={() => set(b.id, "Declined")} className="text-xs px-3 py-2 rounded-lg bg-navy-700 text-slate-300 border border-navy-600">Decline</button></>}</div></div></Card>)}</div>

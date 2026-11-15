@@ -155,8 +155,21 @@ class RecordsController : public HttpController<RecordsController> {
             if (d["status"].asString() == "Cancelled") return fail(cb, "This booking is cancelled", k409Conflict);
             const bool mine = tr["userId"].asString() == w.user || (booker && w.role == "PASSENGER");
             if (!desk && !(w.role == "PASSENGER" && mine && to == "Checked in")) return fail(cb, "Only airport staff can do this step", k403Forbidden);
+            if (tr.isMember("hold") && !tr["hold"].asString().empty()) return fail(cb, ("On hold: " + tr["hold"].asString()).c_str(), k409Conflict);
+            if (to == "Bag dropped" && !(tr["checks"]["id"].asBool() && tr["checks"]["bag"].asBool())) return fail(cb, "Verify the ID and check the bag first", k409Conflict);
+            if (to == "Security cleared" && !tr["checks"]["screen"].asBool()) return fail(cb, "Security screening has not been recorded", k409Conflict);
             if (to == "Boarded" && d["payment"].asString() != "Paid") return fail(cb, "Payment has not been confirmed for this booking", k409Conflict);
             tr["stage"] = to;
+        } else if (action == "check") {
+            const int idx = in["index"].isInt() ? in["index"].asInt() : -1; const std::string key = clip(in, "key", 8);
+            if (idx < 0 || idx >= (int)d["travellers"].size()) return fail(cb, "Unknown traveller", k400BadRequest);
+            const bool admin = w.role == "SUPER_ADMIN" || w.role == "AIRPORT_ADMIN";
+            const bool groundKey = key == "id" || key == "bag", secKey = key == "screen" || key == "hold";
+            if (!groundKey && !secKey) return fail(cb, "Unknown check", k400BadRequest);
+            if (!admin && !((groundKey && w.role == "GROUND_STAFF") || (secKey && w.role == "SECURITY_OFFICER"))) return fail(cb, groundKey ? "Only ground staff record ID and bag checks" : "Only security records screening", k403Forbidden);
+            if (d["status"].asString() == "Cancelled") return fail(cb, "This booking is cancelled", k409Conflict);
+            Json::Value& tr = d["travellers"][idx];
+            if (key == "hold") tr["hold"] = clip(in, "note", 120); else { tr["checks"][key] = in["value"].asBool(); tr["checks"]["by_" + key] = w.name; }
         } else if (action == "payment") {
             if (!(desk || w.role == "AIRLINE_OPS")) return fail(cb, "Only the airline or airport desk can confirm payment", k403Forbidden);
             d["payment"] = clip(in, "payment", 8) == "Unpaid" ? "Unpaid" : "Paid";
