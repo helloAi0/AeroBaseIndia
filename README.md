@@ -7,6 +7,8 @@ One platform for the airport owner, operations director, airlines, pilots, secur
 
 [![Live demo](https://img.shields.io/badge/Live_demo-aero--base--india.vercel.app-d9472f?style=for-the-badge)](https://aero-base-india.vercel.app)
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+![Tests](https://img.shields.io/badge/tests-63_integration_%2B_76_unit-2ea44f)
 ![C++20](https://img.shields.io/badge/C%2B%2B-20-00599C?logo=cplusplus&logoColor=white)
 ![Drogon](https://img.shields.io/badge/Drogon-HTTP%20%2B%20WS-1c1428)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)
@@ -20,6 +22,15 @@ One platform for the airport owner, operations director, airlines, pilots, secur
 **[🚀 Open the live demo](https://aero-base-india.vercel.app)** · [Architecture](#architecture) · [Feature tour](#feature-tour) · [Run locally](#run-it-locally) · [Deploy](#deploy-free)
 
 </div>
+
+<div align="center">
+
+| 9 role workspaces | 20 airports | 958 routes | 74 airlines | 45 migrations | 139 automated tests |
+|:-:|:-:|:-:|:-:|:-:|:-:|
+
+</div>
+
+**Contents:** [Try it](#try-it-in-60-seconds) · [Why](#why-this-exists) · [Highlights](#highlights) · [Feature tour](#feature-tour) · [Architecture](#architecture) · [Tech stack](#tech-stack) · [Security](#security) · [Quality](#quality) · [Run locally](#run-it-locally) · [Deploy](#deploy-free) · [Roadmap](#roadmap) · [Contributing](#contributing) · [License](#license)
 
 ---
 
@@ -54,6 +65,19 @@ AeroBase puts all of them on one tenant-aware data model and one live board:
 - **One source of truth.** Flights, gates, crew, bags, bookings and orders live in one database, scoped per airport.
 - **Role-shaped product.** Each role signs in to a different workspace with only what it needs and is allowed to see.
 - **Enforced in the backend.** Role policies, booking gates and ownership are checked server-side, not hidden in the UI.
+
+---
+
+## Highlights
+
+- **Passenger journey with real gates.** Book, check in, drop bag, clear security and board, in that order. The API rejects skipped steps with `409`.
+- **Ground staff and security pre-checks.** ID and bag verification, then screen or hold, recorded against the booking.
+- **Disruption tooling.** What-if simulation, a disruption autopilot and an ops copilot on top of live flight, gate and crew data.
+- **Delay prediction.** A Flask ML service scores flights; the API calls it for the board.
+- **Multi-currency.** Fares and prices shown in INR, AED, QAR, GBP or SGD depending on the airport.
+- **Multi-tenant by design.** Every airport is a tenant; platform owners see across tenants, everyone else only their own.
+- **Developer friendly.** Built-in API tester, GraphQL explorer and OpenAPI docs.
+- **One-command deploy.** Render Blueprint plus Vercel; migrations and data bootstrap themselves on first start.
 
 ---
 
@@ -339,6 +363,25 @@ render.yaml     Render Blueprint
 - Weather comes from Open-Meteo; map tiles come from OpenStreetMap.
 - Free-tier hosting sleeps when idle, so the first request after a pause is slow.
 - Demo data is synthetic. No real passenger data is included.
+- Payments are simulated; no real money moves.
+
+---
+
+## Roadmap
+
+- Live airline fare and schedule feeds in place of indicative fares.
+- Native mobile apps for passengers and ground staff.
+- Real payment gateway integration for bookings and shop orders.
+- Offline-friendly staff tools for poor-connectivity zones.
+- More overseas hubs and localisation.
+
+## Contributing
+
+Issues and pull requests are welcome. Run `bash scripts/install-hooks.sh` once per clone to enable the secret-scan hook, and make sure `bash scripts/run-local.sh test` and `cd frontend && npx vitest run` pass before opening a PR.
+
+## License
+
+Released under the [MIT License](LICENSE). © 2026 helloAi0.
 
 ---
 
