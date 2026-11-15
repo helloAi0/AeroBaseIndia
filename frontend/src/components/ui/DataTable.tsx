@@ -44,8 +44,8 @@ export function DataTable<T>({ columns, rows, rowKey, onRowClick, empty }: Props
       <div className={`table-scroll ${showTable}`}>
         <table className="w-full text-sm">
           <thead>
-            <tr style={{ borderBottom: "1px solid #322a1e" }}>
-              {columns.map(c => <th key={c.key} className="px-4 py-3 text-left text-xs uppercase" style={{ color: "#475569" }}>{c.label}</th>)}
+            <tr style={{ borderBottom: "1px solid #41305e" }}>
+              {columns.map(c => <th key={c.key} className="px-4 py-3 text-left text-xs uppercase" style={{ color: "#7f7396" }}>{c.label}</th>)}
             </tr>
           </thead>
           <tbody>

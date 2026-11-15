@@ -4,8 +4,8 @@
   "description": "Airport Management Platform",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0a0e1a",
-  "theme_color": "#0ea5e9",
+  "background_color": "#150f1d",
+  "theme_color": "#ff7a66",
   "orientation": "any",
   "icons": [
     {"src":"/icon-192.png","sizes":"192x192","type":"image/png"},

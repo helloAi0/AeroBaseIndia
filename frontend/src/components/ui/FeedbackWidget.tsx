@@ -55,7 +55,7 @@ export function FeedbackWidget({ role, name, context, onClose, minimal=false }: 
   if(minimal && !open) return (
     <button onClick={()=>setOpen(true)}
       className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-3 rounded-2xl text-sm font-bold text-white shadow-2xl transition-all hover:scale-105"
-      style={{background:"linear-gradient(135deg,#c9953c,#6fae8f)",boxShadow:"0 8px 32px rgba(201,149,60,0.4)"}}>
+      style={{background:"linear-gradient(135deg,#ff7a66,#4fd1b0)",boxShadow:"0 8px 32px rgba(255,122,102,0.4)"}}>
       <MessageSquare className="w-4 h-4"/>
       Feedback
     </button>
@@ -65,13 +65,13 @@ export function FeedbackWidget({ role, name, context, onClose, minimal=false }: 
     <div className={minimal ? "fixed inset-0 z-50 flex items-center justify-center p-4" : ""}
       style={minimal ? {background:"rgba(0,0,0,0.7)",backdropFilter:"blur(8px)"} : {}}>
       <div className="w-full max-w-md rounded-3xl border overflow-hidden"
-        style={{background:"#16130f",borderColor:"rgba(232,199,122,0.3)"}}>
+        style={{background:"#1c1428",borderColor:"rgba(255,148,128,0.3)"}}>
         {/* Header */}
         <div className="p-5 border-b flex items-center justify-between"
-          style={{background:"rgba(201,149,60,0.08)",borderColor:"rgba(232,199,122,0.15)"}}>
+          style={{background:"rgba(255,122,102,0.08)",borderColor:"rgba(255,148,128,0.15)"}}>
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl flex items-center justify-center"
-              style={{background:"rgba(201,149,60,0.2)"}}>
+              style={{background:"rgba(255,122,102,0.2)"}}>
               <MessageSquare className="w-5 h-5 text-sky-400"/>
             </div>
             <div>
@@ -130,8 +130,8 @@ export function FeedbackWidget({ role, name, context, onClose, minimal=false }: 
                   <button key={c} onClick={()=>setCat(c)}
                     className="px-3 py-1.5 rounded-xl text-xs font-medium border transition-all"
                     style={category===c
-                      ?{background:"rgba(201,149,60,0.2)",borderColor:"rgba(201,149,60,0.5)",color:"#e8c77a"}
-                      :{background:"rgba(255,255,255,0.03)",borderColor:"rgba(255,255,255,0.08)",color:"#64748b"}}>
+                      ?{background:"rgba(255,122,102,0.2)",borderColor:"rgba(255,122,102,0.5)",color:"#ff9d8a"}
+                      :{background:"rgba(255,255,255,0.03)",borderColor:"rgba(255,255,255,0.08)",color:"#8a7fa0"}}>
                     {c}
                   </button>
                 ))}
@@ -152,7 +152,7 @@ export function FeedbackWidget({ role, name, context, onClose, minimal=false }: 
             <button onClick={submit}
               disabled={!rating||!text.trim()}
               className="w-full py-3.5 rounded-xl font-bold text-sm text-white transition-all disabled:opacity-40"
-              style={{background:"linear-gradient(135deg,#c9953c,#6fae8f)"}}>
+              style={{background:"linear-gradient(135deg,#ff7a66,#4fd1b0)"}}>
               Submit Feedback
             </button>
 

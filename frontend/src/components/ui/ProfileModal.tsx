@@ -52,13 +52,13 @@ export function ProfileModal({ onClose }: Props) {
       <div
         className="fixed top-[4.5rem] right-4 z-50 w-72 rounded-2xl border overflow-hidden shadow-2xl"
         style={{
-          background:"linear-gradient(135deg,#16130f,#0e0c0a)",
-          borderColor:"rgba(232,199,122,0.2)",
+          background:"linear-gradient(135deg,#1c1428,#150f1d)",
+          borderColor:"rgba(255,148,128,0.2)",
           boxShadow:"0 20px 60px rgba(0,0,0,0.6)"
         }}>
 
         {/* User header */}
-        <div className="p-5 border-b" style={{background:"rgba(201,149,60,0.08)",borderColor:"rgba(232,199,122,0.12)"}}>
+        <div className="p-5 border-b" style={{background:"rgba(255,122,102,0.08)",borderColor:"rgba(255,148,128,0.12)"}}>
           <div className="flex items-center gap-3">
             <div className={`w-12 h-12 rounded-2xl bg-${color}-500/20 border border-${color}-500/30 flex items-center justify-center flex-shrink-0`}>
               <span className={`text-lg font-black text-${color}-400`}>{initials}</span>

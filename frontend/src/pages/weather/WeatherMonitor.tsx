@@ -31,7 +31,7 @@ const RISK_STYLE: Record<string, string> = {
   Med: "bg-yellow-500/15 text-yellow-400 border-yellow-500/20",
   Low: "bg-green-500/15 text-green-400 border-green-500/20",
 };
-const TOOLTIP = { background: "#16130f", border: "1px solid #322a1e", borderRadius: 10, fontSize: 12 };
+const TOOLTIP = { background: "#1c1428", border: "1px solid #41305e", borderRadius: 10, fontSize: 12 };
 
 interface Wx {
   cur: { temp: number; feels: number; code: number; wind: number; dir: number; gust: number; hum: number; pres: number; vis: number };
@@ -185,8 +185,8 @@ export function WeatherMonitor() {
                   <defs><linearGradient id="tg" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.25} /><stop offset="95%" stopColor="#f59e0b" stopOpacity={0} />
                   </linearGradient></defs>
-                  <XAxis dataKey="h" tick={{ fill: "#475569", fontSize: 11 }} axisLine={false} tickLine={false} />
-                  <YAxis tick={{ fill: "#475569", fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => `${v}°`} />
+                  <XAxis dataKey="h" tick={{ fill: "#7f7396", fontSize: 11 }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fill: "#7f7396", fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => `${v}°`} />
                   <Tooltip contentStyle={TOOLTIP} />
                   <Area type="monotone" dataKey="temp" stroke="#f59e0b" fill="url(#tg)" strokeWidth={2} name="°C" />
                 </AreaChart>
@@ -196,11 +196,11 @@ export function WeatherMonitor() {
               <h2 className="font-semibold text-white mb-4">Wind (km/h) & Visibility (km)</h2>
               <ResponsiveContainer width="100%" height={180}>
                 <LineChart data={wx.hourly} margin={{ left: -20 }}>
-                  <XAxis dataKey="h" tick={{ fill: "#475569", fontSize: 11 }} axisLine={false} tickLine={false} />
-                  <YAxis tick={{ fill: "#475569", fontSize: 11 }} axisLine={false} tickLine={false} />
+                  <XAxis dataKey="h" tick={{ fill: "#7f7396", fontSize: 11 }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fill: "#7f7396", fontSize: 11 }} axisLine={false} tickLine={false} />
                   <Tooltip contentStyle={TOOLTIP} />
-                  <Line type="monotone" dataKey="wind" stroke="#e8c77a" strokeWidth={2} dot={false} name="Wind km/h" />
-                  <Line type="monotone" dataKey="vis" stroke="#8cc7a8" strokeWidth={2} dot={false} name="Visibility km" />
+                  <Line type="monotone" dataKey="wind" stroke="#ff9d8a" strokeWidth={2} dot={false} name="Wind km/h" />
+                  <Line type="monotone" dataKey="vis" stroke="#7fe3c9" strokeWidth={2} dot={false} name="Visibility km" />
                 </LineChart>
               </ResponsiveContainer>
             </div>

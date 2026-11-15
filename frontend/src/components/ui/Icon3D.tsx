@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
 /** CSS-3D icon tile: layered depth, gradient face and tilt on hover (no WebGL needed). */
-export function Icon3D({ children, color = "#c9953c", size = 40, tilt = true }: { children: ReactNode; color?: string; size?: number; tilt?: boolean }) {
+export function Icon3D({ children, color = "#ff7a66", size = 40, tilt = true }: { children: ReactNode; color?: string; size?: number; tilt?: boolean }) {
   return (
     <span className="inline-block" style={{ perspective: 400 }}>
       <span className={`relative flex items-center justify-center rounded-xl transition-transform duration-300 ${tilt ? "hover:[transform:rotateX(18deg)_rotateY(-22deg)]" : ""}`}

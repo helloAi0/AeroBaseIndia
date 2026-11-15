@@ -18,7 +18,7 @@ const AIRLINE_CODE_MAP: Record<string,string> = {
 };
 
 const AIRLINE_COLORS: Record<string,string> = {
-  AI:"#ef4444","6E":"#c9953c",EK:"#f59e0b",
+  AI:"#ef4444","6E":"#ff7a66",EK:"#f59e0b",
   SG:"#f97316",QP:"#22c55e",IX:"#dc2626",
 };
 const AIRLINE_NAMES: Record<string,string> = {
@@ -64,7 +64,7 @@ export function FlightsPage() {
   const sl           = user?.staffLevel || "";
   const airlineCode  = AIRLINE_CODE_MAP[sl] || null;
   const isAirlineUser= airlineCode !== null;
-  const airlineColor = isAirlineUser ? (AIRLINE_COLORS[airlineCode!]||"#c9953c") : "#c9953c";
+  const airlineColor = isAirlineUser ? (AIRLINE_COLORS[airlineCode!]||"#ff7a66") : "#ff7a66";
   const airlineName  = isAirlineUser ? (AIRLINE_NAMES[airlineCode!]||"") : "";
 
   // Filter flights
@@ -136,9 +136,9 @@ export function FlightsPage() {
       {/* KPIs */}
       <div className="grid grid-cols-2 xl:grid-cols-5 gap-3">
         {[
-          {l:"Total Flights",   v:flights.length,                 c:isAirlineUser?airlineColor:"#c9953c", icon:<Plane className="w-4 h-4"/>},
+          {l:"Total Flights",   v:flights.length,                 c:isAirlineUser?airlineColor:"#ff7a66", icon:<Plane className="w-4 h-4"/>},
           {l:"Total Passengers",v:totalPax.toLocaleString(),       c:"#8b5cf6",       icon:<Users className="w-4 h-4"/>},
-          {l:"Boarding Now",    v:boarding,                        c:"#6fae8f",       icon:<CheckCircle className="w-4 h-4"/>},
+          {l:"Boarding Now",    v:boarding,                        c:"#4fd1b0",       icon:<CheckCircle className="w-4 h-4"/>},
           {l:"Delayed",         v:delayed,                         c:delayed>0?"#f59e0b":"#22c55e", icon:<Clock className="w-4 h-4"/>},
           {l:"Active Issues",   v:issues,                          c:issues>0?"#ef4444":"#22c55e",  icon:<AlertTriangle className="w-4 h-4"/>},
         ].map(({l,v,c,icon})=>(
@@ -177,7 +177,7 @@ export function FlightsPage() {
       {/* Live status strip */}
       <div className="grid grid-cols-5 xl:grid-cols-10 gap-2">
         {flights.slice(0,10).map(f=>{
-          const c = AIRLINE_COLORS[f.airCode]||"#64748b";
+          const c = AIRLINE_COLORS[f.airCode]||"#8a7fa0";
           return (
             <div key={f.id}
               onClick={()=>setSel(sel?.id===f.id?null:f)}
@@ -223,8 +223,8 @@ export function FlightsPage() {
             <button key={s} onClick={()=>setStatus(s)}
               className="px-3 py-2 rounded-xl text-xs font-medium border transition-all"
               style={status===s
-                ?{background:isAirlineUser?airlineColor:"#c9953c",borderColor:isAirlineUser?airlineColor:"#c9953c",color:"white"}
-                :{background:"transparent",borderColor:"rgba(255,255,255,0.08)",color:"#64748b"}}>
+                ?{background:isAirlineUser?airlineColor:"#ff7a66",borderColor:isAirlineUser?airlineColor:"#ff7a66",color:"white"}
+                :{background:"transparent",borderColor:"rgba(255,255,255,0.08)",color:"#8a7fa0"}}>
               {s}
             </button>
           ))}
@@ -234,9 +234,9 @@ export function FlightsPage() {
       {/* Main table + detail */}
       <div className={`grid gap-5 ${sel?"xl:grid-cols-3":""}`}>
         <div className={`rounded-2xl border overflow-hidden ${sel?"xl:col-span-2":""}`}
-          style={{background:"#0b0908",borderColor:"#322a1e"}}>
+          style={{background:"#110b19",borderColor:"#41305e"}}>
           <div className="px-5 py-4 border-b flex items-center justify-between"
-            style={{borderColor:"#322a1e"}}>
+            style={{borderColor:"#41305e"}}>
             <div className="font-bold text-white">
               ✈ Flights — {filtered.length} shown
               {isAirlineUser && <span className="ml-2 text-xs font-normal text-slate-500">({airlineName} only)</span>}
@@ -248,18 +248,18 @@ export function FlightsPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr style={{borderBottom:"1px solid #322a1e"}}>
+                <tr style={{borderBottom:"1px solid #41305e"}}>
                   {(isAirlineUser
                     ? ["Flight","Route","Gate","Dep","Arr","Passengers","Captain","Bags","Fuel","Crew","Status","Issues"]
                     : ["Flight","Airline","Route","Gate","Terminal","Dep","Arr","Passengers","Status"]
                   ).map(h=>(
-                    <th key={h} className="px-4 py-3 text-left text-xs uppercase" style={{color:"#475569"}}>{h}</th>
+                    <th key={h} className="px-4 py-3 text-left text-xs uppercase" style={{color:"#7f7396"}}>{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {filtered.map(f=>{
-                  const fc = AIRLINE_COLORS[f.airCode]||"#64748b";
+                  const fc = AIRLINE_COLORS[f.airCode]||"#8a7fa0";
                   return (
                     <tr key={f.id}
                       onClick={()=>setSel(sel?.id===f.id?null:f)}
@@ -319,7 +319,7 @@ export function FlightsPage() {
         {/* Detail panel */}
         {sel && (
           <div className="rounded-2xl border p-5 space-y-4 h-fit"
-            style={{background:"#0b0908",borderColor:`${AIRLINE_COLORS[sel.airCode]||"#322a1e"}40`}}>
+            style={{background:"#110b19",borderColor:`${AIRLINE_COLORS[sel.airCode]||"#41305e"}40`}}>
             <div className="flex justify-between">
               <h2 className="font-bold text-white">Flight Details</h2>
               <button onClick={()=>setSel(null)} className="text-slate-500 hover:text-white text-xl">×</button>
@@ -327,10 +327,10 @@ export function FlightsPage() {
 
             {/* Flight header */}
             <div className="rounded-2xl p-4"
-              style={{background:`${AIRLINE_COLORS[sel.airCode]||"#c9953c"}10`,
-                      border:`1px solid ${AIRLINE_COLORS[sel.airCode]||"#c9953c"}25`}}>
+              style={{background:`${AIRLINE_COLORS[sel.airCode]||"#ff7a66"}10`,
+                      border:`1px solid ${AIRLINE_COLORS[sel.airCode]||"#ff7a66"}25`}}>
               <div className="font-black text-2xl font-mono mb-0.5"
-                style={{color:AIRLINE_COLORS[sel.airCode]||"#c9953c"}}>{sel.flight}</div>
+                style={{color:AIRLINE_COLORS[sel.airCode]||"#ff7a66"}}>{sel.flight}</div>
               <div className="text-slate-400 text-sm">{sel.airline}</div>
               <div className="flex items-center gap-2 text-lg font-bold text-white mt-2">
                 {sel.from}
@@ -387,10 +387,10 @@ export function FlightsPage() {
                 <button key={label}
                   className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl border text-sm text-slate-300 hover:text-white transition-all"
                   style={{
-                    background:`${AIRLINE_COLORS[sel.airCode]||"#c9953c"}06`,
-                    borderColor:`${AIRLINE_COLORS[sel.airCode]||"#c9953c"}20`
+                    background:`${AIRLINE_COLORS[sel.airCode]||"#ff7a66"}06`,
+                    borderColor:`${AIRLINE_COLORS[sel.airCode]||"#ff7a66"}20`
                   }}>
-                  <span style={{color:AIRLINE_COLORS[sel.airCode]||"#c9953c"}}>{icon}</span>
+                  <span style={{color:AIRLINE_COLORS[sel.airCode]||"#ff7a66"}}>{icon}</span>
                   {label}
                 </button>
               ))}
@@ -401,7 +401,7 @@ export function FlightsPage() {
 
       {/* Summary footer */}
       <div className="grid xl:grid-cols-3 gap-4">
-        <div className="rounded-xl p-4 border" style={{background:"rgba(201,149,60,0.05)",borderColor:"rgba(201,149,60,0.15)"}}>
+        <div className="rounded-xl p-4 border" style={{background:"rgba(255,122,102,0.05)",borderColor:"rgba(255,122,102,0.15)"}}>
           <div className="text-xs text-slate-500 mb-1">Flights Airborne Right Now</div>
           <div className="font-black text-2xl text-sky-400">{boarding + airborne}</div>
         </div>

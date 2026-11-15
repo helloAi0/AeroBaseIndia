@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { useThreeScene } from "./useThree";
 
 export interface TwinGate { g: string; status: string; flight?: string }
-const COLOR: Record<string, number> = { occupied: 0xc9953c, available: 0x22c55e, boarding: 0x2dd4bf, delayed: 0xf59e0b, cleaning: 0x6b7280 };
+const COLOR: Record<string, number> = { occupied: 0xff7a66, available: 0x22c55e, boarding: 0x7fe3c9, delayed: 0xf59e0b, cleaning: 0x6b7280 };
 
 /** Drag to orbit, wheel to zoom. Gates are columns coloured by status; aircraft sit at occupied/boarding/delayed gates. */
 export function Twin3D({ gates, terminals }: { gates: TwinGate[]; terminals: { id: string; gates: string[]; color: string }[] }) {
@@ -16,7 +16,7 @@ export function Twin3D({ gates, terminals }: { gates: TwinGate[]; terminals: { i
     ground.rotation.x = -Math.PI / 2; scene.add(ground);
     const runway = new THREE.Mesh(new THREE.BoxGeometry(110, 0.1, 7), new THREE.MeshStandardMaterial({ color: 0x1b2540 }));
     runway.position.set(0, 0.05, 24); scene.add(runway);
-    for (let i = -50; i < 50; i += 8) { const m = new THREE.Mesh(new THREE.BoxGeometry(4, 0.12, 0.3), new THREE.MeshBasicMaterial({ color: 0x94a3b8 })); m.position.set(i, 0.1, 24); scene.add(m); }
+    for (let i = -50; i < 50; i += 8) { const m = new THREE.Mesh(new THREE.BoxGeometry(4, 0.12, 0.3), new THREE.MeshBasicMaterial({ color: 0xa99dbd })); m.position.set(i, 0.1, 24); scene.add(m); }
 
     const gateMeshes: THREE.Object3D[] = [];
     terminals.forEach((t, ti) => {
@@ -29,7 +29,7 @@ export function Twin3D({ gates, terminals }: { gates: TwinGate[]; terminals: { i
         const gate = new THREE.Mesh(new THREE.BoxGeometry(2.4, 1 + (st === "available" ? 0 : 1.2), 2.4), new THREE.MeshStandardMaterial({ color: COLOR[st] ?? 0x888888, emissive: COLOR[st] ?? 0, emissiveIntensity: 0.25 }));
         gate.position.set(x, gate.geometry.parameters.height / 2, -8); scene.add(gate); gateMeshes.push(gate);
         if (st !== "available" && st !== "cleaning") {          // simple aircraft: fuselage + wings + tail
-          const ac = new THREE.Group(), mat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0 });
+          const ac = new THREE.Group(), mat = new THREE.MeshStandardMaterial({ color: 0xe4dcee });
           const body = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.55, 6, 12), mat); body.rotation.x = Math.PI / 2;
           const wing = new THREE.Mesh(new THREE.BoxGeometry(6, 0.12, 1.3), mat); wing.position.z = 0.4;
           const tail = new THREE.Mesh(new THREE.BoxGeometry(0.12, 1.3, 0.9), new THREE.MeshStandardMaterial({ color: COLOR[st] }));

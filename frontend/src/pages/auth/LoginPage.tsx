@@ -15,8 +15,8 @@ const FALLBACK_AIRPORTS: AirportInfo[] = [
 
 /** Who each kind of account is for, and the seeded demo login for it (pattern from scripts/seed_demo.py). */
 const ROLES = [
-  { key: "admin", label: "Airport director", icon: Building2, color: "#e8c77a", blurb: "Runs the whole airport: flights, gates, revenue, team.", email: (a: string) => `admin@${a}.aerobase.in` },
-  { key: "staff", label: "Ground staff", icon: Wrench, color: "#8cc7a8", blurb: "Check-in, baggage, turnaround, assistance requests.", email: (a: string) => `staff@${a}.aerobase.in` },
+  { key: "admin", label: "Airport director", icon: Building2, color: "#ff9d8a", blurb: "Runs the whole airport: flights, gates, revenue, team.", email: (a: string) => `admin@${a}.aerobase.in` },
+  { key: "staff", label: "Ground staff", icon: Wrench, color: "#7fe3c9", blurb: "Check-in, baggage, turnaround, assistance requests.", email: (a: string) => `staff@${a}.aerobase.in` },
   { key: "security", label: "Security", icon: ShieldCheck, color: "#f87171", blurb: "Security events, CCTV, emergencies.", email: (a: string) => `security@${a}.aerobase.in` },
   { key: "airline", label: "Airline ops", icon: Plane, color: "#fbbf24", blurb: "Your airline's flights, fleet, crew and revenue.", email: (a: string, x?: string) => `ops.${(x || "6e").toLowerCase()}@${a}.aerobase.in` },
   { key: "sechead", label: "Security head", icon: ShieldCheck, color: "#fb7185", blurb: "Your officers by reference ID; send them instructions.", email: (a: string) => `head.security@${a}.aerobase.in` },
@@ -87,9 +87,9 @@ export function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen grid lg:grid-cols-[1.05fr_1fr] bg-[#080706] text-slate-200">
+    <div className="min-h-screen grid lg:grid-cols-[1.05fr_1fr] bg-[#0f0a16] text-slate-200">
       {/* Brand side */}
-      <aside className="hidden lg:flex flex-col justify-between p-10 relative overflow-hidden" style={{ background: "radial-gradient(1200px 600px at 0% 0%, rgba(201,149,60,.18), transparent 60%), radial-gradient(800px 500px at 100% 100%, rgba(45,212,191,.12), transparent 60%)" }}>
+      <aside className="hidden lg:flex flex-col justify-between p-10 relative overflow-hidden" style={{ background: "radial-gradient(1200px 600px at 0% 0%, rgba(255,122,102,.18), transparent 60%), radial-gradient(800px 500px at 100% 100%, rgba(45,212,191,.12), transparent 60%)" }}>
         <div className="flex items-center gap-3"><div className="w-11 h-11 rounded-xl bg-gradient-to-br from-sky-500 to-teal-400 flex items-center justify-center"><Plane className="w-6 h-6 text-white" /></div>
           <div><div className="text-lg font-black text-white leading-none">AeroBase India</div><div className="text-xs text-sky-300 mt-1">Airport operations platform</div></div></div>
         <div>

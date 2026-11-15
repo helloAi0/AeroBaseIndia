@@ -4,11 +4,11 @@ import { Palette, Upload, Eye, Save,
          CheckCircle, Globe, Smartphone } from "lucide-react";
 
 const PRESETS = [
-  {name:"AeroBase Default", primary:"#c9953c", secondary:"#6fae8f", bg:"#0e0c0a", accent:"#8b5cf6"},
+  {name:"AeroBase Default", primary:"#ff7a66", secondary:"#4fd1b0", bg:"#150f1d", accent:"#8b5cf6"},
   {name:"Sunrise Gold",     primary:"#f59e0b", secondary:"#ef4444", bg:"#1a0a0a", accent:"#f97316"},
-  {name:"Forest Green",     primary:"#22c55e", secondary:"#6fae8f", bg:"#0a1a0a", accent:"#84cc16"},
-  {name:"Royal Purple",     primary:"#8b5cf6", secondary:"#ec4899", bg:"#0b0908", accent:"#a78bfa"},
-  {name:"Ocean Blue",       primary:"#c9953c", secondary:"#c9953c", bg:"#0b0908", accent:"#6366f1"},
+  {name:"Forest Green",     primary:"#22c55e", secondary:"#4fd1b0", bg:"#0a1a0a", accent:"#84cc16"},
+  {name:"Royal Purple",     primary:"#8b5cf6", secondary:"#ec4899", bg:"#110b19", accent:"#a78bfa"},
+  {name:"Ocean Blue",       primary:"#ff7a66", secondary:"#ff7a66", bg:"#110b19", accent:"#6366f1"},
   {name:"Crimson Red",      primary:"#ef4444", secondary:"#f97316", bg:"#1a0a0a", accent:"#dc2626"},
 ];
 
@@ -19,9 +19,9 @@ export function BrandingPage() {
     airportName: "Delhi International Airport",
     tagline:     "Gateway to India",
     logoText:    "DEL",
-    primaryColor:  "#c9953c",
-    secondaryColor:"#6fae8f",
-    bgColor:       "#0e0c0a",
+    primaryColor:  "#ff7a66",
+    secondaryColor:"#4fd1b0",
+    bgColor:       "#150f1d",
     accentColor:   "#8b5cf6",
     fontFamily:    "Inter",
     borderRadius:  "16",

@@ -9,7 +9,7 @@ import { useAirport } from "../../hooks/useAirport";
 import { API_ENABLED } from "../../config";
 
 const STATUS_COLOR: Record<string,string> = {
-  Scheduled:"#e8c77a", Boarding:"#8cc7a8", Departed:"#22c55e",
+  Scheduled:"#ff9d8a", Boarding:"#7fe3c9", Departed:"#22c55e",
   Landed:"#16a34a", Delayed:"#f59e0b", Cancelled:"#ef4444",
 };
 
@@ -101,11 +101,11 @@ export function Dashboard() {
           </div>
           <ResponsiveContainer width="100%" height={180}>
             <BarChart data={byHour} margin={{left:-20,right:0}}>
-              <XAxis dataKey="h" tick={{fill:"#475569",fontSize:11}} axisLine={false} tickLine={false}/>
-              <YAxis allowDecimals={false} tick={{fill:"#475569",fontSize:11}} axisLine={false} tickLine={false}/>
-              <Tooltip contentStyle={{background:"#16130f",border:"1px solid #322a1e",borderRadius:12,fontSize:12}}
-                labelStyle={{color:"#94a3b8"}} itemStyle={{color:"#e8c77a"}} formatter={(v:any)=>[v,"Departures"]}/>
-              <Bar dataKey="n" fill="#e8c77a" radius={[4,4,0,0]}/>
+              <XAxis dataKey="h" tick={{fill:"#7f7396",fontSize:11}} axisLine={false} tickLine={false}/>
+              <YAxis allowDecimals={false} tick={{fill:"#7f7396",fontSize:11}} axisLine={false} tickLine={false}/>
+              <Tooltip contentStyle={{background:"#1c1428",border:"1px solid #41305e",borderRadius:12,fontSize:12}}
+                labelStyle={{color:"#a99dbd"}} itemStyle={{color:"#ff9d8a"}} formatter={(v:any)=>[v,"Departures"]}/>
+              <Bar dataKey="n" fill="#ff9d8a" radius={[4,4,0,0]}/>
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -153,17 +153,17 @@ export function Dashboard() {
                   <Pie data={pieData} cx="50%" cy="50%" innerRadius={45} outerRadius={70}
                     dataKey="value" stroke="none">
                     {pieData.map((e,i)=>(
-                      <Cell key={i} fill={STATUS_COLOR[e.name]||"#475569"}/>
+                      <Cell key={i} fill={STATUS_COLOR[e.name]||"#7f7396"}/>
                     ))}
                   </Pie>
-                  <Tooltip contentStyle={{background:"#16130f",border:"1px solid #322a1e",borderRadius:8,fontSize:12}}/>
+                  <Tooltip contentStyle={{background:"#1c1428",border:"1px solid #41305e",borderRadius:8,fontSize:12}}/>
                 </PieChart>
               </ResponsiveContainer>
               <div className="space-y-2 mt-2">
                 {pieData.map((e,i)=>(
                   <div key={i} className="flex items-center justify-between text-sm">
                     <div className="flex items-center gap-2">
-                      <div className="w-2.5 h-2.5 rounded-full" style={{background:STATUS_COLOR[e.name]||"#475569"}}/>
+                      <div className="w-2.5 h-2.5 rounded-full" style={{background:STATUS_COLOR[e.name]||"#7f7396"}}/>
                       <span className="text-slate-300">{e.name}</span>
                     </div>
                     <span className="font-mono font-semibold text-white">{e.value as number}</span>

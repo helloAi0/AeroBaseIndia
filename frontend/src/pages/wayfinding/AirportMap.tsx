@@ -13,11 +13,11 @@ const FLOOR_LAYOUTS: Record<TKey, {
   paths: {from:string;to:string;via:string[]}[];
 }[]> = {
   T1:[
-    { level:"Ground — Arrivals", color:"#c9953c",
+    { level:"Ground — Arrivals", color:"#ff7a66",
       zones:[
-        {id:"entry",    label:"Airport Entry",  icon:"🚗",x:10, y:120,w:80, h:50, color:"#475569"},
-        {id:"baggage",  label:"Baggage Claim",  icon:"🧳",x:120,y:70, w:160,h:80, color:"#c9953c"},
-        {id:"arrivals", label:"Arrival Hall",   icon:"🚶",x:120,y:165,w:160,h:60, color:"#6fae8f"},
+        {id:"entry",    label:"Airport Entry",  icon:"🚗",x:10, y:120,w:80, h:50, color:"#7f7396"},
+        {id:"baggage",  label:"Baggage Claim",  icon:"🧳",x:120,y:70, w:160,h:80, color:"#ff7a66"},
+        {id:"arrivals", label:"Arrival Hall",   icon:"🚶",x:120,y:165,w:160,h:60, color:"#4fd1b0"},
         {id:"taxi",     label:"Taxi / Metro",   icon:"🚖",x:300,y:120,w:100,h:60, color:"#f59e0b"},
         {id:"parking1", label:"Car Park P1",    icon:"🅿",x:420,y:100,w:80, h:80, color:"#6366f1"},
       ],
@@ -27,9 +27,9 @@ const FLOOR_LAYOUTS: Record<TKey, {
         {from:"entry",to:"arrivals",  via:["Walk straight past security exit","Follow green ARRIVAL signs"]},
       ]
     },
-    { level:"Level 1 — Departures", color:"#c9953c",
+    { level:"Level 1 — Departures", color:"#ff7a66",
       zones:[
-        {id:"checkin",  label:"Check-in A–G",   icon:"🛂",x:20, y:60, w:200,h:80, color:"#c9953c"},
+        {id:"checkin",  label:"Check-in A–G",   icon:"🛂",x:20, y:60, w:200,h:80, color:"#ff7a66"},
         {id:"security", label:"Security",        icon:"🔒",x:240,y:60, w:100,h:80, color:"#ef4444"},
         {id:"food1",    label:"Food Court",      icon:"🍽",x:360,y:60, w:100,h:80, color:"#22c55e"},
         {id:"retail1",  label:"Retail",          icon:"🛍",x:360,y:155,w:100,h:60, color:"#8b5cf6"},
@@ -41,13 +41,13 @@ const FLOOR_LAYOUTS: Record<TKey, {
         {from:"security",to:"lift1",    via:["After security clearance","Walk to central area","Take Lift or Escalator to Level 2 Gates"]},
       ]
     },
-    { level:"Level 2 — Gates A1–A6", color:"#c9953c",
+    { level:"Level 2 — Gates A1–A6", color:"#ff7a66",
       zones:[
-        {id:"gateA1",   label:"Gate A1–A3",      icon:"✈",x:20, y:80, w:140,h:100,color:"#c9953c"},
-        {id:"gateA4",   label:"Gate A4–A6",      icon:"✈",x:180,y:80, w:140,h:100,color:"#6fae8f"},
+        {id:"gateA1",   label:"Gate A1–A3",      icon:"✈",x:20, y:80, w:140,h:100,color:"#ff7a66"},
+        {id:"gateA4",   label:"Gate A4–A6",      icon:"✈",x:180,y:80, w:140,h:100,color:"#4fd1b0"},
         {id:"lounge1",  label:"IndiGo Lounge",   icon:"🛋",x:340,y:80, w:100,h:60, color:"#f59e0b"},
         {id:"pharmacy", label:"Pharmacy 24hr",   icon:"💊",x:340,y:155,w:100,h:55, color:"#22c55e"},
-        {id:"lift2",    label:"Lift ← Level 1",  icon:"🔽",x:20, y:195,w:80, h:45, color:"#475569"},
+        {id:"lift2",    label:"Lift ← Level 1",  icon:"🔽",x:20, y:195,w:80, h:45, color:"#7f7396"},
       ],
       paths:[
         {from:"lift2",to:"gateA1",  via:["Exit lift at Level 2","Turn RIGHT","Gates A1–A3 are straight ahead on LEFT"]},
@@ -57,11 +57,11 @@ const FLOOR_LAYOUTS: Record<TKey, {
     },
   ],
   T2:[
-    { level:"Ground — Arrivals", color:"#6fae8f",
+    { level:"Ground — Arrivals", color:"#4fd1b0",
       zones:[
-        {id:"t2entry",  label:"T2 Entry",        icon:"🚌",x:10, y:120,w:80, h:50, color:"#475569"},
-        {id:"t2bag",    label:"Baggage Claim",   icon:"🧳",x:120,y:70, w:160,h:80, color:"#6fae8f"},
-        {id:"t2arr",    label:"Arrival Hall",    icon:"🚶",x:120,y:165,w:160,h:60, color:"#c9953c"},
+        {id:"t2entry",  label:"T2 Entry",        icon:"🚌",x:10, y:120,w:80, h:50, color:"#7f7396"},
+        {id:"t2bag",    label:"Baggage Claim",   icon:"🧳",x:120,y:70, w:160,h:80, color:"#4fd1b0"},
+        {id:"t2arr",    label:"Arrival Hall",    icon:"🚶",x:120,y:165,w:160,h:60, color:"#ff7a66"},
         {id:"t2bus",    label:"Bus Stop",         icon:"🚌",x:300,y:100,w:100,h:80, color:"#f59e0b"},
         {id:"t2park",   label:"Car Park P2",      icon:"🅿",x:420,y:100,w:80, h:80, color:"#6366f1"},
       ],
@@ -70,9 +70,9 @@ const FLOOR_LAYOUTS: Record<TKey, {
         {from:"t2bag",to:"t2bus",    via:["Exit baggage area LEFT","Follow Bus/Transport signs","Bus stop is outside Gate 2"]},
       ]
     },
-    { level:"Level 1 — Departures", color:"#6fae8f",
+    { level:"Level 1 — Departures", color:"#4fd1b0",
       zones:[
-        {id:"t2chk",    label:"Check-in H–N",    icon:"🛂",x:20, y:60, w:200,h:80, color:"#6fae8f"},
+        {id:"t2chk",    label:"Check-in H–N",    icon:"🛂",x:20, y:60, w:200,h:80, color:"#4fd1b0"},
         {id:"t2sec",    label:"Security",         icon:"🔒",x:240,y:60, w:100,h:80, color:"#ef4444"},
         {id:"t2fnb",    label:"Food & Bev",       icon:"🍽",x:360,y:60, w:100,h:80, color:"#22c55e"},
         {id:"t2ret",    label:"Retail",           icon:"🛍",x:360,y:155,w:100,h:60, color:"#8b5cf6"},
@@ -83,13 +83,13 @@ const FLOOR_LAYOUTS: Record<TKey, {
         {from:"t2sec",to:"t2lift",  via:["After security","Central area → Lift to Gates Level 2"]},
       ]
     },
-    { level:"Level 2 — Gates B1–B5", color:"#6fae8f",
+    { level:"Level 2 — Gates B1–B5", color:"#4fd1b0",
       zones:[
-        {id:"gateB1",   label:"Gates B1–B3",      icon:"✈",x:20, y:80, w:160,h:100,color:"#6fae8f"},
-        {id:"gateB4",   label:"Gates B4–B5",       icon:"✈",x:200,y:80, w:120,h:100,color:"#c9953c"},
+        {id:"gateB1",   label:"Gates B1–B3",      icon:"✈",x:20, y:80, w:160,h:100,color:"#4fd1b0"},
+        {id:"gateB4",   label:"Gates B4–B5",       icon:"✈",x:200,y:80, w:120,h:100,color:"#ff7a66"},
         {id:"t2snack",  label:"Snack Bar",          icon:"☕",x:340,y:80, w:100,h:60, color:"#f59e0b"},
         {id:"t2smk",    label:"Smoking Zone",       icon:"🚬",x:340,y:155,w:100,h:55, color:"#6b7280"},
-        {id:"t2liftB",  label:"Lift ← Level 1",    icon:"🔽",x:20, y:195,w:80, h:45, color:"#475569"},
+        {id:"t2liftB",  label:"Lift ← Level 1",    icon:"🔽",x:20, y:195,w:80, h:45, color:"#7f7396"},
       ],
       paths:[
         {from:"t2liftB",to:"gateB1", via:["Exit lift Level 2","Straight ahead LEFT → Gates B1–B3"]},
@@ -103,7 +103,7 @@ const FLOOR_LAYOUTS: Record<TKey, {
         {id:"t3imm",    label:"Immigration",     icon:"🛂",x:20, y:60, w:130,h:80, color:"#ef4444"},
         {id:"t3bag",    label:"Baggage Claim",   icon:"🧳",x:170,y:60, w:140,h:80, color:"#8b5cf6"},
         {id:"t3cust",   label:"Customs",          icon:"⚖",x:330,y:60, w:100,h:80, color:"#f59e0b"},
-        {id:"t3arr",    label:"Arrival Hall",     icon:"🚶",x:170,y:155,w:260,h:65, color:"#6fae8f"},
+        {id:"t3arr",    label:"Arrival Hall",     icon:"🚶",x:170,y:155,w:260,h:65, color:"#4fd1b0"},
         {id:"t3metro",  label:"Metro Station",    icon:"🚇",x:20, y:180,w:120,h:55, color:"#6366f1"},
       ],
       paths:[
@@ -118,8 +118,8 @@ const FLOOR_LAYOUTS: Record<TKey, {
         {id:"t3sec",    label:"Security",          icon:"🔒",x:240,y:50, w:110,h:85, color:"#ef4444"},
         {id:"t3df",     label:"Duty Free",         icon:"🛍",x:370,y:50, w:100,h:85, color:"#f59e0b"},
         {id:"t3food",   label:"Food Court",        icon:"🍽",x:20, y:150,w:150,h:70, color:"#22c55e"},
-        {id:"t3lift3",  label:"Lift → L4/L5",     icon:"🔼",x:240,y:150,w:110,h:70, color:"#475569"},
-        {id:"t3atm",    label:"ATM & Currency",    icon:"💵",x:370,y:150,w:100,h:70, color:"#6fae8f"},
+        {id:"t3lift3",  label:"Lift → L4/L5",     icon:"🔼",x:240,y:150,w:110,h:70, color:"#7f7396"},
+        {id:"t3atm",    label:"ATM & Currency",    icon:"💵",x:370,y:150,w:100,h:70, color:"#4fd1b0"},
       ],
       paths:[
         {from:"t3chk",to:"t3sec",   via:["Complete check-in at T3 counters O–Z","Collect boarding pass","Walk RIGHT 80m → Security entrance","~20 min wait during peak hours"]},
@@ -134,7 +134,7 @@ const FLOOR_LAYOUTS: Record<TKey, {
         {id:"t3gvk",    label:"GVK Lounge",       icon:"🛋",x:210,y:70, w:140,h:90, color:"#8b5cf6"},
         {id:"t3cross",  label:"Crossword Books",  icon:"📚",x:370,y:70, w:100,h:90, color:"#22c55e"},
         {id:"t3beauty", label:"Forest Essentials",icon:"💆",x:20, y:175,w:200,h:60, color:"#ec4899"},
-        {id:"t3lift4",  label:"Lifts L3 ↔ L5",   icon:"🔄",x:240,y:175,w:110,h:60, color:"#475569"},
+        {id:"t3lift4",  label:"Lifts L3 ↔ L5",   icon:"🔄",x:240,y:175,w:110,h:60, color:"#7f7396"},
         {id:"t3pray",   label:"Prayer Room",      icon:"🕌",x:370,y:175,w:100,h:60, color:"#6366f1"},
       ],
       paths:[
@@ -147,10 +147,10 @@ const FLOOR_LAYOUTS: Record<TKey, {
       zones:[
         {id:"gateC",    label:"Gates C1–C3",      icon:"✈",x:20, y:70, w:120,h:100,color:"#8b5cf6"},
         {id:"gateD",    label:"Gates D1–D3",       icon:"✈",x:160,y:70, w:120,h:100,color:"#6366f1"},
-        {id:"gateE",    label:"Gates E1–E2",       icon:"✈",x:300,y:70, w:100,h:100,color:"#c9953c"},
+        {id:"gateE",    label:"Gates E1–E2",       icon:"✈",x:300,y:70, w:100,h:100,color:"#ff7a66"},
         {id:"transit",  label:"Transit Lounge",    icon:"⏱",x:420,y:70, w:80, h:100,color:"#f59e0b"},
-        {id:"t3liftG",  label:"Lift ← L3/L4",     icon:"🔽",x:20, y:185,w:80, h:50, color:"#475569"},
-        {id:"t3toil",   label:"Toilets",            icon:"🚻",x:160,y:185,w:80, h:50, color:"#94a3b8"},
+        {id:"t3liftG",  label:"Lift ← L3/L4",     icon:"🔽",x:20, y:185,w:80, h:50, color:"#7f7396"},
+        {id:"t3toil",   label:"Toilets",            icon:"🚻",x:160,y:185,w:80, h:50, color:"#a99dbd"},
       ],
       paths:[
         {from:"t3liftG",to:"gateC",  via:["Exit lift Level 5","Turn RIGHT","Gates C1–C3 are immediately ahead — 20m"]},
@@ -217,7 +217,7 @@ export function AirportMap() {
       )
     : [];
 
-  const tColor = {T1:"#c9953c",T2:"#6fae8f",T3:"#8b5cf6"};
+  const tColor = {T1:"#ff7a66",T2:"#4fd1b0",T3:"#8b5cf6"};
 
   return (
     <div className="space-y-4">
@@ -312,8 +312,8 @@ export function AirportMap() {
                 className={`p-3.5 rounded-xl border transition-all text-left`}
                 style={activeT===t
                   ?{background:tColor[t]+"20",borderColor:tColor[t]+"60"}
-                  :{background:"#16130f",borderColor:"#322a1e"}}>
-                <div className="font-bold text-xl" style={activeT===t?{color:tColor[t]}:{color:"#94a3b8"}}>{t}</div>
+                  :{background:"#1c1428",borderColor:"#41305e"}}>
+                <div className="font-bold text-xl" style={activeT===t?{color:tColor[t]}:{color:"#a99dbd"}}>{t}</div>
                 <div className="text-xs text-slate-300 font-medium mt-0.5">
                   {t==="T1"?"Terminal 1":t==="T2"?"Terminal 2":"Terminal 3"}
                 </div>
@@ -331,7 +331,7 @@ export function AirportMap() {
                 className="flex-shrink-0 px-4 py-2.5 rounded-xl border text-sm transition-all"
                 style={activeF===i
                   ?{background:tColor[activeT]+"20",borderColor:tColor[activeT]+"60",color:tColor[activeT]}
-                  :{background:"#16130f",borderColor:"#322a1e",color:"#94a3b8"}}>
+                  :{background:"#1c1428",borderColor:"#41305e",color:"#a99dbd"}}>
                 <div className="font-bold text-xs">{f.level.split("—")[0].trim()}</div>
                 <div className="text-xs opacity-70">{f.level.split("—")[1]?.trim()}</div>
               </button>
@@ -355,13 +355,13 @@ export function AirportMap() {
               )}
             </div>
 
-            <svg viewBox="0 0 520 260" className="w-full" style={{background:"#0b0908",minHeight:"200px"}}>
+            <svg viewBox="0 0 520 260" className="w-full" style={{background:"#110b19",minHeight:"200px"}}>
               {/* Grid lines */}
               {[130,260,390].map(x=>(
-                <line key={x} x1={x} y1="0" x2={x} y2="260" stroke="#16130f" strokeWidth="1"/>
+                <line key={x} x1={x} y1="0" x2={x} y2="260" stroke="#1c1428" strokeWidth="1"/>
               ))}
               {[65,130,195].map(y=>(
-                <line key={y} x1="0" y1={y} x2="520" y2={y} stroke="#16130f" strokeWidth="1"/>
+                <line key={y} x1="0" y1={y} x2="520" y2={y} stroke="#1c1428" strokeWidth="1"/>
               ))}
 
               {/* Terminal outline */}
@@ -427,7 +427,7 @@ export function AirportMap() {
                 const y2 = toZ.y + toZ.h/2;
                 return (
                   <line key={pi} x1={x1} y1={y1} x2={x2} y2={y2}
-                    stroke="#e8c77a" strokeWidth="1.5" strokeDasharray="5,4"
+                    stroke="#ff9d8a" strokeWidth="1.5" strokeDasharray="5,4"
                     markerEnd="url(#arrow)" opacity="0.7"/>
                 );
               })}
@@ -435,12 +435,12 @@ export function AirportMap() {
               {/* Arrow marker */}
               <defs>
                 <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-                  <path d="M0,0 L0,6 L8,3 z" fill="#e8c77a"/>
+                  <path d="M0,0 L0,6 L8,3 z" fill="#ff9d8a"/>
                 </marker>
               </defs>
 
               {/* Compass */}
-              <text x="495" y="248" fill="#322a1e" fontSize="9" textAnchor="middle" fontFamily="monospace">N↑</text>
+              <text x="495" y="248" fill="#41305e" fontSize="9" textAnchor="middle" fontFamily="monospace">N↑</text>
             </svg>
 
             {/* Zone detail on click */}

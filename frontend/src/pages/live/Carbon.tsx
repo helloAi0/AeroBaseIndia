@@ -25,7 +25,7 @@ export function CarbonDashboard() {
         <Stat label="Potential ground saving today" value={`${(c.total / 1000).toFixed(1)} t`} tone="text-green-400" /><Stat label="Flights covered" value={c.rows.length} /></div>
       <Card><div className="text-sm text-slate-300 mb-2">CO2 by airline from fuel uplift (tonnes)</div>
         {byAirline.length === 0 ? <div className="text-sm text-slate-500">Record fuel orders in Fuel Management to see emissions by airline.</div> :
-          <div className="h-56"><ResponsiveContainer width="100%" height="100%"><BarChart data={byAirline}><XAxis dataKey="name" tick={{ fill: "#94a3b8" }} /><YAxis tick={{ fill: "#94a3b8" }} /><Tooltip contentStyle={{ background: "#16130f", border: "1px solid #322a1e" }} /><Bar dataKey="t" fill="#f59e0b" radius={[4, 4, 0, 0]} /></BarChart></ResponsiveContainer></div>}</Card>
+          <div className="h-56"><ResponsiveContainer width="100%" height="100%"><BarChart data={byAirline}><XAxis dataKey="name" tick={{ fill: "#a99dbd" }} /><YAxis tick={{ fill: "#a99dbd" }} /><Tooltip contentStyle={{ background: "#1c1428", border: "1px solid #41305e" }} /><Bar dataKey="t" fill="#f59e0b" radius={[4, 4, 0, 0]} /></BarChart></ResponsiveContainer></div>}</Card>
     </div>
   );
 }

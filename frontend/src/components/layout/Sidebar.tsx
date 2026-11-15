@@ -11,6 +11,9 @@ import { KeyRound, ShoppingBag,
   Globe, Crown, Leaf, ScanFace, Plug, MessageCircle, Timer, Siren, FlaskConical, Bot, Flame as FlameIcon, Route, LayoutGrid, CloudLightning, PlaneTakeoff, Accessibility as AccIcon, SearchCheck, Handshake, ShieldAlert
 } from "lucide-react";
 import { Icon3D } from "../ui/Icon3D";
+
+/** Each menu group has its own friendly accent so the sidebar is easy to scan. */
+const GROUP_COLOR: Record<string, string> = { "Operations": "#ff7a66", "Business": "#ffb347", "Operations Ext": "#a58cff", "Passenger": "#4fd1b0", "My Shop": "#ffb347", "Security": "#ff6b81", "Crew": "#7aa7ff", "Airline": "#7aa7ff", "My Account": "#4fd1b0", "People": "#ff8fc8", "Management": "#a58cff", "System": "#8f9bff", "Super Admin": "#ff7a66" };
 import { useAppStore } from "../../store/appStore";
 import { useAuthStore } from "../../store/authStore";
 
@@ -204,7 +207,7 @@ export function Sidebar() {
         {visibleNav.map(({ group, items }) => (
           <div key={group}>
             {sidebarOpen && (
-              <div className="text-xs font-semibold text-slate-600 uppercase tracking-widest px-2 mb-1 pt-1">
+              <div className="text-xs font-semibold text-slate-500 uppercase tracking-widest px-2 mb-1 pt-1">
                 {group}
               </div>
             )}
@@ -216,10 +219,10 @@ export function Sidebar() {
                   className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl transition-all text-sm
                     ${activePage === id
                       ? "bg-sky-500/15 text-sky-300 font-medium border border-sky-500/20"
-                      : "text-slate-500 hover:bg-navy-700/80 hover:text-slate-200"
+                      : "text-slate-400 hover:bg-navy-700/80 hover:text-slate-200"
                     }
                     ${!sidebarOpen ? "justify-center" : ""}`}>
-                  <Icon3D size={24} color={activePage === id ? "#c9953c" : "#475569"}><Icon className="w-3.5 h-3.5"/></Icon3D>
+                  <Icon3D size={24} color={GROUP_COLOR[group] ?? "#ff7a66"}><Icon className="w-3.5 h-3.5"/></Icon3D>
                   {sidebarOpen && <span className="truncate text-left">{label}</span>}
                 </button>
               ))}

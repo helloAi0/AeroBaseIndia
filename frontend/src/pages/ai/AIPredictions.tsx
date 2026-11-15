@@ -5,7 +5,7 @@ import { Zap, Brain, TrendingUp, AlertTriangle, Play, Clock, CheckCircle } from 
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line } from "recharts";
 
 const TOOLTIP_STYLE = {
-  background:"#16130f",border:"1px solid #322a1e",borderRadius:10,fontSize:12
+  background:"#1c1428",border:"1px solid #41305e",borderRadius:10,fontSize:12
 };
 
 const historicalAccuracy = [
@@ -171,9 +171,9 @@ export function AIPredictions() {
           <div className="h-[220px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={delayFactors} layout="vertical" margin={{left:20,right:20}}>
-                <XAxis type="number" tick={{fill:"#475569",fontSize:11}} axisLine={false} tickLine={false}
+                <XAxis type="number" tick={{fill:"#7f7396",fontSize:11}} axisLine={false} tickLine={false}
                   tickFormatter={v=>`${v}%`}/>
-                <YAxis dataKey="factor" type="category" tick={{fill:"#94a3b8",fontSize:11}}
+                <YAxis dataKey="factor" type="category" tick={{fill:"#a99dbd",fontSize:11}}
                   axisLine={false} tickLine={false} width={80}/>
                 <Tooltip contentStyle={TOOLTIP_STYLE} formatter={(v:any)=>[`${v}%`,"Impact"]}/>
                 <Bar dataKey="impact" fill="#8b5cf6" radius={[0,6,6,0]} name="Impact %"/>
@@ -204,8 +204,8 @@ export function AIPredictions() {
         <div className="h-[200px] w-full">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={historicalAccuracy} margin={{left:-20}}>
-              <XAxis dataKey="d" tick={{fill:"#475569",fontSize:11}} axisLine={false} tickLine={false}/>
-              <YAxis tick={{fill:"#475569",fontSize:11}} axisLine={false} tickLine={false}
+              <XAxis dataKey="d" tick={{fill:"#7f7396",fontSize:11}} axisLine={false} tickLine={false}/>
+              <YAxis tick={{fill:"#7f7396",fontSize:11}} axisLine={false} tickLine={false}
                 domain={[70,100]} tickFormatter={v=>`${v}%`}/>
               <Tooltip contentStyle={TOOLTIP_STYLE} formatter={(v:any)=>[`${v}%`]}/>
               <Line type="monotone" dataKey="predicted" stroke="#8b5cf6" strokeWidth={2}

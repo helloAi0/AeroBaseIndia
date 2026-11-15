@@ -42,17 +42,17 @@ export function RevenueChart() {
         <AreaChart data={data}>
           <defs>
             <linearGradient id="rev" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%"  stopColor="#e8c77a" stopOpacity={0.3} />
-              <stop offset="95%" stopColor="#e8c77a" stopOpacity={0}   />
+              <stop offset="5%"  stopColor="#ff9d8a" stopOpacity={0.3} />
+              <stop offset="95%" stopColor="#ff9d8a" stopOpacity={0}   />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="#262017" />
-          <XAxis dataKey="month" tick={{ fill:"#64748b", fontSize:11 }} axisLine={false} tickLine={false} />
-          <YAxis tick={{ fill:"#64748b", fontSize:11 }} axisLine={false} tickLine={false}
+          <CartesianGrid strokeDasharray="3 3" stroke="#32234a" />
+          <XAxis dataKey="month" tick={{ fill:"#8a7fa0", fontSize:11 }} axisLine={false} tickLine={false} />
+          <YAxis tick={{ fill:"#8a7fa0", fontSize:11 }} axisLine={false} tickLine={false}
             tickFormatter={v => `₹${v/1000}K`} />
           <Tooltip content={<CustomTooltip />} />
           <Area type="monotone" dataKey="revenue"
-            stroke="#e8c77a" strokeWidth={2}
+            stroke="#ff9d8a" strokeWidth={2}
             fill="url(#rev)" />
         </AreaChart>
       </ResponsiveContainer>

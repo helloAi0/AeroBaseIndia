@@ -8,8 +8,8 @@ import { Activity, Wind, Eye, Thermometer, Users } from "lucide-react";
 const Twin3D = lazy(() => import("../../components/three/Twin3D").then(m => ({ default: m.Twin3D })));
 
 const TERMINALS = [
-  { id:"T1", x:60,  y:80,  w:200, h:120, gates:["A1","A2","A3","A4"], color:"#c9953c" },
-  { id:"T2", x:300, y:80,  w:200, h:120, gates:["B1","B2","B3","B4"], color:"#6fae8f" },
+  { id:"T1", x:60,  y:80,  w:200, h:120, gates:["A1","A2","A3","A4"], color:"#ff7a66" },
+  { id:"T2", x:300, y:80,  w:200, h:120, gates:["B1","B2","B3","B4"], color:"#4fd1b0" },
   { id:"T3", x:540, y:80,  w:200, h:120, gates:["C1","C2","D1","D2"], color:"#8b5cf6" },
 ];
 
@@ -26,8 +26,8 @@ function refreshGates(flights: any[]) {
 }
 
 const GATE_COLOR: Record<string,string> = {
-  occupied:"#c9953c", available:"#22c55e",
-  boarding:"#8cc7a8", delayed:"#f59e0b", cleaning:"#6b7280",
+  occupied:"#ff7a66", available:"#22c55e",
+  boarding:"#7fe3c9", delayed:"#f59e0b", cleaning:"#6b7280",
 };
 
 // Fixed Tailwind compilation map for static analysis matching
@@ -58,24 +58,24 @@ function AirportMap({flights}:{flights:any[]}) {
         <span className="text-xs text-slate-500">Live simulation</span>
       </div>
 
-      <svg viewBox="0 0 800 340" className="w-full" style={{background:"#0b0908"}}>
+      <svg viewBox="0 0 800 340" className="w-full" style={{background:"#110b19"}}>
         {/* Runway */}
-        <rect x="0" y="230" width="800" height="80" fill="#16130f" rx="4"/>
-        <line x1="0" y1="270" x2="800" y2="270" stroke="#322a1e" strokeWidth="2" strokeDasharray="20,15"/>
-        <text x="400" y="275" fill="#3a2f1f" fontSize="11" textAnchor="middle" fontFamily="monospace">
+        <rect x="0" y="230" width="800" height="80" fill="#1c1428" rx="4"/>
+        <line x1="0" y1="270" x2="800" y2="270" stroke="#41305e" strokeWidth="2" strokeDasharray="20,15"/>
+        <text x="400" y="275" fill="#4a3868" fontSize="11" textAnchor="middle" fontFamily="monospace">
           RUNWAY 28L/10R
         </text>
 
         {/* Taxiways */}
         {[120,360,590].map((x,i)=>(
-          <line key={i} x1={x} y1="200" x2={x} y2="230" stroke="#322a1e" strokeWidth="8"/>
+          <line key={i} x1={x} y1="200" x2={x} y2="230" stroke="#41305e" strokeWidth="8"/>
         ))}
 
         {/* Terminals */}
         {TERMINALS.map(t=>(
           <g key={t.id}>
             <rect x={t.x} y={t.y} width={t.w} height={t.h}
-              fill="#16130f" stroke={t.color} strokeWidth="1.5" rx="8" opacity="0.9"/>
+              fill="#1c1428" stroke={t.color} strokeWidth="1.5" rx="8" opacity="0.9"/>
             <text x={t.x+t.w/2} y={t.y+18} fill={t.color} fontSize="11"
               textAnchor="middle" fontFamily="monospace" fontWeight="bold">
               Terminal {t.id.slice(1)}
@@ -99,7 +99,7 @@ function AirportMap({flights}:{flights:any[]}) {
                       textAnchor="middle" fontFamily="monospace">{gs.flight}</text>
                   )}
                   {gs?.status==="boarding" && (
-                    <circle cx={gx+28} cy={gy+6} r="4" fill="#8cc7a8" opacity={(tick%2===0)?1:0.3}/>
+                    <circle cx={gx+28} cy={gy+6} r="4" fill="#7fe3c9" opacity={(tick%2===0)?1:0.3}/>
                   )}
                   {gs?.status==="delayed" && (
                     <text x={gx+18} y={gy+48} fill="#f59e0b" fontSize="7" textAnchor="middle">⚠</text>
@@ -115,8 +115,8 @@ function AirportMap({flights}:{flights:any[]}) {
           const xPos = 80 + ((tick*3 + i*200) % 600);
           return (
             <g key={f.id||i} transform={`translate(${xPos},215)`}>
-              <polygon points="0,-6 12,0 0,6 2,0" fill="#e8c77a" opacity="0.8"/>
-              <text x="14" y="4" fill="#e8c77a" fontSize="8" fontFamily="monospace">
+              <polygon points="0,-6 12,0 0,6 2,0" fill="#ff9d8a" opacity="0.8"/>
+              <text x="14" y="4" fill="#ff9d8a" fontSize="8" fontFamily="monospace">
                 {f.flight_number}
               </text>
             </g>
@@ -127,7 +127,7 @@ function AirportMap({flights}:{flights:any[]}) {
         {Object.entries(GATE_COLOR).map(([status,color],i)=>(
           <g key={status} transform={`translate(${10+i*120},315)`}>
             <rect width="10" height="10" fill={color} rx="2" opacity="0.7"/>
-            <text x="14" y="9" fill="#475569" fontSize="9" fontFamily="monospace" >
+            <text x="14" y="9" fill="#7f7396" fontSize="9" fontFamily="monospace" >
               {status}
             </text>
           </g>
