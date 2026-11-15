@@ -19,8 +19,9 @@ WORKDIR /src
 COPY CMakeLists.txt ./
 COPY include ./include
 COPY src ./src
-RUN cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-I/tmp/jwt-cpp/include" \
-    && cmake --build build -j"$(nproc)"
+# Two compile jobs at a time and an eager compiler garbage collector keep memory low enough for a free build machine.
+RUN cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-I/tmp/jwt-cpp/include --param ggc-min-expand=20 --param ggc-min-heapsize=32768" \
+    && cmake --build build -j2
 
 # ---------- runtime stage ----------
 FROM ubuntu:24.04
