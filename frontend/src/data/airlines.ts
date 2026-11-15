@@ -3,7 +3,7 @@ export interface AirlineInfo { name: string; color: string; }
 
 export const AIRLINES: Record<string, AirlineInfo> = {
   AI:   { name: "Air India",         color: "#ef4444" },
-  "6E": { name: "IndiGo",            color: "#0ea5e9" },
+  "6E": { name: "IndiGo",            color: "#c9953c" },
   EK:   { name: "Emirates",          color: "#f59e0b" },
   SG:   { name: "SpiceJet",          color: "#f97316" },
   QP:   { name: "Akasa Air",         color: "#22c55e" },

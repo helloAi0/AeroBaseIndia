@@ -1,5 +1,5 @@
 const cfg: Record<string, string> = {
-  Scheduled: "bg-blue-500/20 text-blue-300 border border-blue-500/30",
+  Scheduled: "bg-amber-500/20 text-amber-300 border border-amber-500/30",
   Boarding:  "bg-teal-500/20 text-teal-300 border border-teal-500/30",
   Departed:  "bg-green-500/20 text-green-300 border border-green-500/30",
   Landed:    "bg-green-600/20 text-green-400 border border-green-600/30",
@@ -9,7 +9,7 @@ const cfg: Record<string, string> = {
   DOWN:      "bg-red-500/20 text-red-300",
   healthy:   "bg-green-500/20 text-green-300",
   degraded:  "bg-yellow-500/20 text-yellow-300",
-  CREATED:   "bg-blue-500/20 text-blue-300",
+  CREATED:   "bg-amber-500/20 text-amber-300",
   PAID:      "bg-green-500/20 text-green-300",
 };
 

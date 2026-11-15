@@ -15,8 +15,8 @@ const FALLBACK_AIRPORTS: AirportInfo[] = [
 
 /** Who each kind of account is for, and the seeded demo login for it (pattern from scripts/seed_demo.py). */
 const ROLES = [
-  { key: "admin", label: "Airport director", icon: Building2, color: "#38bdf8", blurb: "Runs the whole airport: flights, gates, revenue, team.", email: (a: string) => `admin@${a}.aerobase.in` },
-  { key: "staff", label: "Ground staff", icon: Wrench, color: "#2dd4bf", blurb: "Check-in, baggage, turnaround, assistance requests.", email: (a: string) => `staff@${a}.aerobase.in` },
+  { key: "admin", label: "Airport director", icon: Building2, color: "#e8c77a", blurb: "Runs the whole airport: flights, gates, revenue, team.", email: (a: string) => `admin@${a}.aerobase.in` },
+  { key: "staff", label: "Ground staff", icon: Wrench, color: "#8cc7a8", blurb: "Check-in, baggage, turnaround, assistance requests.", email: (a: string) => `staff@${a}.aerobase.in` },
   { key: "security", label: "Security", icon: ShieldCheck, color: "#f87171", blurb: "Security events, CCTV, emergencies.", email: (a: string) => `security@${a}.aerobase.in` },
   { key: "airline", label: "Airline ops", icon: Plane, color: "#fbbf24", blurb: "Your airline's flights, fleet, crew and revenue.", email: (a: string, x?: string) => `ops.${(x || "6e").toLowerCase()}@${a}.aerobase.in` },
   { key: "sechead", label: "Security head", icon: ShieldCheck, color: "#fb7185", blurb: "Your officers by reference ID; send them instructions.", email: (a: string) => `head.security@${a}.aerobase.in` },
@@ -87,9 +87,9 @@ export function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen grid lg:grid-cols-[1.05fr_1fr] bg-[#050b17] text-slate-200">
+    <div className="min-h-screen grid lg:grid-cols-[1.05fr_1fr] bg-[#080706] text-slate-200">
       {/* Brand side */}
-      <aside className="hidden lg:flex flex-col justify-between p-10 relative overflow-hidden" style={{ background: "radial-gradient(1200px 600px at 0% 0%, rgba(14,165,233,.18), transparent 60%), radial-gradient(800px 500px at 100% 100%, rgba(45,212,191,.12), transparent 60%)" }}>
+      <aside className="hidden lg:flex flex-col justify-between p-10 relative overflow-hidden" style={{ background: "radial-gradient(1200px 600px at 0% 0%, rgba(201,149,60,.18), transparent 60%), radial-gradient(800px 500px at 100% 100%, rgba(45,212,191,.12), transparent 60%)" }}>
         <div className="flex items-center gap-3"><div className="w-11 h-11 rounded-xl bg-gradient-to-br from-sky-500 to-teal-400 flex items-center justify-center"><Plane className="w-6 h-6 text-white" /></div>
           <div><div className="text-lg font-black text-white leading-none">AeroBase India</div><div className="text-xs text-sky-300 mt-1">Airport operations platform</div></div></div>
         <div>
@@ -129,7 +129,7 @@ export function LoginPage() {
                   <input className={inputCls} placeholder="Crew reference ID e.g. EK-FD-3FA21C" value={crewRef} onChange={e => setCrewRef(e.target.value)} required autoCapitalize="characters" aria-label="Crew reference ID" />
                   <input className={inputCls} placeholder="Licence number e.g. ATPL-IN-4471" value={license} onChange={e => setLicense(e.target.value)} required aria-label="Licence number" /></div>}
                 {acct !== "PILOT" && <div><label className="text-xs font-semibold text-slate-400 mb-1.5 block">Airport</label>
-                  <select className={inputCls} value={airport} onChange={e => setAirport(e.target.value)}>{airports.map(a => <option key={a.code} value={a.code} className="bg-slate-900">{a.code} — {a.name}</option>)}</select></div>}
+                  <select className={inputCls} value={airport} onChange={e => setAirport(e.target.value)}>{airports.map(a => <option key={a.code} value={a.code} className="bg-navy-900">{a.code} — {a.name}</option>)}</select></div>}
               </>)}
 
               {mode !== "reset" && (<div><label className="text-xs font-semibold text-slate-400 mb-1.5 block">Email</label>
@@ -158,7 +158,7 @@ export function LoginPage() {
               <div className="flex items-center justify-between gap-3 mb-3">
                 <div><div className="text-sm font-bold text-white">Try a demo account</div><div className="text-[11px] text-slate-500">One click fills the form · password <code className="text-slate-300">{DEMO_PASSWORD}</code></div></div>
                 <select aria-label="Demo airport" className="rounded-lg px-2 py-1.5 text-xs bg-white/5 border border-white/10 text-white" value={airport} onChange={e => { setAirport(e.target.value); const r = ROLES.find(x => x.key === demoRole); if (r) setEmail((r.email as (a: string, x?: string) => string)(e.target.value.toLowerCase(), airline)); }}>
-                  {airports.map(a => <option key={a.code} value={a.code} className="bg-slate-900">{a.code}</option>)}</select>
+                  {airports.map(a => <option key={a.code} value={a.code} className="bg-navy-900">{a.code}</option>)}</select>
               </div>
               <div className="grid grid-cols-2 gap-2">
                 {ROLES.map(r => (<button key={r.key} type="button" onClick={() => { setDemoRole(r.key); setEmail((r.email as (a: string, x?: string) => string)(airport.toLowerCase(), airline)); setPassword(DEMO_PASSWORD); setError(""); }}
@@ -169,7 +169,7 @@ export function LoginPage() {
               </div>
               {demoRole === "airline" && airlines.length > 0 && <div className="mt-3"><label className="text-[11px] text-slate-400 block mb-1">Which airline? (only airlines flying at {airport})</label>
                 <select aria-label="Demo airline" className="w-full rounded-lg px-2 py-2 text-xs bg-white/5 border border-white/10 text-white" value={airline} onChange={e => { setAirline(e.target.value); setEmail(`ops.${e.target.value.toLowerCase()}@${airport.toLowerCase()}.aerobase.in`); }}>
-                  {airlines.map(a => <option key={a.code} value={a.code} className="bg-slate-900">{a.name} ({a.code})</option>)}</select></div>}
+                  {airlines.map(a => <option key={a.code} value={a.code} className="bg-navy-900">{a.name} ({a.code})</option>)}</select></div>}
               {email && <div className="text-[11px] text-slate-500 mt-3">Filled: <span className="text-slate-300">{email}</span> — press <b>Sign in</b></div>}
             </div>)}
         </div>

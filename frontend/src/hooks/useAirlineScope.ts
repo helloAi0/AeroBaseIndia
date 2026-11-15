@@ -20,7 +20,7 @@ export function useAirlineScope(): AirlineScope {
     code,
     isAirline: code !== null,
     name: info?.name ?? "",
-    color: info?.color ?? "#0ea5e9",
+    color: info?.color ?? "#c9953c",
     scope: (rows, flightOf) => (code ? rows.filter(r => airlineOfFlight(flightOf(r)) === code) : rows),
   };
 }

@@ -218,7 +218,7 @@ export function Sidebar() {
                       : "text-slate-500 hover:bg-navy-700/80 hover:text-slate-200"
                     }
                     ${!sidebarOpen ? "justify-center" : ""}`}>
-                  <Icon3D size={24} color={activePage === id ? "#0ea5e9" : "#475569"}><Icon className="w-3.5 h-3.5"/></Icon3D>
+                  <Icon3D size={24} color={activePage === id ? "#c9953c" : "#475569"}><Icon className="w-3.5 h-3.5"/></Icon3D>
                   {sidebarOpen && <span className="truncate text-left">{label}</span>}
                 </button>
               ))}

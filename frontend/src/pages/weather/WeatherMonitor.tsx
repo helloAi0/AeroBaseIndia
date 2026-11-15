@@ -31,7 +31,7 @@ const RISK_STYLE: Record<string, string> = {
   Med: "bg-yellow-500/15 text-yellow-400 border-yellow-500/20",
   Low: "bg-green-500/15 text-green-400 border-green-500/20",
 };
-const TOOLTIP = { background: "#0f1629", border: "1px solid #1e2d4d", borderRadius: 10, fontSize: 12 };
+const TOOLTIP = { background: "#16130f", border: "1px solid #322a1e", borderRadius: 10, fontSize: 12 };
 
 interface Wx {
   cur: { temp: number; feels: number; code: number; wind: number; dir: number; gust: number; hum: number; pres: number; vis: number };
@@ -199,8 +199,8 @@ export function WeatherMonitor() {
                   <XAxis dataKey="h" tick={{ fill: "#475569", fontSize: 11 }} axisLine={false} tickLine={false} />
                   <YAxis tick={{ fill: "#475569", fontSize: 11 }} axisLine={false} tickLine={false} />
                   <Tooltip contentStyle={TOOLTIP} />
-                  <Line type="monotone" dataKey="wind" stroke="#38bdf8" strokeWidth={2} dot={false} name="Wind km/h" />
-                  <Line type="monotone" dataKey="vis" stroke="#2dd4bf" strokeWidth={2} dot={false} name="Visibility km" />
+                  <Line type="monotone" dataKey="wind" stroke="#e8c77a" strokeWidth={2} dot={false} name="Wind km/h" />
+                  <Line type="monotone" dataKey="vis" stroke="#8cc7a8" strokeWidth={2} dot={false} name="Visibility km" />
                 </LineChart>
               </ResponsiveContainer>
             </div>

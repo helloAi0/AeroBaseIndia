@@ -10,7 +10,7 @@ interface Props {
 }
 
 const colorMap = {
-  blue:   "from-blue-500/20 to-blue-600/5 border-blue-500/20",
+  blue:   "from-amber-500/20 to-amber-600/5 border-amber-500/20",
   teal:   "from-teal-500/20 to-teal-600/5 border-teal-500/20",
   green:  "from-green-500/20 to-green-600/5 border-green-500/20",
   yellow: "from-yellow-500/20 to-yellow-600/5 border-yellow-500/20",
@@ -18,7 +18,7 @@ const colorMap = {
 };
 
 const iconMap = {
-  blue:   "text-blue-400",
+  blue:   "text-amber-400",
   teal:   "text-teal-400",
   green:  "text-green-400",
   yellow: "text-yellow-400",

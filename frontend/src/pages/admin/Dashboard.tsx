@@ -9,7 +9,7 @@ import { useAirport } from "../../hooks/useAirport";
 import { API_ENABLED } from "../../config";
 
 const STATUS_COLOR: Record<string,string> = {
-  Scheduled:"#38bdf8", Boarding:"#2dd4bf", Departed:"#22c55e",
+  Scheduled:"#e8c77a", Boarding:"#8cc7a8", Departed:"#22c55e",
   Landed:"#16a34a", Delayed:"#f59e0b", Cancelled:"#ef4444",
 };
 
@@ -103,9 +103,9 @@ export function Dashboard() {
             <BarChart data={byHour} margin={{left:-20,right:0}}>
               <XAxis dataKey="h" tick={{fill:"#475569",fontSize:11}} axisLine={false} tickLine={false}/>
               <YAxis allowDecimals={false} tick={{fill:"#475569",fontSize:11}} axisLine={false} tickLine={false}/>
-              <Tooltip contentStyle={{background:"#0f1629",border:"1px solid #1e2d4d",borderRadius:12,fontSize:12}}
-                labelStyle={{color:"#94a3b8"}} itemStyle={{color:"#38bdf8"}} formatter={(v:any)=>[v,"Departures"]}/>
-              <Bar dataKey="n" fill="#38bdf8" radius={[4,4,0,0]}/>
+              <Tooltip contentStyle={{background:"#16130f",border:"1px solid #322a1e",borderRadius:12,fontSize:12}}
+                labelStyle={{color:"#94a3b8"}} itemStyle={{color:"#e8c77a"}} formatter={(v:any)=>[v,"Departures"]}/>
+              <Bar dataKey="n" fill="#e8c77a" radius={[4,4,0,0]}/>
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -156,7 +156,7 @@ export function Dashboard() {
                       <Cell key={i} fill={STATUS_COLOR[e.name]||"#475569"}/>
                     ))}
                   </Pie>
-                  <Tooltip contentStyle={{background:"#0f1629",border:"1px solid #1e2d4d",borderRadius:8,fontSize:12}}/>
+                  <Tooltip contentStyle={{background:"#16130f",border:"1px solid #322a1e",borderRadius:8,fontSize:12}}/>
                 </PieChart>
               </ResponsiveContainer>
               <div className="space-y-2 mt-2">

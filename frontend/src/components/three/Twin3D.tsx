@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { useThreeScene } from "./useThree";
 
 export interface TwinGate { g: string; status: string; flight?: string }
-const COLOR: Record<string, number> = { occupied: 0x0ea5e9, available: 0x22c55e, boarding: 0x2dd4bf, delayed: 0xf59e0b, cleaning: 0x6b7280 };
+const COLOR: Record<string, number> = { occupied: 0xc9953c, available: 0x22c55e, boarding: 0x2dd4bf, delayed: 0xf59e0b, cleaning: 0x6b7280 };
 
 /** Drag to orbit, wheel to zoom. Gates are columns coloured by status; aircraft sit at occupied/boarding/delayed gates. */
 export function Twin3D({ gates, terminals }: { gates: TwinGate[]; terminals: { id: string; gates: string[]; color: string }[] }) {

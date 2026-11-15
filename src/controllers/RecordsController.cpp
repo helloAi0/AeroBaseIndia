@@ -52,7 +52,7 @@ class RecordsController : public HttpController<RecordsController> {
             {"bookings",      {[] { Roles r = OPS_AIR; r.insert("SUPER_ADMIN"); r.insert("PASSENGER"); return r; }(), {"PASSENGER"}, [] { Roles r = OPS_AIR; r.insert("PASSENGER"); return r; }(), false, {"PASSENGER"}, {}, {"AIRLINE_OPS"}}},   // tickets: a passenger sees bookings they made or that name them as a traveller
             {"products",      {[] { Roles r = OPS; r.insert("RETAILER"); r.insert("PASSENGER"); return r; }(), [] { Roles r = ADMIN; r.insert("RETAILER"); return r; }(), [] { Roles r = ADMIN; r.insert("RETAILER"); return r; }(), false, {}, {"RETAILER"}}},
             {"orders",        {[] { Roles r = OPS; r.insert("RETAILER"); r.insert("PASSENGER"); return r; }(), {"PASSENGER"}, [] { Roles r = OPS; r.insert("RETAILER"); r.insert("PASSENGER"); return r; }(), false, {"RETAILER", "PASSENGER"}, {"RETAILER", "PASSENGER"}}},   // placed by passengers; the shop owner sees and moves only their shop's orders
-            {"passes",        {[] { Roles r = ADMIN; r.insert("PASSENGER"); return r; }(), {"PASSENGER", "AIRPORT_ADMIN", "SUPER_ADMIN"}, ADMIN, true}},
+            {"passes",        {[] { Roles r = OPS; r.insert("PASSENGER"); r.insert("AIRPORT_ADMIN"); r.insert("SUPER_ADMIN"); return r; }(), {"PASSENGER", "AIRPORT_ADMIN", "SUPER_ADMIN"}, ADMIN, true}},
             {"bids",          {[] { Roles r = ADMIN; r.insert("RETAILER"); return r; }(), {"RETAILER"}, ADMIN, true}},
         };
         return P;

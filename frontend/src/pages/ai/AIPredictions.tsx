@@ -5,7 +5,7 @@ import { Zap, Brain, TrendingUp, AlertTriangle, Play, Clock, CheckCircle } from 
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line } from "recharts";
 
 const TOOLTIP_STYLE = {
-  background:"#0f1629",border:"1px solid #1e2d4d",borderRadius:10,fontSize:12
+  background:"#16130f",border:"1px solid #322a1e",borderRadius:10,fontSize:12
 };
 
 const historicalAccuracy = [

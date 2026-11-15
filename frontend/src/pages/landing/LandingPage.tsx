@@ -20,14 +20,14 @@ function Hero3D() {
     const dl = new THREE.DirectionalLight(0xffffff, 1.1); dl.position.set(5, 4, 6); scene.add(dl);
     const globe = new THREE.Group(); scene.add(globe);
     const R = 2;
-    globe.add(new THREE.Mesh(new THREE.SphereGeometry(R, 48, 32), new THREE.MeshStandardMaterial({ color: 0x07142b, roughness: 0.85 })));
-    globe.add(new THREE.Mesh(new THREE.SphereGeometry(R * 1.12, 40, 28), new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.05, side: THREE.BackSide })));
+    globe.add(new THREE.Mesh(new THREE.SphereGeometry(R, 48, 32), new THREE.MeshStandardMaterial({ color: 0x120e08, roughness: 0.85 })));
+    globe.add(new THREE.Mesh(new THREE.SphereGeometry(R * 1.12, 40, 28), new THREE.MeshBasicMaterial({ color: 0xe8c77a, transparent: true, opacity: 0.05, side: THREE.BackSide })));
     const ll = (lat: number, lon: number, r = R) => { const p = (90 - lat) * Math.PI / 180, t = (lon + 180) * Math.PI / 180; return new THREE.Vector3(-r * Math.sin(p) * Math.cos(t), r * Math.cos(p), r * Math.sin(p) * Math.sin(t)); };
-    const gridMat = new THREE.LineBasicMaterial({ color: 0x0ea5e9, transparent: true, opacity: 0.22 });
+    const gridMat = new THREE.LineBasicMaterial({ color: 0xc9953c, transparent: true, opacity: 0.22 });
     for (let lat = -60; lat <= 80; lat += 20) globe.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(Array.from({ length: 73 }, (_, i) => ll(lat, -180 + i * 5, R * 1.003))), gridMat));
     for (let lon = -180; lon < 180; lon += 20) globe.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(Array.from({ length: 37 }, (_, i) => ll(-90 + i * 5, lon, R * 1.003))), gridMat));
     const pins = Object.entries(NODES).map(([k, [a, b]]) => {
-      const m = new THREE.Mesh(new THREE.SphereGeometry(k === "DEL" || k === "BOM" || k === "BLR" ? 0.032 : 0.022, 12, 12), new THREE.MeshBasicMaterial({ color: k === "DEL" ? 0xfbbf24 : 0x5eead4 }));
+      const m = new THREE.Mesh(new THREE.SphereGeometry(k === "DEL" || k === "BOM" || k === "BLR" ? 0.032 : 0.022, 12, 12), new THREE.MeshBasicMaterial({ color: k === "DEL" ? 0xfbbf24 : 0x8cc7a8 }));
       m.position.copy(ll(a, b, R * 1.01)); globe.add(m); return m;
     });
     // great-circle arcs lifted off the surface, with a glowing dot flying along each
@@ -37,15 +37,15 @@ function Hero3D() {
       const a = ll(NODES[h][0], NODES[h][1], 1).normalize(), b = ll(NODES[k][0], NODES[k][1], 1).normalize(), pts: THREE.Vector3[] = [];
       const ang = a.angleTo(b);
       for (let s = 0; s <= 48; s++) { const t = s / 48, v = a.clone().multiplyScalar(Math.sin((1 - t) * ang)).add(b.clone().multiplyScalar(Math.sin(t * ang))).divideScalar(Math.sin(ang) || 1).normalize(); pts.push(v.multiplyScalar(R * (1.01 + Math.sin(t * Math.PI) * 0.12 * Math.min(1, ang * 1.6)))); }
-      globe.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: 0x7dd3fc, transparent: true, opacity: 0.75 })));
+      globe.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: 0xf0d28a, transparent: true, opacity: 0.75 })));
       const dot = new THREE.Mesh(new THREE.SphereGeometry(0.02, 8, 8), new THREE.MeshBasicMaterial({ color: 0xffffff })); globe.add(dot);
       arcs.push({ pts, dot, off: (i * 0.37 + hi * 0.21) % 1, speed: 0.07 + ((i * 7 + hi * 3) % 5) * 0.012 });
     }));
     const g = new THREE.BufferGeometry(), pts = new Float32Array(1200);
     for (let i = 0; i < pts.length; i++) pts[i] = (Math.random() - 0.5) * 46;
     g.setAttribute("position", new THREE.BufferAttribute(pts, 3));
-    scene.add(new THREE.Points(g, new THREE.PointsMaterial({ color: 0x7dd3fc, size: 0.035 })));
-    camera.position.set(0.3, 0.5, 4.9); camera.lookAt(0, 0, 0);
+    scene.add(new THREE.Points(g, new THREE.PointsMaterial({ color: 0xf0d28a, size: 0.035 })));
+    camera.position.set(-1.7, 0.4, 7.6); camera.lookAt(-1.7, 0, 0);
     globe.rotation.x = 0.35;
     return (t) => {
       globe.rotation.y = 3.35 + t * 0.05;                         // India faces the viewer at start, then slowly turns
@@ -53,16 +53,17 @@ function Hero3D() {
       pins.forEach((p, i) => p.scale.setScalar(1 + Math.sin(t * 2 + i) * 0.3));
     };
   });
-  if (!ok) return <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_40%,#0c4a6e55,transparent_60%)]" />;
+  if (!ok) return <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_40%,#5a3d1055,transparent_60%)]" />;
   return <div ref={ref} aria-hidden className="absolute inset-0" />;
 }
 
 const ROLES = [
-  { k: "director", l: "Airport director", i: Building2, c: "#38bdf8", t: "See the whole airport in one place", pts: ["Live flight board with delays, gates and terminals", "Revenue, analytics and an Ops Copilot you can question in plain English", "Crowd and queue pressure with one-click fixes", "Add and manage your own staff, security and airline accounts"] },
-  { k: "staff", l: "Ground & security", i: Wrench, c: "#2dd4bf", t: "Run the shift, not the spreadsheet", pts: ["Check-in, baggage tracking and turnaround timers", "Accessibility requests routed to the nearest free staff member", "Security events, emergencies and weather playbooks", "Gate optimiser that finds double-booked gates"] },
-  { k: "airline", l: "Airlines & pilots", i: Plane, c: "#fbbf24", t: "Your fleet, your flights, nobody else's", pts: ["Only your airline's flights, gates and delays", "Crew duty and briefing for the day", "Disruption autopilot with rebooking options", "Carbon scorecard for your operations"] },
-  { k: "retail", l: "Shop owners", i: Store, c: "#fb923c", t: "Bid for space and track your unit", pts: ["Open units and retail bids from the airport", "Your own records, visible to you and the airport only", "Notices and messages from management"] },
-  { k: "pax", l: "Passengers", i: UserRound, c: "#c084fc", t: "Everything for your journey", pts: ["Your flight, gate and boarding time", "Biometric check-in with a passkey on your phone", "Airport map and gate finder, live weather", "Report lost items and request assistance"] },
+  { k: "director", l: "Airport director", i: Building2, c: "#e8c77a", t: "See the whole airport in one place", pts: ["Live flight board with delays, gates and terminals, for the airport you chose at sign-up", "Revenue, analytics and an Ops Copilot you can question in plain English", "Crowd and queue pressure with one-click fixes", "Add your own staff and approve lounge and Pro requests"] },
+  { k: "staff", l: "Ground staff", i: Wrench, c: "#8cc7a8", t: "Run the shift, not the spreadsheet", pts: ["Passenger Desk: check in, drop bags, clear security and board each traveller", "Baggage tracking and turnaround timers", "Accessibility requests routed to the nearest free staff member", "Gate optimiser that finds double-booked gates"] },
+  { k: "security", l: "Security", i: ShieldCheck, c: "#e07a5f", t: "A head who can see and command every officer", pts: ["Officers get a reference ID and work at any airport", "The security head sends instructions such as “Rohan, go to the toilet section”", "Officers acknowledge and resolve from their own screen", "Emergency centre and weather playbooks"] },
+  { k: "airline", l: "Airlines & pilots", i: Plane, c: "#fbbf24", t: "Your fleet, your flights, nobody else's", pts: ["Airline ops see only their own airline's flights and bookings", "Issue crew reference IDs; a pilot signs up with the ID and is placed on the airline, aircraft and flights", "Moving airline? A new reference ID re-assigns the pilot", "Disruption autopilot and carbon scorecard"] },
+  { k: "retail", l: "Shop owners", i: Store, c: "#fb923c", t: "Create your shop and run it", pts: ["Open your own shop: products, stock, prices and opening status", "Orders from passengers arrive live: accept, prepare, deliver to the gate or pickup", "Stock is reserved when an order is placed and restored on cancel", "Sales and top-product reports"] },
+  { k: "pax", l: "Passengers", i: UserRound, c: "#c084fc", t: "Everything for your journey", pts: ["Book for yourself, family and friends with a passenger ID; they see their own boarding pass", "Pro membership takes 10% off fares", "Order food and coffee to your gate", "Lounge finder, bag tracking, assistance and lost items"] },
 ];
 
 const JOURNEY = [
@@ -74,13 +75,13 @@ const JOURNEY = [
 ];
 
 const FEATURES = [
-  { i: Plane, c: "#0ea5e9", t: "Live flight operations", d: "Flights, gates, terminals and delays for each airport, from real route data." },
+  { i: Plane, c: "#c9953c", t: "Live flight operations", d: "Flights, gates, terminals and delays for each airport, from real route data." },
   { i: Bot, c: "#a78bfa", t: "Ops Copilot", d: "Ask “how many passengers booked Air India today?” and get an answer, by role." },
   { i: Users, c: "#f472b6", t: "Crowd & queues", d: "Expected pressure at check-in, security and gates, with levers to relieve it." },
   { i: CloudSun, c: "#f59e0b", t: "Live weather", d: "Current conditions per airport and ready-made response playbooks." },
-  { i: Radar, c: "#14b8a6", t: "3D digital twin", d: "Rotate the apron and see every gate's status at a glance." },
+  { i: Radar, c: "#6fae8f", t: "3D digital twin", d: "Rotate the apron and see every gate's status at a glance." },
   { i: Leaf, c: "#22c55e", t: "Carbon-aware ops", d: "Per-flight and per-airline emission savings from taxi and APU choices." },
-  { i: Accessibility, c: "#38bdf8", t: "Accessibility", d: "Assisted-travel requests assigned to the nearest available staff." },
+  { i: Accessibility, c: "#e8c77a", t: "Accessibility", d: "Assisted-travel requests assigned to the nearest available staff." },
   { i: Map, c: "#fb7185", t: "Wayfinding", d: "Airport maps and a live gate finder for passengers." },
   { i: BrainCircuit, c: "#818cf8", t: "Delay prediction", d: "Early warning from weather and congestion signals." },
   { i: Fingerprint, c: "#34d399", t: "Passkey check-in", d: "Passengers check in with Face ID or a fingerprint (WebAuthn): no password to forget." },
@@ -97,7 +98,7 @@ export function LandingPage({ onEnter }: { onEnter: () => void }) {
   const r = ROLES.find(x => x.k === role)!;
 
   return (
-    <div className="min-h-screen bg-[#050b17] text-white relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#080706] text-white relative overflow-x-hidden">
       <header className="absolute z-20 inset-x-0 top-0 flex items-center justify-between px-5 lg:px-12 py-5">
         <div className="flex items-center gap-2 font-bold text-lg"><Icon3D size={34} tilt={false}><Plane className="w-5 h-5" /></Icon3D>AeroBase India</div>
         <nav className="flex items-center gap-2">
@@ -110,20 +111,20 @@ export function LandingPage({ onEnter }: { onEnter: () => void }) {
       {/* Hero */}
       <section className="relative min-h-[92vh] flex items-center">
         <div className="absolute inset-0 lg:left-[28%]"><Hero3D /></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-[#050b17] via-[#050b17]/70 to-transparent lg:via-[#050b17]/40" />
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#050b17] to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#080706] via-[#080706]/70 to-transparent lg:via-[#080706]/40" />
+        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#080706] to-transparent" />
         <div className="relative z-10 px-5 lg:px-12 pt-28 pb-16 max-w-2xl">
           <motion.div {...fade} className="inline-flex items-center gap-2 text-xs px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-sky-300 mb-6">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />Built on real airport, airline and route data
           </motion.div>
-          <motion.h1 {...fade} className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-[1.05]">One control tower for <span className="bg-gradient-to-r from-sky-400 to-teal-300 bg-clip-text text-transparent">every airport</span> you run.</motion.h1>
-          <motion.p {...fade} className="mt-5 text-slate-300 text-lg">Flights, gates, baggage, crowds, weather and carbon in one live workspace — with a separate, safe view for directors, ground teams, airlines, pilots, shop owners and passengers.</motion.p>
+          <motion.h1 {...fade} className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-[1.05]">Fly, run and serve <span className="bg-gradient-to-r from-sky-300 via-sky-400 to-teal-400 bg-clip-text text-transparent">every airport</span> from one place.</motion.h1>
+          <motion.p {...fade} className="mt-5 text-slate-300 text-lg">Directors, security, airlines, pilots, shop owners and passengers each get their own real workspace: book family trips, order food to your gate, dispatch officers, run your shop, and see the whole airport live.</motion.p>
           <motion.div {...fade} className="mt-8 flex flex-wrap gap-3">
             <button onClick={onEnter} className="group px-6 py-3 rounded-2xl bg-sky-500 hover:bg-sky-400 text-white font-semibold shadow-lg shadow-sky-500/30 flex items-center gap-2">Open the console<ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition" /></button>
             <a href="#roles" className="px-6 py-3 rounded-2xl border border-white/15 hover:bg-white/5 font-semibold">See who it's for</a>
           </motion.div>
           <motion.dl {...fade} className="mt-10 grid grid-cols-3 gap-4 max-w-md">
-            {[[String(airports.length || 15), "airports"], ["958", "real routes"], ["74", "airlines"]].map(([n, l]) => (
+            {[[String(airports.length || 20), "airports"], ["958", "real routes"], ["74", "airlines"]].map(([n, l]) => (
               <div key={l}><dt className="text-2xl font-black text-white">{n}</dt><dd className="text-xs text-slate-400">{l}</dd></div>))}
           </motion.dl>
         </div>
